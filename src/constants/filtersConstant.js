@@ -1,0 +1,115 @@
+export const SubCategoryFilters = [
+  "Roses",
+  "Lilies",
+  "Orchids",
+  "Mixed",
+  "Carnation",
+  "Gerbera",
+  "Bonsai",
+  "Lucky",
+  "Jade",
+  "Money",
+  "Terrarium",
+  "Lily",
+  "Snake",
+  "Succulents",
+  "Syngonium",
+  "Chocolate Cakes",
+  "Butterscotch Cakes",
+  "Black Forest Cakes",
+  "Fruit Cakes",
+  "Cheesecakes",
+  "Pineapple Cakes",
+  "Red Velvet Cakes",
+  "Coffee Cakes",
+  "Strawberry Cakes",
+  "KitKat Cakes",
+  "Vanilla Cakes",
+  "Ferrero Rocher Cakes",
+  "Blueberry",
+  "Rasmalai Cake",
+  "Chocolate Truffle",
+  "Photo Cakes",
+  "Theme Cake",
+  "Pinata Cake",
+  "Pull Me Up",
+  "Doll Cake",
+  "Hamper",
+  "Flowers & Cakes",
+  "Flowers & Chocolates",
+  "Flowers & Teddy",
+  "All Flowers Combos",
+  "Cakes & Teddy",
+  "All Cake Combos",
+  "Plants & Chocolates",
+  "Plants & Cakes",
+  "Plants & Idols",
+  "All Plant Combos",
+  "Chocolates"
+];
+export const FestivalFilters = [
+  "Christmas",
+  "Lohri",
+  "Holi",
+  "Eid Al Fitr",
+  "Rakhi"
+];
+export const SpecialOccasionFilters = [
+  "New Year",
+  "Republic Day",
+  "Rose Day",
+  "Propose Day",
+  "Chocolate Day",
+  "Teddy Day",
+  "Promise Day",
+  "Hug Day",
+  "Kiss Day",
+  "Valentine's Day",
+  "Women's Day",
+  "Doctor's Day",
+  "Mother's Day",
+  "Brother's Day",
+  "Father's Day"
+];
+export const OccasionFilters = [
+  "Birthday",
+  "Anniversary",
+  "Wedding",
+  "House Warming",
+  "New Born Baby",
+  "Baby Shower",
+  "Appreciation",
+  "Cheer Up",
+  "Congratulations",
+  "Get Well Soon",
+  "Love n Romance",
+  "Thank You"
+];
+export const TypeFilters = [
+  "Best Seller",
+  "Hot Pick",
+  "New Arrival"
+];
+export const RelationshipFilters = [
+  "Her",
+  "Him",
+  "Friends",
+  "Wife",
+  "Husband",
+  "Kids",
+  "Boyfriend",
+  "Girlfriend",
+  "Mother",
+  "Father"
+];
+export const ColorFilters = [
+  "Red",
+  "Pink",
+  "White",
+  "Yellow",
+  "Orange",
+  "Purple",
+  "Blue",
+  "Green"
+];
+
