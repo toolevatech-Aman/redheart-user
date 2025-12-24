@@ -1,196 +1,60 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { 
-  Star, 
-  Heart, 
-  ShoppingBag, 
-  Plus, 
-  Minus, 
-  Check, 
-  Truck, 
-  Shield, 
-  Leaf, 
-  Tag,
-  ChevronRight,
+import React, { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import {
+  Star,
+  Heart,
+  ShoppingBag,
+  Plus,
+  Minus,
+  Check,
+  Truck,
+  Shield,
+  Leaf,
   Package
 } from "lucide-react";
+import { getProductById } from "../../service/products";
+import { message } from "../../comman/toaster-message/toasterMessage";
 
 const ProductDescription = () => {
-  const { category, productSlug } = useParams();
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [productDescriptionData, setProductDescriptionData] = useState({
-    "categorization": {
-      "category_id": 1,
-      "category_name": "Roses",
-      "subcategory_id": 101,
-      "subcategory_name": "Red Roses",
-      "festival_tags": [
-        "Valentine's Day",
-        "Anniversary",
-        "Romantic"
-      ],
-      "occasion_tags": [
-        "Birthday",
-        "Get Well",
-        "Just Because"
-      ],
-      "type": "Arrangement"
-    },
-    "product_attributes": {
-      "color": "Deep Red / Velvety",
-      "stem_length_cm": 60,
-      "fragrance_level": "Low to None",
-      "vase_life_days_min": 10,
-      "origin": "Netherlands"
-    },
-    "media": {
-      "primary_image_url":"https://imgcdn.floweraura.com/IMG_6360.jpg?tr=w-400,dpr-1.5&q=50",
-      "gallery_images": [
-        "https://imgcdn.floweraura.com/IMG_6360.jpg?tr=w-400,dpr-1.5&q=50",
-        "https://imgcdn.floweraura.com/IMG_6360.jpg?tr=w-400,dpr-1.5&q=50",
-       "https://imgcdn.floweraura.com/IMG_6360.jpg?tr=w-400,dpr-1.5&q=50"
-      ]
-    },
-    "metrics": {
-      "average_rating": 4.8,
-      "review_count": 145,
-      "times_ordered": 870
-    },
-    "care_and_logistics": {
-      "shipping_constraints": {
-        "requires_cold_chain": true,
-        "max_delivery_days": 3,
-        "regional_availability": [
-          "India"
-        ]
-      },
-      "care_instructions": [
-        "Cut stems at a 45-degree angle upon arrival.",
-        "Use the included flower food packet.",
-        "Change water every two days.",
-        "Keep away from direct sunlight and heat sources."
-      ],
-      "add_ons": [
-        {
-          "name": "Clear Glass Vase",
-          "product_id": "VASE-001",
-          "quantity": 1,
-          "original_price": 20,
-          "selling_price": 20,
-          "image_url": "https://imgcdn.floweraura.com/teddy-love-with-red-roses-bouquet-9813480co-A_0.jpg?tr=w-400,dpr-1.5&q=50",
-          "_id": "692ca762d374d60a8c63cd4a"
-        },
-        
-        {
-          "name": "Luxury Chocolates",
-          "product_id": "CHOCO-005",
-          "quantity": 1,
-          "original_price": 25,
-          "selling_price": 22.5,
-          "image_url": "https://imgcdn.floweraura.com/teddy-love-with-red-roses-bouquet-9813480co-A_0.jpg?tr=w-400,dpr-1.5&q=50",
-          "_id": "692ca762d374d60a8c63cd4b"
-        }
-      ]
-    },
-    "availability": {
-      "is_active": true,
-      "is_featured": true,
-      "last_restock_date": "2025-11-15T10:30:00.000Z"
-    },
-    "_id": "692ca762d374d60a8c63cd47",
-    "product_id": "FL-RNR-001",
-    "name": "Luxury Red Naomi Rose Bouquet",
-    "slug": "luxury-red-naomi-roses",
-    "sku": "RNROSE-BASE",
-    "quantity": 1,
-    "original_price": 145,
-    "selling_price": 120,
-    "description": "The Red Naomi is the quintessential luxury red rose, known for its large head, deep velvety color, and long vase life. Sourced directly from premier Dutch growers.",
-    "short_summary": "The classic choice for eternal love, featuring large heads and an incredible 10+ day vase life.",
-    "customer_reviews": [
-      {
-        "rating": 5,
-        "review_date": "2025-11-01T15:00:00.000Z",
-        "comment": "The Naomi roses were even more beautiful in person. Deep color and they lasted for two weeks! Worth every penny.",
-        "_id": "692ca762d374d60a8c63cd48"
-      },
-      {
-        "rating": 4.5,
-        "review_date": "2025-10-25T09:15:00.000Z",
-        "comment": "Delivered on time and the flowers were fresh. One stem had a slightly small head, but overall excellent.",
-        "_id": "692ca762d374d60a8c63cd49"
-      }
-    ],
-    "variations": [
-      {
-        "inventory": {
-          "quantity_available": 120,
-          "reorder_point": 20
-        },
-        "variant_id": "VAR-001-S",
-        "variant_sku": "RNROSE-S05",
-        "variant_name": "Bunch of 5 Stems (Standard)",
-        "quantity_in_bunch": 5,
-        "currency": "USD",
-        "original_price": 35,
-        "selling_price": 31.5,
-        "discount_percentage": 10,
-        "image_url": "https://example.com/images/redrose_5.jpg",
-        "_id": "692ca762d374d60a8c63cd4c"
-      },
-      {
-        "inventory": {
-          "quantity_available": 75,
-          "reorder_point": 15
-        },
-        "variant_id": "VAR-001-M",
-        "variant_sku": "RNROSE-M12",
-        "variant_name": "Bunch of 12 Stems (Dozen)",
-        "quantity_in_bunch": 12,
-        "currency": "USD",
-        "original_price": 75,
-        "selling_price": 67.5,
-        "discount_percentage": 10,
-        "image_url": "https://example.com/images/redrose_12.jpg",
-        "_id": "692ca762d374d60a8c63cd4d"
-      },
-      {
-        "inventory": {
-          "quantity_available": 30,
-          "reorder_point": 5
-        },
-        "variant_id": "VAR-001-L",
-        "variant_sku": "RNROSE-L24",
-        "variant_name": "Two Dozen Stems (Grand)",
-        "quantity_in_bunch": 24,
-        "currency": "USD",
-        "original_price": 145,
-        "selling_price": 123.25,
-        "discount_percentage": 15,
-        "image_url": "https://example.com/images/redrose_24.jpg",
-        "_id": "692ca762d374d60a8c63cd4e"
-      }
-    ],
-    "createdAt": "2025-11-30T20:21:54.945Z",
-    "updatedAt": "2025-11-30T20:34:37.866Z",
-    "__v": 0
-  });
+  const location = useLocation();
+  const { productSlug } = useParams();
+  const { id } = location.state || {};
 
-  const [selectedVariant, setSelectedVariant] = useState(
-    productDescriptionData.variations[0]
-  );
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [loader, setLoader] = useState(true);
+  const [productDescriptionData, setProductDescriptionData] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedAddOns, setSelectedAddOns] = useState([]);
 
-  // Get all images
-  const allImages = [
-    productDescriptionData.media.primary_image_url,
-    ...productDescriptionData.media.gallery_images
-  ];
+  useEffect(() => {
+    if (!id) {
+      message.error("Product ID not found");
+      return;
+    }
+    getProductDescription();
+  }, [id]);
 
-  // Calculate discount percentage
+  const getProductDescription = async () => {
+    try {
+      setLoader(true);
+      const response = await getProductById(id);
+      setProductDescriptionData(response);
+      // Set default selected variant as first variation
+      if (response.variations && response.variations.length > 0) {
+        setSelectedVariant(response.variations[0]);
+      }
+    } catch (err) {
+      message.error("Something went wrong");
+      console.error("Error fetching product description:", err);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  // Calculate discount
   const calculateDiscount = (original, selling) => {
-    if (original <= selling) return 0;
+    if (!original || !selling || original <= selling) return 0;
     return Math.round(((original - selling) / original) * 100);
   };
 
@@ -200,6 +64,7 @@ const ProductDescription = () => {
       (v) => v.variant_id === variantId
     );
     setSelectedVariant(variant);
+    setQuantity(1); // Reset quantity on variant change
   };
 
   // Add-ons toggle
@@ -219,13 +84,14 @@ const ProductDescription = () => {
   };
 
   const increaseQuantity = () => {
-    if (quantity < selectedVariant.inventory.quantity_available) {
+    if (quantity < selectedVariant?.inventory?.quantity_available) {
       setQuantity(quantity + 1);
     }
   };
 
   // Calculate total price
   const calculateTotal = () => {
+    if (!selectedVariant) return 0;
     const variantTotal = selectedVariant.selling_price * quantity;
     const addOnsTotal = selectedAddOns.reduce(
       (sum, addOn) => sum + addOn.selling_price,
@@ -236,6 +102,7 @@ const ProductDescription = () => {
 
   // Add to cart
   const addToCart = () => {
+    if (!selectedVariant) return;
     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
     const cartItem = {
       product_id: productDescriptionData.product_id,
@@ -247,7 +114,10 @@ const ProductDescription = () => {
       currency: selectedVariant.currency,
       image_url: selectedVariant.image_url,
       original_price: selectedVariant.original_price,
-      discount_percentage: selectedVariant.discount_percentage || 0,
+      discount_percentage: calculateDiscount(
+        selectedVariant.original_price,
+        selectedVariant.selling_price
+      ),
       add_ons: selectedAddOns
     };
 
@@ -264,19 +134,16 @@ const ProductDescription = () => {
     }
 
     localStorage.setItem("cart", JSON.stringify(existingCart));
-    
-    // Dispatch event to update cart count in header
     window.dispatchEvent(new CustomEvent("cartCountUpdated"));
-    
-    alert("Added to cart!");
+    message.success("Added to cart!");
   };
 
   // Render stars
   const renderStars = (rating) => {
+    if (!rating) return null;
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
     const stars = [];
-
     for (let i = 0; i < fullStars; i++) {
       stars.push(
         <Star key={i} className="w-4 h-4 text-accent-rose-600 fill-accent-rose-600" strokeWidth={2} />
@@ -296,9 +163,21 @@ const ProductDescription = () => {
     return stars;
   };
 
-  const discount = calculateDiscount(selectedVariant.original_price, selectedVariant.selling_price);
+ 
+
+  const allImages = [
+    productDescriptionData?.media?.primary_image_url,
+    ...(productDescriptionData?.media?.gallery_images || [])
+  ];
+
+  const discount = calculateDiscount(selectedVariant?.original_price, selectedVariant?.selling_price);
 
   return (
+    loader?
+   <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-accent-rose-600"></div>
+      </div>
+      :
     <div className="min-h-screen bg-primary-white">
       {/* Product Section */}
       <section className="py-6 sm:py-8 md:py-12 lg:py-16 bg-primary-white">
@@ -334,11 +213,10 @@ const ProductDescription = () => {
                     <button
                       key={index}
                       onClick={() => setSelectedImageIndex(index)}
-                      className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all duration-300 ${
-                        selectedImageIndex === index
-                          ? "border-accent-rose-600"
-                          : "border-grey-200 hover:border-grey-300"
-                      }`}
+                      className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all duration-300 ${selectedImageIndex === index
+                        ? "border-accent-rose-600"
+                        : "border-grey-200 hover:border-grey-300"
+                        }`}
                     >
                       <img
                         src={image}
@@ -357,8 +235,8 @@ const ProductDescription = () => {
             {/* Product Details */}
             <div className="space-y-6">
               {/* Category Tags */}
-              <div className="flex flex-wrap items-center gap-2">
-                {productDescriptionData.categorization.festival_tags.map((tag, index) => (
+              {/* <div className="flex flex-wrap items-center gap-2">
+                {productDescriptionData?.categorization?.festival_tags.map((tag, index) => (
                   <span
                     key={index}
                     className="px-3 py-1 bg-accent-rose-100 border border-accent-rose-200 text-accent-rose-700 rounded-full font-body text-xs font-light uppercase tracking-wider"
@@ -366,44 +244,39 @@ const ProductDescription = () => {
                     {tag}
                   </span>
                 ))}
-              </div>
+              </div> */}
 
               {/* Product Name */}
-              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-light text-black-charcoal tracking-tight">
-                {productDescriptionData.name}
+              <h1 className="font-display text-2xl sm:text-2xl md:text-3xl font-light text-black-charcoal tracking-tight">
+                {productDescriptionData?.name}
               </h1>
 
               {/* Rating & Reviews */}
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
-                  {renderStars(productDescriptionData.metrics.average_rating)}
+                  {renderStars(productDescriptionData?.metrics?.average_rating)}
                 </div>
-                <span className="font-body text-sm text-grey-600 font-light">
-                  {productDescriptionData.metrics.average_rating} ({productDescriptionData.metrics.review_count} reviews)
-                </span>
-                <span className="font-body text-sm text-grey-500 font-light">
-                  • {productDescriptionData.metrics.times_ordered} orders
-                </span>
+              
               </div>
 
               {/* Short Summary */}
               <p className="font-body text-base md:text-lg text-grey-700 font-light leading-relaxed">
-                {productDescriptionData.short_summary}
+                {productDescriptionData?.short_summary}
               </p>
 
               {/* Price Section */}
               <div className="py-4 border-y border-grey-200">
                 <div className="flex items-baseline gap-3">
                   <span className="font-display text-3xl md:text-4xl font-light text-black-charcoal">
-                    ${selectedVariant.selling_price}
+                    {selectedVariant?.selling_price}
                   </span>
-                  {selectedVariant.original_price > selectedVariant.selling_price && (
+                  {selectedVariant?.original_price > selectedVariant?.selling_price && (
                     <>
                       <span className="font-body text-lg text-grey-500 line-through font-light">
                         ${selectedVariant.original_price}
                       </span>
                       <span className="px-2 py-1 bg-accent-rose-100 text-accent-rose-700 rounded font-body text-xs font-light">
-                        Save {calculateDiscount(selectedVariant.original_price, selectedVariant.selling_price)}%
+                        Save {calculateDiscount(selectedVariant?.original_price, selectedVariant?.selling_price)}%
                       </span>
                     </>
                   )}
@@ -422,11 +295,10 @@ const ProductDescription = () => {
                       <button
                         key={variant.variant_id}
                         onClick={() => handleVariantChange(variant.variant_id)}
-                        className={`relative p-4 border-2 rounded-xl text-left transition-all duration-300 ${
-                          selectedVariant.variant_id === variant.variant_id
-                            ? "border-accent-rose-600 bg-accent-rose-50/30"
-                            : "border-grey-200 hover:border-grey-300 bg-primary-white"
-                        }`}
+                        className={`relative p-4 border-2 rounded-xl text-left transition-all duration-300 ${selectedVariant.variant_id === variant.variant_id
+                          ? "border-accent-rose-600 bg-accent-rose-50/30"
+                          : "border-grey-200 hover:border-grey-300 bg-primary-white"
+                          }`}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div>
@@ -478,14 +350,14 @@ const ProductDescription = () => {
                     </span>
                     <button
                       onClick={increaseQuantity}
-                      disabled={quantity >= selectedVariant.inventory.quantity_available}
+                      // disabled={quantity >= selectedVariant?.inventory?.quantity_available}
                       className="p-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-grey-50 transition-colors duration-300"
                     >
                       <Plus className="w-4 h-4 text-black-charcoal" strokeWidth={2} />
                     </button>
                   </div>
                   <span className="font-body text-sm text-grey-600 font-light">
-                    {selectedVariant.inventory.quantity_available} available
+                    {/* {selectedVariant.inventory.quantity_available} available */}
                   </span>
                 </div>
               </div>
@@ -503,18 +375,16 @@ const ProductDescription = () => {
                         <button
                           key={addOn._id}
                           onClick={() => handleAddOnToggle(addOn)}
-                          className={`w-full p-4 border-2 rounded-xl text-left transition-all duration-300 flex items-center justify-between ${
-                            isSelected
-                              ? "border-accent-rose-600 bg-accent-rose-50/30"
-                              : "border-grey-200 hover:border-grey-300 bg-primary-white"
-                          }`}
+                          className={`w-full p-4 border-2 rounded-xl text-left transition-all duration-300 flex items-center justify-between ${isSelected
+                            ? "border-accent-rose-600 bg-accent-rose-50/30"
+                            : "border-grey-200 hover:border-grey-300 bg-primary-white"
+                            }`}
                         >
                           <div className="flex items-center gap-3">
-                            <div className={`w-5 h-5 flex items-center justify-center border-2 rounded ${
-                              isSelected
-                                ? "bg-accent-rose-600 border-accent-rose-600"
-                                : "border-grey-300"
-                            }`}>
+                            <div className={`w-5 h-5 flex items-center justify-center border-2 rounded ${isSelected
+                              ? "bg-accent-rose-600 border-accent-rose-600"
+                              : "border-grey-300"
+                              }`}>
                               {isSelected && <Check className="w-3 h-3 text-primary-white" strokeWidth={3} />}
                             </div>
                             <div>
