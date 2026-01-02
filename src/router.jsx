@@ -23,7 +23,7 @@ const Cart = lazy(() => import("./pages/cart/cart"));
 const Checkout = lazy(() => import("./pages/checkout/checkout"));
 const MyAccount = lazy(() => import("./pages/my-account/my-account"));
 const Orders = lazy(() => import("./pages/orders/orders"));
-const logoImage ="s"
+const logoImage ="../../assets/RedHeart-Logo-02.png"
 const Router = () => {
   const routes = [
     // { path: "/", element: <Navigate to="/home" replace /> },
@@ -54,7 +54,7 @@ const Router = () => {
     <Suspense fallback={ <div className="flex items-center justify-center h-screen">
       <img
         src={logoImage}
-        alt="YOBHA Logo"
+        alt="RedHeart"
         className="h-8 md:h-10"
       />
     </div>}>
