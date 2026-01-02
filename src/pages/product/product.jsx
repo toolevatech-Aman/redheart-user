@@ -13,7 +13,28 @@ import {
   ColorFilters,
 } from "../../constants/filtersConstant";
 import ProductCard from "./ProductCard";
+import { getPayloadKeyByItemName } from "../../comman/payload-finder/payload-finder";
+const buildInitialFilters = (filterData) => {
+  const baseFilters = {
+    category_name: '',
+    subcategory_name: [],
+    festival_tags: [],
+    occasion_tags: [],
+    special_occasion_tags: [],
+    type: [],
+    relationship: [],
+    color: [],
+  };
 
+  if (!filterData) return baseFilters;
+
+  const { payloadKey, value } = filterData;
+
+  return {
+    ...baseFilters,
+    [payloadKey]: [value],
+  };
+};
 const Product = () => {
   const { category } = useParams();
   const navigate = useNavigate();
@@ -28,6 +49,7 @@ const Product = () => {
   const [currentImages, setCurrentImages] = useState({}); // track current image per product
 
   const initialFilters = {
+    category_name: '',
     subcategory_name: [],
     festival_tags: [],
     occasion_tags: [],
@@ -37,15 +59,18 @@ const Product = () => {
     color: [],
   };
 
-  const [selectedFilters, setSelectedFilters] = useState(initialFilters);
+  const filterFromCategory = getPayloadKeyByItemName(category);
 
+  const [selectedFilters, setSelectedFilters] = useState(() =>
+    buildInitialFilters(filterFromCategory)
+  );
   /* ===================== API ===================== */
   const fetchProducts = async (pageNo) => {
     if (loading) return;
 
     setLoading(true);
     const payload = {
-      category_name: "",
+      category_name: selectedFilters.category_name  || "",
       subcategory_name: selectedFilters.subcategory_name.join(","),
       festival_tags: selectedFilters.festival_tags.join(","),
       occasion_tags: [
@@ -56,7 +81,7 @@ const Product = () => {
       relationship: selectedFilters.relationship.join(","),
       color: selectedFilters.color.join(","),
       page: pageNo,
-      limit: 6,
+      limit: 16,
     };
 
     try {
@@ -79,6 +104,10 @@ const Product = () => {
     setHasMore(true);
     fetchProducts(1);
   }, [category, selectedFilters]);
+  useEffect(() => {
+    const filterFromCategory = getPayloadKeyByItemName(category);
+    setSelectedFilters(buildInitialFilters(filterFromCategory));
+  }, [category]);
 
   /* ===================== PAGE CHANGE ===================== */
   useEffect(() => {
@@ -95,8 +124,8 @@ const Product = () => {
     });
   };
 
-  const handleProductClick = (slug , id) => {
-   navigate(`/product/${category}/${slug}`, { state: { id } });
+  const handleProductClick = (slug, id) => {
+    navigate(`/product/${category}/${slug}`, { state: { id } });
   };
 
   const calculateDiscount = (original, selling) =>
@@ -112,13 +141,13 @@ const Product = () => {
       {/* Header */}
       <div className="border-b p-4 flex justify-between">
         <h1 className="text-2xl capitalize">{category}</h1>
-        <button
+        {/* <button
           onClick={() => setShowFilters(true)}
           className="border px-4 py-2 flex gap-2"
         >
           <SlidersHorizontal size={16} />
           Filters
-        </button>
+        </button> */}
       </div>
 
       {/* Filters */}
@@ -190,9 +219,9 @@ const Product = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
           {products.map((p) => (
             <ProductCard
-              key={p.id}
+              key={p._id}
               product={p}
-              currentImageIndex={currentImages[p.id] || 0}
+              currentImageIndex={currentImages[p._id] || 0}
               selectImage={selectImage}
               handleProductClick={handleProductClick}
               calculateDiscount={calculateDiscount}

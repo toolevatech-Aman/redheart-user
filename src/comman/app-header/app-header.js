@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Search, User, ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
 import logo from "../../assets/RedHeart-Logo-02.png";
 import { getProduct } from "../../service/products";
+import { menuData } from "../../constants/menuData";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -133,132 +134,7 @@ useEffect(() => {
     }
   };
 
-  const menuData = [
-    {
-      title: "Shop by Flower Type",
-      items: [
-        { name: "Roses", date: "2025-01-01" },
-        { name: "Lilies", date: "2025-02-14" },
-        { name: "Orchids", date: null },
-        { name: "Mixed", date: "2025-03-21" },
-        { name: "Carnation", date: null },
-        { name: "Gerbera", date: "2025-04-10" },
-        { name: "Bonsai", date: null },
-        { name: "Lucky", date: "2025-05-05" },
-        { name: "Jade", date: null },
-        { name: "Money", date: "2025-06-15" },
-        { name: "Terrarium", date: null },
-        { name: "Lily", date: "2025-07-20" },
-        { name: "Snake", date: null },
-        { name: "Succulents", date: "2025-08-08" },
-        { name: "Syngonium", date: null },
-      ],
-    },
-    {
-      title: "Cakes",
-      items: [
-        { name: "Chocolate Cakes", date: "2025-01-05" },
-        { name: "Butterscotch Cakes", date: null },
-        { name: "Black Forest Cakes", date: "2025-02-10" },
-        { name: "Fruit Cakes", date: null },
-        { name: "Cheesecakes", date: "2025-03-15" },
-        { name: "Pineapple Cakes", date: null },
-        { name: "Red Velvet Cakes", date: "2025-04-20" },
-        { name: "Coffee Cakes", date: null },
-        { name: "Strawberry Cakes", date: "2025-05-25" },
-        { name: "KitKat Cakes", date: null },
-        { name: "Vanilla Cakes", date: "2025-06-30" },
-        { name: "Ferrero Rocher Cakes", date: null },
-        { name: "Blueberry Cakes", date: "2025-07-04" },
-        { name: "Rasmalai Cake", date: null },
-        { name: "Chocolate Truffle", date: "2025-08-12" },
-        { name: "Photo Cakes", date: null },
-        { name: "Theme Cake", date: "2025-09-01" },
-        { name: "Pinata Cake", date: null },
-        { name: "Pull Me Up", date: "2025-10-10" },
-        { name: "Doll Cake", date: null },
-      ],
-    },
-    {
-      title: "Combos",
-      items: [
-        { name: "Hamper", date: "2025-01-01" },
-        { name: "Flowers & Cakes", date: null },
-        { name: "Flowers & Chocolates", date: "2025-02-14" },
-        { name: "Flowers & Teddy", date: null },
-        { name: "All Flowers Combos", date: "2025-03-20" },
-        { name: "Cakes & Teddy", date: null },
-        { name: "All Cake Combos", date: "2025-04-15" },
-        { name: "Plants & Chocolates", date: null },
-        { name: "Plants & Cakes", date: "2025-05-10" },
-        { name: "Plants & Idols", date: null },
-        { name: "All Plant Combos", date: "2025-06-05" },
-        { name: "Chocolates Gift", date: null },
-      ],
-    },
-    {
-      title: "Festival",
-      items: [
-        { name: "Christmas", date: "2025-12-25" },
-        { name: "Lohri", date: null },
-        { name: "Holi", date: "2025-03-29" },
-        { name: "Eid Al Fitr", date: null },
-        { name: "Rakhi", date: "2025-08-15" },
-      ],
-    },
-    {
-      title: "Special Occasion",
-      items: [
-        { name: "New Year", date: "2025-01-01" },
-        { name: "Republic Day", date: null },
-        { name: "Rose Day", date: "2025-02-07" },
-        { name: "Propose Day", date: null },
-        { name: "Chocolate Day", date: "2025-02-09" },
-        { name: "Teddy Day", date: null },
-        { name: "Promise Day", date: "2025-02-11" },
-        { name: "Hug Day", date: null },
-        { name: "Kiss Day", date: "2025-02-13" },
-        { name: "Valentine's Day", date: null },
-        { name: "Womens Day", date: "2025-03-08" },
-        { name: "Doctors Day", date: null },
-        { name: "Mothers Day", date: "2025-05-10" },
-        { name: "Brother's Day", date: null },
-        { name: "Father's Day", date: "2025-06-21" },
-      ],
-    },
-    {
-      title: "Occasion",
-      items: [
-        { name: "Birthday", date: "2025-01-10" },
-        { name: "Anniversary", date: null },
-        { name: "Wedding", date: "2025-02-20" },
-        { name: "House Warming", date: null },
-        { name: "New Born Baby", date: "2025-03-15" },
-        { name: "Baby Shower", date: null },
-        { name: "Appreciation", date: "2025-04-05" },
-        { name: "Cheer Up", date: null },
-        { name: "Congratulations", date: "2025-05-01" },
-        { name: "Get Well Soon", date: null },
-        { name: "Love n Romance", date: "2025-06-14" },
-        { name: "Thank You", date: null },
-      ],
-    },
-    {
-      title: "Loved Ones",
-      items: [
-        { name: "Her", date: "2025-01-15" },
-        { name: "Him", date: null },
-        { name: "Friends", date: "2025-02-10" },
-        { name: "Wife", date: null },
-        { name: "Husband", date: "2025-03-05" },
-        { name: "Kids", date: null },
-        { name: "Boyfriend", date: "2025-04-01" },
-        { name: "Girlfriend", date: null },
-        { name: "Mother", date: "2025-05-12" },
-        { name: "Father", date: null },
-      ],
-    },
-  ];
+  
 
 
   const closeSidebar = () => {

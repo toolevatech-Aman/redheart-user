@@ -1,26 +1,59 @@
-import React from "react";
+import React, { useRef } from "react";
 
-const ProductCard = ({ product, currentImageIndex, selectImage, handleProductClick, calculateDiscount }) => {
-  const images = [product.media.primary_image_url, ...(product.media.gallery_images || [])];
-  const discount = calculateDiscount(product.original_price, product.selling_price);
+const ProductCard = ({
+  product,
+  currentImageIndex,
+  selectImage,
+  handleProductClick,
+  calculateDiscount,
+}) => {
+  const images = [
+    product.media.primary_image_url,
+    ...(product.media.gallery_images || []),
+  ];
+
+  const discount = calculateDiscount(
+    product.original_price,
+    product.selling_price
+  );
+
   const type = product.categorization?.type || "";
+  const intervalRef = useRef(null);
+
+  const startCarousel = () => {
+    if (intervalRef.current || images.length <= 1) return;
+
+    intervalRef.current = setInterval(() => {
+      selectImage(
+        product._id,
+        (currentImageIndex + 1) % images.length
+      );
+    }, 1200); // change image every 1.2s
+  };
+
+  const stopCarousel = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  };
 
   return (
     <div
       className="group relative cursor-pointer overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-md transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl"
-      onClick={() => handleProductClick(product.slug , product.product_id)}
+      onClick={() => handleProductClick(product.slug, product.product_id)}
+      onMouseEnter={startCarousel}
+      onMouseLeave={stopCarousel}
     >
-      {/* Image Carousel */}
+      {/* Image */}
       <div className="relative h-64 w-full overflow-hidden">
         <img
           src={images[currentImageIndex] || images[0]}
           alt={product.name}
+          loading="lazy"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
 
-        {/* Type badge stuck to top-left */}
         {type && (
-          <span className="absolute top-0 left-0 bg-red-600 text-white text-xs font-semibold shadow-md px-2 py-1">
+          <span className="absolute top-0 left-0 bg-red-600 text-white text-xs font-semibold px-2 py-1">
             {type}
           </span>
         )}
@@ -33,10 +66,12 @@ const ProductCard = ({ product, currentImageIndex, selectImage, handleProductCli
                 key={idx}
                 onClick={(e) => {
                   e.stopPropagation();
-                  selectImage(product.id, idx);
+                  selectImage(product._id, idx);
                 }}
                 className={`w-2 h-2 rounded-full ${
-                  idx === currentImageIndex ? "bg-rose-600" : "bg-white/70"
+                  idx === currentImageIndex
+                    ? "bg-rose-600"
+                    : "bg-white/70"
                 } border border-neutral-400`}
               />
             ))}
@@ -46,29 +81,24 @@ const ProductCard = ({ product, currentImageIndex, selectImage, handleProductCli
 
       {/* Content */}
       <div className="p-5 text-center">
-        <p className="mb-1 text-sm font-medium tracking-wide text-neutral-700 group-hover:text-neutral-900 line-clamp-2">
+        <p className="mb-1 text-sm font-medium text-neutral-700 line-clamp-2">
           {product.name}
         </p>
 
-        {/* Price and Discount */}
         <div className="flex justify-center items-center gap-2">
-          <p className="text-lg font-semibold tracking-wide text-neutral-900">
-            ₹{product.selling_price}
-          </p>
+          <p className="text-lg font-semibold">₹{product.selling_price}</p>
 
           {discount > 0 && (
             <>
               <p className="text-sm line-through text-neutral-400">
                 ₹{product.original_price}
               </p>
-              <span className="bg-rose-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+              <span className="bg-rose-600 text-white text-xs px-2 py-1 rounded-full">
                 −{discount}%
               </span>
             </>
           )}
         </div>
-
-        <div className="mx-auto mt-3 h-[2px] w-0 bg-neutral-900 transition-all duration-500 group-hover:w-12" />
       </div>
     </div>
   );

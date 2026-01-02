@@ -41,6 +41,10 @@ import birthday1 from "../../assets/category-image/birthday.avif"
 import giftforher from "../../assets/category-image/giftforher.jpg"
 import giftforhim from "../../assets/category-image/giftforhim.jpg"
 
+import chocolates from "../../assets/category-image/chocolates .jpg"
+import gifts from "../../assets/category-image/gifts.webp"
+import hampers from "../../assets/category-image/hampers.webp"
+
 
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -85,6 +89,17 @@ const Home = () => {
     { id: 3, title: "Gift for Her", img: giftforher },
     { id: 4, title: "Gift for Him", img: giftforhim },
   ];
+
+  const mainCategories = [
+    { title: "Cakes", img: cake },
+    { title: "Flowers", img: loveAffectionImg },
+    { title: "Plants", img: plant },
+    { title: "Combos", img: combo },
+    { title: "Chocolate Gifts", img: chocolates },
+    { title: "Gifts", img: gifts },
+    { title: "Hampers", img: hampers }
+
+  ]
   return (
     <div className="min-h-screen bg-primary-white">
       {/* Hero Section */}
@@ -157,45 +172,62 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Heading */}
-          <div className="text-center mb-12">
-            <span className="inline-block px-5 py-2 bg-primary-white/90 border border-grey-300/40 rounded-full shadow-sm backdrop-blur-md font-body text-xs tracking-[0.18em] text-grey-700 uppercase">
-              Explore Categories
-            </span>
 
-
-          </div>
 
           {/* Category Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {[
-              { title: "Cakes", img: cake },
-              { title: "Flowers", img: loveAffectionImg },
-              { title: "Plants", img: plant },
-              { title: "Combos", img: combo },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="group relative rounded-3xl overflow-hidden shadow-elegant hover:shadow-premium cursor-pointer transition-all duration-300"
-              >
-                {/* Image */}
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-full h-52 sm:h-60 object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+          <style>
+            {`
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+  `}
+          </style>
 
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+          <div className="w-full md:overflow-x-auto md:hide-scrollbar">
+            <div
+              className="
+      grid grid-cols-3 gap-4 px-3
+      md:flex md:gap-5 md:min-w-max
+    "
+            >
+              {mainCategories.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="
+          cursor-pointer
+          md:w-56 md:flex-shrink-0
+        "
+        onClick={() => navigate(`/product/${item.title}`)}
+                >
+                  {/* Image */}
+                  <div className="group relative rounded-2xl overflow-hidden shadow-elegant hover:shadow-premium transition-all duration-300">
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="
+              w-full h-40
+              md:h-48
+              object-cover transition-transform duration-500 group-hover:scale-105
+            "
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+                  </div>
 
-                {/* Title */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center">
-                  <h3 className="font-display text-lg sm:text-xl text-primary-white font-light tracking-wide">
+                  {/* Title */}
+                  <h3 className="mt-2 text-center font-display text-sm md:text-base font-light tracking-wide text-gray-900 truncate">
                     {item.title}
                   </h3>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
+
+
 
         </div>
       </section>
