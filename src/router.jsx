@@ -23,6 +23,7 @@ const Cart = lazy(() => import("./pages/cart/cart"));
 const Checkout = lazy(() => import("./pages/checkout/checkout"));
 const MyAccount = lazy(() => import("./pages/my-account/my-account"));
 const Orders = lazy(() => import("./pages/orders/orders"));
+const Hamper = lazy(() => import("./pages/hampers/hamper"));
 const logoImage ="../../assets/RedHeart-Logo-02.png"
 const Router = () => {
   const routes = [
@@ -48,6 +49,7 @@ const Router = () => {
     {path: "/checkout", element: <Checkout />},
     {path: "/my-account", element: <MyAccount />},
     {path: "/orders", element: <Orders />},
+    {path: "/hamper", element: <Hamper />},
   ];
 
   return (

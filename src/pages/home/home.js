@@ -45,6 +45,7 @@ import chocolates from "../../assets/category-image/chocolates .jpg"
 import gifts from "../../assets/category-image/gifts.webp"
 import hampers from "../../assets/category-image/hampers.webp"
 
+import buildHamper from "../../assets/background/buildhamper.webp"
 
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -201,7 +202,7 @@ const Home = () => {
           cursor-pointer
           md:w-56 md:flex-shrink-0
         "
-        onClick={() => navigate(`/product/${item.title}`)}
+                  onClick={() => navigate(`/product/${item.title}`)}
                 >
                   {/* Image */}
                   <div className="group relative rounded-2xl overflow-hidden shadow-elegant hover:shadow-premium transition-all duration-300">
@@ -231,6 +232,50 @@ const Home = () => {
 
         </div>
       </section>
+
+      {/* Build Your Own Hamper Section */}
+      <section
+        className="relative cursor-pointer group"
+        onClick={() => navigate("/hamper")}
+      >
+        {/* Background Image */}
+        <div className="w-full h-64 sm:h-80 md:h-96 lg:h-96 overflow-hidden rounded-2xl">
+          <img
+            src={buildHamper}
+            alt="Build Your Own Hamper"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/30 md:bg-black/40 group-hover:bg-black/50 transition-all duration-500"></div>
+        </div>
+
+        {/* Text Content */}
+       <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8">
+  <h2 className="font-display text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg">
+    Build Your Own Hamper
+  </h2>
+  <p className="mt-2 text-sm sm:text-base md:text-lg text-white/90 font-light drop-shadow-md">
+    Choose flowers, gifts, and treats for your perfect combo
+  </p>
+  
+  {/* Luxury Button */}
+  <button className="mt-6 px-6 py-3 bg-gradient-to-r from-amber-500 via-rose-500 to-pink-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300">
+    Customize Now
+  </button>
+</div>
+
+
+        {/* Mobile-only text overlay at bottom */}
+        {/* <div className="absolute bottom-4 left-4 right-4 text-center sm:hidden">
+          <h2 className="font-display text-lg font-semibold text-white drop-shadow-md">
+            Build Your Own Hamper
+          </h2>
+          <p className="text-xs text-white/90 font-light drop-shadow-sm">
+            Customize your perfect gift
+          </p>
+        </div> */}
+      </section>
+
 
       <section className="py-12 bg-gradient-to-b from-pink-50 to-white">
         <div className="max-w-7xl mx-auto px-4">
