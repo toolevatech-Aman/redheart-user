@@ -27,7 +27,6 @@ const HamperBuilder = () => {
     }
   };
 
-  // Add product or increase quantity
   const addToHamper = (product) => {
     const existingIndex = hamper.findIndex((item) => item._id === product._id);
     if (existingIndex !== -1) {
@@ -39,7 +38,6 @@ const HamperBuilder = () => {
     }
   };
 
-  // Decrease quantity or remove if 0
   const decreaseQuantity = (productId) => {
     const index = hamper.findIndex((item) => item._id === productId);
     if (index === -1) return;
@@ -64,10 +62,10 @@ const HamperBuilder = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col">
+    <div className="min-h-screen bg-[#fff8f5] text-gray-900 flex flex-col font-sans">
       {/* Header */}
-      <header className="bg-red-600 text-white py-4 text-center text-2xl  shadow-sm">
-        Build Your Personalized Hamper
+      <header className="bg-gradient-to-r from-[#800000] to-[#c0392b] text-white py-6 text-center text-3xl font-serif shadow-md">
+        Build Your Premium Hamper
       </header>
 
       {/* Step Indicator */}
@@ -75,10 +73,10 @@ const HamperBuilder = () => {
         {steps.map((step, index) => (
           <div
             key={step}
-            className={`px-5 py-2 rounded-full font-semibold border-2 transition-all ${
+            className={`px-6 py-2 rounded-full font-semibold border-2 text-sm transition-all ${
               index === stepIndex
-                ? "bg-red-600 text-white border-red-600"
-                : "border-black text-black hover:bg-red-100 cursor-pointer"
+                ? "bg-[#c0392b] text-white border-[#c0392b]"
+                : "border-gray-300 text-gray-600 hover:bg-[#fbeae6] cursor-pointer"
             }`}
             onClick={() => setStepIndex(index)}
           >
@@ -90,7 +88,7 @@ const HamperBuilder = () => {
       {/* Progress Bar */}
       <div className="w-3/4 mx-auto mt-4 h-2 bg-gray-200 rounded-full">
         <div
-          className="h-2 bg-red-600 rounded-full transition-all"
+          className="h-2 bg-[#c0392b] rounded-full transition-all duration-500"
           style={{ width: `${((stepIndex + 1) / steps.length) * 100}%` }}
         ></div>
       </div>
@@ -99,13 +97,13 @@ const HamperBuilder = () => {
       <div className="flex flex-col md:flex-row gap-6 p-6 md:p-8 flex-1">
         {/* Products Section */}
         <div className="md:w-2/3 flex flex-col">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">
+          <h2 className="text-2xl font-bold text-[#c0392b] mb-4">
             Select {currentCategory}
           </h2>
 
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="loader border-4 border-red-600 border-t-transparent rounded-full w-12 h-12 animate-spin"></div>
+              <div className="loader border-4 border-[#c0392b] border-t-transparent rounded-full w-12 h-12 animate-spin"></div>
             </div>
           ) : products.length === 0 ? (
             <p className="text-gray-500">No products available.</p>
@@ -116,25 +114,25 @@ const HamperBuilder = () => {
                 return (
                   <div
                     key={item._id}
-                    className="border rounded-lg p-4 shadow hover:shadow-xl transition transform hover:-translate-y-1 flex flex-col"
+                    className="border rounded-2xl p-4 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 flex flex-col bg-white"
                   >
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="h-40 w-full object-cover rounded mb-3"
+                      className="h-44 w-full object-cover rounded-xl mb-3"
                     />
                     <h3 className="font-semibold text-lg">{item.name}</h3>
-                    <p className="text-sm text-gray-500 line-through">
+                    <p className="text-sm text-gray-400 line-through">
                       ₹{item.originalPrice}
                     </p>
-                    <p className="text-red-600 font-bold text-lg mb-2">
+                    <p className="text-[#c0392b] font-bold text-lg mb-2">
                       ₹{item.sellingPrice}
                     </p>
 
                     {quantity === 0 ? (
                       <button
                         onClick={() => addToHamper(item)}
-                        className="mt-auto w-full bg-black text-white py-2 rounded-full hover:bg-red-600 transition"
+                        className="mt-auto w-full bg-gradient-to-r from-[#c0392b] to-[#e74c3c] text-white py-2 rounded-full hover:from-[#e74c3c] hover:to-[#c0392b] transition"
                       >
                         Add to Hamper
                       </button>
@@ -142,14 +140,14 @@ const HamperBuilder = () => {
                       <div className="mt-auto flex items-center justify-center gap-2">
                         <button
                           onClick={() => decreaseQuantity(item._id)}
-                          className="px-3 py-1 bg-gray-200 rounded-full hover:bg-red-100 transition"
+                          className="px-3 py-1 bg-gray-100 rounded-full hover:bg-[#fbeae6] transition"
                         >
                           -
                         </button>
                         <span className="font-semibold">{quantity}</span>
                         <button
                           onClick={() => addToHamper(item)}
-                          className="px-3 py-1 bg-gray-200 rounded-full hover:bg-red-100 transition"
+                          className="px-3 py-1 bg-gray-100 rounded-full hover:bg-[#fbeae6] transition"
                         >
                           +
                         </button>
@@ -168,32 +166,42 @@ const HamperBuilder = () => {
               onClick={() => setStepIndex(stepIndex - 1)}
               className={`px-6 py-2 rounded-full font-semibold border-2 transition ${
                 stepIndex === 0
-                  ? "border-gray-400 text-gray-400 cursor-not-allowed"
-                  : "border-black text-black hover:bg-red-100"
+                  ? "border-gray-300 text-gray-300 cursor-not-allowed"
+                  : "border-gray-400 text-gray-700 hover:bg-[#fbeae6]"
               }`}
             >
               Back
             </button>
 
-            {stepIndex < steps.length - 1 && (
-              <button
-                onClick={() => setStepIndex(stepIndex + 1)}
-                className="px-6 py-2 rounded-full font-semibold bg-red-600 text-white hover:bg-black transition"
-              >
-                Skip
-              </button>
-            )}
+            <div className="flex gap-3">
+              {stepIndex < steps.length - 1 && (
+                <button
+                  onClick={() => setStepIndex(stepIndex + 1)}
+                  className="px-6 py-2 rounded-full font-semibold bg-gray-200 text-gray-700 hover:bg-[#fbeae6] transition"
+                >
+                  Skip
+                </button>
+              )}
+              {stepIndex < steps.length - 1 && (
+                <button
+                  onClick={() => setStepIndex(stepIndex + 1)}
+                  className="px-6 py-2 rounded-full font-semibold bg-gradient-to-r from-[#c0392b] to-[#e74c3c] text-white hover:from-[#e74c3c] hover:to-[#c0392b] transition"
+                >
+                  Next
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Hamper Summary - Sticky */}
-        <div className="md:w-1/3 border rounded-lg p-5 shadow-lg flex flex-col sticky top-6 h-fit">
-          <h2 className="text-xl font-bold text-red-600 mb-4">
+        {/* Hamper Summary */}
+        <div className="md:w-1/3 border rounded-2xl p-6 shadow-xl flex flex-col sticky top-6 h-fit bg-white">
+          <h2 className="text-xl font-bold text-[#c0392b] mb-4">
             Your Hamper
           </h2>
 
           {hamper.length === 0 ? (
-            <p className="text-gray-500">No items added yet</p>
+            <p className="text-gray-400 italic">No items added yet</p>
           ) : (
             <ul className="space-y-3 flex-1 max-h-[65vh] overflow-y-auto">
               {hamper.map((item, idx) => (
@@ -203,12 +211,12 @@ const HamperBuilder = () => {
                 >
                   <div>
                     <span className="font-medium">{item.name}</span>
-                    <p className="text-sm text-gray-500 line-through">
+                    <p className="text-sm text-gray-400 line-through">
                       ₹{item.originalPrice}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-red-600">
+                    <span className="font-semibold text-[#c0392b]">
                       ₹{item.sellingPrice * item.quantity}
                     </span>
                     <span className="font-semibold">x{item.quantity}</span>
@@ -222,11 +230,11 @@ const HamperBuilder = () => {
             <>
               <div className="flex justify-between mt-4 font-bold text-lg">
                 <span>Total</span>
-                <span className="text-red-600">₹{totalPrice}</span>
+                <span className="text-[#c0392b]">₹{totalPrice}</span>
               </div>
 
               {stepIndex === steps.length - 1 && (
-                <button className="mt-4 w-full bg-red-600 text-white py-3 rounded hover:bg-black transition">
+                <button className="mt-4 w-full bg-gradient-to-r from-[#c0392b] to-[#e74c3c] text-white py-3 rounded-full hover:from-[#e74c3c] hover:to-[#c0392b] transition">
                   Checkout Hamper
                 </button>
               )}

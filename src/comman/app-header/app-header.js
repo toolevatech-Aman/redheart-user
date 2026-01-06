@@ -308,49 +308,66 @@ useEffect(() => {
           </div>
 
           {/* Second Row Desktop Menu */}
-          <div className="hidden lg:flex justify-center bg-primary-white border-t  border-red-700 shadow-sm">
-            <ul className="flex items-center space-x-4 xl:space-x-6 px-8">
-              {menuData.map((menu, index) => {
-                // Determine number of columns dynamically
-                const columns = menu.items.length <= 4 ? menu.items.length : 4; // max 4 columns
-                return (
-                  <li key={index} className="group relative">
-                    <button className="px-3 py-3 text-sm xl:text-[15px] font-body font-medium text-black-charcoal hover:text-accent-rose-600 transition-all duration-300">
-                      {menu.title}
-                    </button>
+          <div className="hidden lg:flex justify-center bg-primary-white border-t border-red-700 shadow-sm">
+  <ul className="flex items-center space-x-4 xl:space-x-6 px-8">
+    {menuData.map((menu, index) => {
+      // Determine number of columns dynamically (max 4)
+      const columns = menu.items.length <= 4 ? menu.items.length : 4;
 
-                    <div className="absolute hidden group-hover:flex pt-3 left-1/2 -translate-x-1/2 animate-fade-in scale-95 group-hover:scale-100 transition-all duration-200 z-50">
-                      <div
-                        className={`bg-white backdrop-blur-md rounded-3xl p-6 border border-black/10 overflow-hidden relative`}
-                        style={{
-                          width: `${columns * 8}rem`, // 8rem per column
-                        }}
-                      >
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-l border-t border-black/10 rotate-45"></div>
-                        <ul
-                          className={`grid grid-cols-${columns} gap-x-6 gap-y-4`}
-                        >
-                          {menu.items.map((item, i) => (
-                            <li key={i} className="px-2 py-2 hover:bg-grey-50 rounded-lg transition-all duration-200">
-                              <a
-                                href={`/product/${item.name}`}
-                                className="block text-black hover:text-red-600"
-                              >
-                                <span className="font-medium">{item.name}</span>
-                                {item.date && (
-                                  <span className="block text-xs text-grey-400 mt-1">{item.date}</span>
-                                )}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
+      // Map columns to Tailwind classes
+      const gridColsClass = {
+        1: 'grid-cols-1',
+        2: 'grid-cols-2',
+        3: 'grid-cols-3',
+        4: 'grid-cols-4',
+      }[columns];
+
+      return (
+        <li key={index} className="group relative">
+          <button className="px-3 py-3 text-sm xl:text-[15px] font-body font-medium text-black-charcoal hover:text-accent-rose-600 transition-all duration-300">
+            {menu.title}
+          </button>
+
+          {/* Dropdown */}
+          <div className="absolute hidden group-hover:block pt-3 left-1/2 -translate-x-1/2 z-50">
+            <div
+              className="bg-white backdrop-blur-md rounded-3xl p-6 border border-black/10 overflow-hidden relative"
+              style={{
+                width: `${columns * 8}rem`, // adjust width
+              }}
+            >
+              {/* Arrow */}
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-l border-t border-black/10 rotate-45"></div>
+
+              {/* Grid */}
+              <ul className={`grid ${gridColsClass} gap-x-6 gap-y-4`}>
+                {menu.items.map((item, i) => (
+                  <li
+                    key={i}
+                    className="px-2 py-2 hover:bg-grey-50 rounded-lg transition-all duration-200"
+                  >
+                    <a
+                      href={`/product/${item.name}`}
+                      className="block text-black hover:text-red-600"
+                    >
+                      <span className="font-medium">{item.name}</span>
+                      {item.date && (
+                        <span className="block text-xs text-red-400 mt-1">
+                          {item.date}
+                        </span>
+                      )}
+                    </a>
                   </li>
-                );
-              })}
-            </ul>
+                ))}
+              </ul>
+            </div>
           </div>
+        </li>
+      );
+    })}
+  </ul>
+</div>
+
 
 
           {/* Mobile Sidebar */}

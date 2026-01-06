@@ -23,35 +23,52 @@ const Cookies = () => {
       <section className="py-16 md:py-24 lg:py-32 bg-primary-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-12">
+
+            {/* What Are Cookies */}
             <div>
               <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
                 What Are Cookies
               </h2>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Cookies are small text files that are stored on your device when you visit a website. They help the site remember your preferences, login information, and other details to improve your browsing experience.
               </p>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Cookies may also be used to analyze traffic, measure the effectiveness of advertising, and provide personalized content. They are widely used to make websites work more efficiently and deliver a better user experience.
               </p>
             </div>
 
+            {/* How We Use Cookies */}
             <div>
               <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
                 How We Use Cookies
               </h2>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                We use cookies for several purposes, including:  
               </p>
+              <ul className="list-disc ml-6 text-grey-700 space-y-2">
+                <li>To remember your preferences and settings.</li>
+                <li>To analyze site traffic and improve our services.</li>
+                <li>To show personalized content and relevant advertisements.</li>
+                <li>To enhance website functionality and ensure security.</li>
+              </ul>
             </div>
 
+            {/* Managing Cookies */}
             <div>
               <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
                 Managing Cookies
               </h2>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                You have the right to control the cookies stored on your device. You can accept or decline cookies through your browser settings or via the cookie banner on this website.  
+              </p>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
+                Most browsers allow you to manage cookie preferences, delete existing cookies, or block certain types of cookies entirely. Please note that disabling cookies may affect the functionality of some parts of our website.
+              </p>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed">
+                For more detailed information about how we use cookies and your options, please visit our <a href="/privacy-policy" className="underline hover:text-accent-rose-600 transition">Privacy Policy</a>.
               </p>
             </div>
+
           </div>
         </div>
       </section>
@@ -60,4 +77,3 @@ const Cookies = () => {
 };
 
 export default Cookies;
-
