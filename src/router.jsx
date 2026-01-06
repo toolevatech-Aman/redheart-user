@@ -25,7 +25,7 @@ const Checkout = lazy(() => import("./pages/checkout/checkout"));
 const MyAccount = lazy(() => import("./pages/my-account/my-account"));
 const Orders = lazy(() => import("./pages/orders/orders"));
 const Hamper = lazy(() => import("./pages/hampers/hamper"));
-const logoImage ="../../assets/RedHeart-Logo-02.png"
+const logoImage ="./assets/redHeartLogoo.png"
 const Router = () => {
   const routes = [
     // { path: "/", element: <Navigate to="/home" replace /> },
@@ -54,13 +54,20 @@ const Router = () => {
   ];
 
   return (
-    <Suspense fallback={ <div className="flex items-center justify-center h-screen">
-      <img
-        src={logoImage}
-        alt="RedHeart"
-        className="h-8 md:h-10"
-      />
-    </div>}>
+    <Suspense fallback={<div className="flex flex-col items-center justify-center h-screen px-4 text-center">
+  {/* Main Title */}
+  <h1 className="text-xl font-semibold text-red-600 mb-1">
+    RedHeart
+  </h1>
+
+  {/* Subtitle / beautiful line */}
+  <p className="text-xs text-gray-600 max-w-xs">
+    Bringing warmth, love, and passion to every heartbeat.
+  </p>
+</div>
+
+
+}>
       <Routes>
         {routes.map(({ path, element }, index) => (
           <Route
