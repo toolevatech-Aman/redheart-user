@@ -57,22 +57,22 @@ const Footer = () => {
               </div>
             </Link>
             <p className="font-body text-sm text-grey-400 mb-6 font-light leading-relaxed max-w-sm">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            We believe gifting is more than just exchanging products; it’s about expressing emotions, celebrating relationships, and creating unforgettable memories. That’s why at Redheart, every bouquet, every cake, every plant, and every gift hamper is crafted with care, creativity, and a touch of love.
             </p>
             
             {/* Contact Info */}
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-grey-300">
                 <Phone className="w-4 h-4 text-accent-rose-600 flex-shrink-0" strokeWidth={1.5} />
-                <span className="font-body text-sm font-light">+1 (555) 123-4567</span>
+                <span className="font-body text-sm font-light">+91 XXXXXXXXX</span>
               </div>
               <div className="flex items-center space-x-3 text-grey-300">
                 <Mail className="w-4 h-4 text-accent-rose-600 flex-shrink-0" strokeWidth={1.5} />
-                <span className="font-body text-sm font-light">hello@redheart.com</span>
+                <span className="font-body text-sm font-light">support@redheart.in</span>
               </div>
               <div className="flex items-start space-x-3 text-grey-300">
                 <MapPin className="w-4 h-4 text-accent-rose-600 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-                <span className="font-body text-sm font-light">123 Flower Street, Garden City, NY 11530</span>
+                <span className="font-body text-sm font-light">Gurugram , India</span>
               </div>
             </div>
           </div>
