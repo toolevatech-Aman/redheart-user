@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import AppLayout from "./comman/app-layout/app-layout";
+import SellWithUs from "./pages/sell-with-us/sell-with-us";
 // import logoImage from "./assets/yobhaLogo.png"
 // Lazy load pages
 const Home = lazy(() => import("./pages/home/home"));
@@ -16,7 +17,7 @@ const Shipping = lazy(() => import("./pages/shipping/shipping"));
 const Returns = lazy(() => import("./pages/returns/returns"));
 const TrackOrder = lazy(() => import("./pages/track-order/track-order"));
 const GiftCards = lazy(() => import("./pages/gift-cards/gift-cards"));
-const SizeGuide = lazy(() => import("./pages/size-guide/size-guide"));
+const SizeGuide = lazy(() => import("./pages/sell-with-us/sell-with-us"));
 const Cookies = lazy(() => import("./pages/cookies/cookies"));
 const RefundPolicy = lazy(() => import("./pages/refund-policy/refund-policy"));
 const Cart = lazy(() => import("./pages/cart/cart"));
@@ -42,7 +43,7 @@ const Router = () => {
     {path: "/returns", element: <Returns />},
     {path: "/track-order", element: <TrackOrder />},
     {path: "/gift-cards", element: <GiftCards />},
-    {path: "/size-guide", element: <SizeGuide />},
+    {path: "/sell-with-us", element: <SellWithUs />},
     {path: "/cookies", element: <Cookies />},
     {path: "/refund-policy", element: <RefundPolicy />},
     {path: "/cart", element: <Cart />},

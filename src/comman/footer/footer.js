@@ -16,8 +16,8 @@ const Footer = () => {
   const customerService = [
     { name: "FAQ", path: "/faq" },
     { name: "Track Order", path: "/track-order" },
-    { name: "Gift Cards", path: "/gift-cards" },
-    { name: "Size Guide", path: "/size-guide" },
+    { name: "Coupans and Deals", path: "/gift-cards" },
+    { name: "Sell With Us", path: "/sell-with-us" },
   ];
 
   const legal = [

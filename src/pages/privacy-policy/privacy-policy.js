@@ -14,7 +14,7 @@ const PrivacyPolicy = () => {
             Privacy Policy
           </h1>
           <p className="font-body text-base md:text-lg text-grey-700 font-light leading-relaxed">
-            Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            Effective Date: January 2025
           </p>
         </div>
       </section>
@@ -23,16 +23,14 @@ const PrivacyPolicy = () => {
       <section className="py-16 md:py-24 lg:py-32 bg-primary-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-12">
+
             {/* Introduction */}
             <div>
-              <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
-                Introduction
-              </h2>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                At Redheart, we value your trust. This Privacy Policy explains how we collect, use, share, and protect your personal information when you use our website, mobile application, or services.
               </p>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                By accessing or purchasing from Redheart, you agree to the terms described in this policy.
               </p>
             </div>
 
@@ -41,18 +39,12 @@ const PrivacyPolicy = () => {
               <div className="flex items-center gap-3 mb-4">
                 <FileText className="w-5 h-5 text-accent-rose-600" strokeWidth={2} />
                 <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal tracking-tight">
-                  Information We Collect
+                  1. Information We Collect
                 </h2>
               </div>
-              <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua:
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed">
+                We may collect the following types of information:
               </p>
-              <ul className="list-disc list-inside space-y-2 ml-4">
-                <li className="font-body text-base text-grey-700 font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
-                <li className="font-body text-base text-grey-700 font-light">Sed do eiusmod tempor incididunt ut labore et dolore</li>
-                <li className="font-body text-base text-grey-700 font-light">Ut enim ad minim veniam, quis nostrud exercitation</li>
-                <li className="font-body text-base text-grey-700 font-light">Duis aute irure dolor in reprehenderit in voluptate</li>
-              </ul>
             </div>
 
             {/* How We Use Your Information */}
@@ -60,14 +52,41 @@ const PrivacyPolicy = () => {
               <div className="flex items-center gap-3 mb-4">
                 <Eye className="w-5 h-5 text-accent-rose-600" strokeWidth={2} />
                 <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal tracking-tight">
-                  How We Use Your Information
+                  2. How We Use Your Information
                 </h2>
               </div>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Your information helps us provide a smooth and personalized experience. We use it for:
               </p>
-              <p className="font-body text-base text-grey-700 font-light leading-relaxed">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              <ul className="list-disc list-inside space-y-2 ml-4 text-grey-700">
+                <li>Processing and delivering orders</li>
+                <li>Verifying payments</li>
+                <li>Sending order updates and notifications</li>
+                <li>Improving website functionality</li>
+                <li>Personalizing offers and recommendations</li>
+                <li>Providing customer support</li>
+              </ul>
+            </div>
+
+            {/* Sharing of Information */}
+            <div>
+              <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
+                3. Sharing of Information
+              </h2>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
+                Redheart does not sell or trade your personal data.
+              </p>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
+                We only share information with:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4 text-grey-700">
+                <li>Delivery partners for fulfilling your orders</li>
+                <li>Payment gateways for secure transactions</li>
+                <li>Business partners for promotional services (only if consented)</li>
+                <li>Legal authorities if required by law</li>
+              </ul>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed mt-4">
+                All third-party partners are required to maintain strict data confidentiality.
               </p>
             </div>
 
@@ -76,43 +95,86 @@ const PrivacyPolicy = () => {
               <div className="flex items-center gap-3 mb-4">
                 <Lock className="w-5 h-5 text-accent-rose-600" strokeWidth={2} />
                 <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal tracking-tight">
-                  Data Security
+                  4. Data Security
                 </h2>
               </div>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                We use advanced security measures to keep your information safe:
               </p>
-              <p className="font-body text-base text-grey-700 font-light leading-relaxed">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4 text-grey-700">
+                <li>SSL encryption</li>
+                <li>Secure servers</li>
+                <li>Restricted access protocols</li>
+              </ul>
             </div>
 
             {/* Your Rights */}
             <div>
               <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
-                Your Rights
+                5. Your Rights
               </h2>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                You can:
               </p>
-              <p className="font-body text-base text-grey-700 font-light leading-relaxed">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              <ul className="list-disc list-inside space-y-2 ml-4 text-grey-700">
+                <li>Request a copy of your stored data</li>
+                <li>Ask us to update or correct information</li>
+                <li>Opt out of promotional messages</li>
+                <li>Request deletion of your personal data (where legally applicable)</li>
+              </ul>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed mt-4">
+                To make such requests, email us at: support@redheart.in
               </p>
             </div>
 
-            {/* Contact Us */}
-            <div className="pt-8 border-t border-grey-200">
+            {/* Cookies */}
+            <div>
               <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
-                Contact Us
+                6. Cookies
               </h2>
-              <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                If you have any questions about this Privacy Policy, please contact us:
-              </p>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed">
-                Email: privacy@redheart.com<br />
-                Phone: +1 (555) 123-4567
+                You can choose to disable cookies through your browser settings. However, some site features may not function properly without them.
               </p>
             </div>
+
+            {/* Third Party Links */}
+            <div>
+              <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
+                7. Links to Third-Party Websites
+              </h2>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed">
+                Our site may contain links to external websites. We are not responsible for their content, policies, or security practices.
+              </p>
+            </div>
+
+            {/* Updates */}
+            <div>
+              <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
+                8. Updates to This Privacy Policy
+              </h2>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed">
+                We may update this policy occasionally. Any changes will be posted on this page with the updated date.
+              </p>
+            </div>
+
+            {/* Contact */}
+            <div className="pt-8 border-t border-grey-200">
+              <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
+                9. Contact Us
+              </h2>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
+                For questions, concerns, or privacy-related requests, contact:
+              </p>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed">
+                Redheart Customer Support<br />
+                Email: support@redheart.in<br />
+                Phone: +91-XXXXXXXXXX
+              </p>
+              <p className="font-body text-base text-grey-700 font-light leading-relaxed mt-6">
+                Thank you for trusting Redheart with your personal information.
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
@@ -121,4 +183,3 @@ const PrivacyPolicy = () => {
 };
 
 export default PrivacyPolicy;
-

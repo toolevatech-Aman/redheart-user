@@ -6,39 +6,97 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
   const faqs = [
-    {
-      question: "How do I place an order?",
-      answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      question: "What payment methods do you accept?",
-      answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      question: "How long does shipping take?",
-      answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      question: "Can I cancel or modify my order?",
-      answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      question: "Do you offer international shipping?",
-      answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      question: "What is your return policy?",
-      answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      question: "How do I track my order?",
-      answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      question: "Do you offer gift wrapping?",
-      answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    }
-  ];
+  {
+    question: "What types of flowers can I order from Redheart?",
+    answer:
+      "We offer a wide range of flowers including roses, tulips, carnations, gerberas, lilies, exotic blooms, and premium bouquets in various colours."
+  },
+  {
+    question: "Do you offer same-day delivery?",
+    answer:
+      "Yes, same‑day delivery is available on most flowers and cakes placed before the cut‑off time."
+  },
+  {
+    question: "Can I schedule a delivery for a specific date and time?",
+    answer:
+      "Yes, you can choose your preferred date and time slot during checkout."
+  },
+  {
+    question: "Do you deliver at midnight or early morning?",
+    answer:
+      "We offer special delivery slots like midnight and early‑morning deliveries in select cities."
+  },
+  {
+    question: "What happens if the recipient is not available at the delivery location?",
+    answer:
+      "Our delivery partner will attempt contact. If unreachable, the order may be left with a neighbour or returned to our hub."
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer:
+      "We accept UPI, credit/debit cards, net banking, digital wallets, and selected EMI options."
+  },
+  {
+    question: "Is Cash on Delivery (COD) available?",
+    answer:
+      "COD is not available as most gifts are perishable and require prepaid confirmation."
+  },
+  {
+    question: "Will I receive an invoice for my order?",
+    answer:
+      "Yes, a digital invoice is emailed immediately after order confirmation."
+  },
+  {
+    question: "How do I track my order?",
+    answer:
+      "You can track your order in the “My Orders” section or through the tracking link sent via SMS/Email."
+  },
+  {
+    question: "Are your cakes fresh and eggless?",
+    answer:
+      "All cakes are freshly baked, and eggless options are available for most flavours."
+  },
+  {
+    question: "Do you deliver indoor plants and flower bulbs?",
+    answer:
+      "Yes, we deliver air‑purifying plants, succulents, flowering plants, and seasonal flower bulbs nationwide."
+  },
+  {
+    question: "Are gift hampers customisable?",
+    answer:
+      "Yes, we offer custom hampers, especially for Valentine’s Day, birthdays, anniversaries, and corporate orders."
+  },
+  {
+    question: "Can I cancel an order after placing it?",
+    answer:
+      "Cancellations are possible before dispatch. Perishable items like cakes and flowers have tighter timelines."
+  },
+  {
+    question: "What if my product is damaged or incorrect?",
+    answer:
+      "If you receive a damaged or wrong item, contact us within 24 hours for a replacement or resolution."
+  },
+  {
+    question: "How long does a refund take?",
+    answer:
+      "Refunds typically take 5–7 business days to reflect in your account."
+  },
+  {
+    question: "Can I use multiple coupons in one order?",
+    answer: "No, only one coupon can be applied per order."
+  },
+  {
+    question: "Do you handle corporate gifting?",
+    answer:
+      "Yes, we specialise in customised corporate gifting with branding options."
+  },
+  {
+    question: "How early should I place a bulk order?",
+    answer:
+      "We recommend placing bulk orders at least 3–7 days in advance."
+  }
+];
+
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);

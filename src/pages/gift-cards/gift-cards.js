@@ -1,7 +1,7 @@
 import React from "react";
 import { Gift } from "lucide-react";
 
-const GiftCards = () => {
+const CouponsDeals = () => {
   return (
     <div className="min-h-screen bg-primary-white">
       {/* Hero Section */}
@@ -11,49 +11,105 @@ const GiftCards = () => {
             <Gift className="w-8 h-8 text-accent-rose-600" strokeWidth={2} />
           </div>
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-light text-black-charcoal mb-6 tracking-tight">
-            Gift Cards
+            Coupons & Deals
           </h1>
           <p className="font-body text-lg md:text-xl text-grey-700 font-light leading-relaxed max-w-2xl mx-auto">
-            The perfect gift for any occasion
+            Enjoy exclusive offers, bulk order discounts, and promotional coupons to make your gifting experience delightful.
           </p>
         </div>
       </section>
 
-      {/* Gift Cards Section */}
+      {/* Coupons & Deals Section */}
       <section className="py-16 md:py-24 lg:py-32 bg-primary-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-12">
-            <div>
-              <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
-                About Our Gift Cards
-              </h2>
-              <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+
+          {/* Bulk Order Deals */}
+          <div>
+            <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
+              Bulk Order Deals
+            </h2>
+            <p className="font-body text-base text-grey-700 font-light leading-relaxed">
+              Planning to place a large order for corporate gifting, events, or celebrations? We offer special pricing on bulk orders.
+            </p>
+          </div>
+
+          {/* Available Coupons */}
+          <div>
+            <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
+              Available Coupons
+            </h2>
+
+            {/* Coupon 1 */}
+            <div className="mb-6">
+              <p className="font-body text-base text-grey-700 font-light mb-1">
+                🎉 <strong>Coupon: NEW10</strong>
               </p>
-              <p className="font-body text-base text-grey-700 font-light leading-relaxed">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+              <ul className="list-disc list-inside text-grey-700 font-light ml-4 space-y-1">
+                <li>Discount: Flat 10% OFF on your first purchase</li>
+                <li>Minimum Order Value: ₹599</li>
+                <li>Applicable On: All categories — flowers, cakes, plants, personalised gifts, hampers, and more</li>
+                <li>Terms: Valid for new customers only, cannot be combined with other coupons, one-time use per user</li>
+              </ul>
             </div>
 
-            <div>
-              <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
-                How to Use
-              </h2>
-              <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua:
+            {/* Coupon 2 */}
+            <div className="mb-6">
+              <p className="font-body text-base text-grey-700 font-light mb-1">
+                🎁 <strong>Coupon: HAPPY100</strong>
               </p>
-              <ol className="list-decimal list-inside space-y-2 ml-4">
-                <li className="font-body text-base text-grey-700 font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
-                <li className="font-body text-base text-grey-700 font-light">Sed do eiusmod tempor incididunt ut labore et dolore</li>
-                <li className="font-body text-base text-grey-700 font-light">Ut enim ad minim veniam, quis nostrud exercitation</li>
-              </ol>
+              <ul className="list-disc list-inside text-grey-700 font-light ml-4 space-y-1">
+                <li>Discount: Flat ₹100 OFF</li>
+                <li>Minimum Order Value: ₹1000</li>
+                <li>Applicable On: All gift categories</li>
+              </ul>
             </div>
           </div>
+
+          {/* How to Apply Coupons */}
+          <div>
+            <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
+              How to Apply Coupons
+            </h2>
+            <ol className="list-decimal list-inside ml-4 space-y-2">
+              <li className="font-body text-base text-grey-700 font-light">Add products to your cart</li>
+              <li className="font-body text-base text-grey-700 font-light">Proceed to checkout</li>
+              <li className="font-body text-base text-grey-700 font-light">Enter your coupon code in the “Apply Coupon” section</li>
+              <li className="font-body text-base text-grey-700 font-light">The discount will be applied automatically if terms are met</li>
+            </ol>
+          </div>
+
+          {/* Important Guidelines */}
+          <div>
+            <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
+              Important Coupon Guidelines
+            </h2>
+            <ul className="list-disc list-inside text-grey-700 font-light ml-4 space-y-1">
+              <li>Only one coupon can be applied per order</li>
+              <li>Coupons may not apply to special combos or festive hampers</li>
+              <li>Coupons cannot be exchanged for cash</li>
+              <li>Coupon misuse may lead to order cancellation</li>
+            </ul>
+          </div>
+
+          {/* Stay Updated */}
+          <div>
+            <h2 className="font-display text-2xl md:text-3xl font-light text-black-charcoal mb-4 tracking-tight">
+              Stay Updated
+            </h2>
+            <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-2">
+              We regularly launch festival offers, Valentine’s Day deals, limited-time discounts, and early-bird sale coupons. Follow us for updates:
+            </p>
+            <ul className="list-disc list-inside text-grey-700 font-light ml-4 space-y-1">
+              <li>Instagram: <a href="https://www.instagram.com/redheart.in" className="text-accent-rose-600">@redheart.in</a></li>
+              <li>Facebook: Redheart Gifting</li>
+              <li>Website: <a href="https://www.redheart.in" className="text-accent-rose-600">redheart.in</a></li>
+            </ul>
+          </div>
+
         </div>
       </section>
     </div>
   );
 };
 
-export default GiftCards;
-
+export default CouponsDeals;
