@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getProductById } from "../../service/products";
-
+import RecentlyViewed from "./RecentlyViewed";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/cartSlice";
+import { message } from "../../comman/toaster-message/toasterMessage";
 const Accordion = ({ title, children, initialOpen = false }) => {
   const [open, setOpen] = useState(initialOpen);
 
@@ -20,7 +23,8 @@ const Accordion = ({ title, children, initialOpen = false }) => {
 };
 
 
-const LuxuryProductDetails = () => {
+const ProductDescriptionPage = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const { id } = location.state || {};
   const [open, setOpen] = useState(false);
@@ -66,6 +70,29 @@ const LuxuryProductDetails = () => {
   // Determine prices
   const displayOriginal = selectedVariant?.original_price || product.original_price;
   const displaySelling = selectedVariant?.selling_price || product.selling_price;
+  const handleAddToCart = () => {
+    if (!product) return;
+
+    const cartItem = {
+      _id: selectedVariant?._id || product._id,
+      name: product.name,
+      variant_name: selectedVariant?.variant_name || "",
+      image_url: selectedVariant?.image_url || product.media.primary_image_url,
+      selling_price: selectedVariant?.selling_price || product.selling_price,
+      original_price: selectedVariant?.original_price || product.original_price,
+      quantity: 1,
+      add_ons: selectedAddOns.map((a) => ({
+        _id: a._id,
+        name: a.name,
+        selling_price: a.selling_price,
+        quantity: 1,
+      })),
+    };
+
+    dispatch(addToCart(cartItem));
+
+    message.success("Added to cart!");
+  };
 
   return (
     <div className="bg-white text-black">
@@ -267,7 +294,7 @@ const LuxuryProductDetails = () => {
                 <p>
                   Type: <span className="font-semibold text-orange-500">{product?.categorization?.subcategory_name} </span>
                 </p>
-                
+
               </div>
             </Accordion>
 
@@ -326,7 +353,7 @@ const LuxuryProductDetails = () => {
 
           {/* CTA */}
           <div className="pt-6 flex gap-4">
-            <button className="flex-1 py-3 rounded-full border border-black text-black font-medium hover:bg-black hover:text-white transition text-sm">
+            <button className="flex-1 py-3 rounded-full border border-black text-black font-medium hover:bg-black hover:text-white transition text-sm" onClick={handleAddToCart}>
               Add to Cart
             </button>
             <button className="flex-1 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition text-sm">
@@ -336,8 +363,9 @@ const LuxuryProductDetails = () => {
 
         </div>
       </div>
+      <RecentlyViewed />
     </div>
   );
 };
 
-export default LuxuryProductDetails;
+export default ProductDescriptionPage;

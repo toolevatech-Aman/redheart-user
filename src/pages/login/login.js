@@ -3,6 +3,7 @@ import { sendOtpApi, verifyOtpApi } from "../../service/loginService";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Lock, Smartphone, Shield, Check, Sparkles, Heart, ArrowRight } from "lucide-react";
 import logo from "../../assets/redHeartLogoo.png";
+import { message } from "../../comman/toaster-message/toasterMessage";
 
 
 export default function LoginWithOTP() {
@@ -37,7 +38,7 @@ export default function LoginWithOTP() {
 
     } catch (err) {
       console.error("Send OTP Error:", err);
-      alert("Failed to send OTP");
+      message.error("Failed to send OTP");
     } finally {
       setLoading(false);
     }
@@ -53,13 +54,13 @@ export default function LoginWithOTP() {
       
       console.log("Verified:", res);
 
-      alert("OTP Verified!");
+      message.success("OTP Verified!");
       navigate("/")
       
 
     } catch (err) {
       console.error("Verify Error:", err);
-      alert("Invalid OTP");
+      message.error("Invalid OTP");
     } finally {
       setLoading(false);
     }

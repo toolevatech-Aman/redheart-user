@@ -4,7 +4,7 @@ import { Search, User, ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
 import logo from "../../assets/RedHeart-Logo-02.png";
 import { getProduct } from "../../service/products";
 import { menuData } from "../../constants/menuData";
-
+import { useSelector } from "react-redux";
 export default function Header() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -19,6 +19,7 @@ export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const mobileSearchRef = useRef(null);
+  const totalCount = useSelector((state) => state.cart.totalCount);
 
   // Scroll effect for header shadow'
   useEffect(() => {
@@ -232,9 +233,9 @@ useEffect(() => {
                 className="relative p-2.5 rounded-full text-black-charcoal hover:text-accent-rose-600 hover:bg-grey-50 transition-all duration-300"
               >
                 <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
-                {cartCount > 0 && (
+                {totalCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-gradient-to-br from-accent-rose-500 to-accent-pink-600 text-primary-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartCount > 99 ? "99+" : cartCount}
+                    {totalCount > 99 ? "99+" : totalCount}
                   </span>
                 )}
               </button>

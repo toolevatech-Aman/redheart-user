@@ -27,6 +27,7 @@ import {
   DeleteAddress
 } from "../../service/user"; // your api helpers
 import { formatDate, getOrderStatusColor } from "../../utils/utils";
+import { message } from "../../comman/toaster-message/toasterMessage";
 
 
 const MyAccount = () => {
@@ -495,7 +496,7 @@ const SavedAddressesModal = ({
 
   const handleSave = () => {
     if (!addressForm.street || !addressForm.city || !addressForm.postalCode) {
-      alert("Please fill in all required fields");
+      message.error("Please fill in all required fields");
       return;
     }
     onSaveAddress(addressForm);

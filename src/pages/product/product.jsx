@@ -70,7 +70,7 @@ const Product = () => {
 
     setLoading(true);
     const payload = {
-      category_name: selectedFilters.category_name  || "",
+      category_name: selectedFilters.category_name || "",
       subcategory_name: selectedFilters.subcategory_name.join(","),
       festival_tags: selectedFilters.festival_tags.join(","),
       occasion_tags: [
@@ -124,9 +124,26 @@ const Product = () => {
     });
   };
 
-  const handleProductClick = (slug, id) => {
-    navigate(`/product/${category}/${slug}`, { state: { id } });
-  };
+ const handleProductClick = (slug, id, product) => {
+  // Save product in localStorage
+  const stored = JSON.parse(localStorage.getItem("recentProducts")) || [];
+
+  // Remove if product already exists to avoid duplicates
+  const filtered = stored.filter((p) => p._id !== product._id);
+
+  // Add current product to the start
+  filtered.unshift(product);
+
+  // Keep only last 8
+  if (filtered.length > 8) filtered.pop();
+
+  // Save back to localStorage
+  localStorage.setItem("recentProducts", JSON.stringify(filtered));
+
+  // Navigate to product page
+  navigate(`/product/${category}/${slug}`, { state: { id } });
+};
+
 
   const calculateDiscount = (original, selling) =>
     original > selling ? Math.round(((original - selling) / original) * 100) : 0;
@@ -140,7 +157,7 @@ const Product = () => {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="border-b p-4 flex justify-between">
-        <h1 className="text-2xl capitalize">{category}</h1>
+        <h1 className="text-2xl capitalize">{category} Delivery</h1>
         {/* <button
           onClick={() => setShowFilters(true)}
           className="border px-4 py-2 flex gap-2"
@@ -148,6 +165,19 @@ const Product = () => {
           <SlidersHorizontal size={16} />
           Filters
         </button> */}
+        <nav className="text-sm text-gray-500">
+          <ol className="flex items-center gap-1 flex-wrap">
+            <li>
+              <a href="/" className="hover:text-gray-700 transition">Home</a>
+            </li>
+            {/* <li>/</li> */}
+            {/* <li>
+              <a href="/categories" className="hover:text-gray-700 transition">Categories</a>
+            </li> */}
+            <li>/</li>
+            <li className="text-gray-900 font-medium">{category}</li>
+          </ol>
+        </nav>
       </div>
 
       {/* Filters */}
@@ -223,7 +253,7 @@ const Product = () => {
               product={p}
               currentImageIndex={currentImages[p._id] || 0}
               selectImage={selectImage}
-              handleProductClick={handleProductClick}
+              handleProductClick={(slug, id) => handleProductClick(slug, id, p)} 
               calculateDiscount={calculateDiscount}
             />
           ))}
