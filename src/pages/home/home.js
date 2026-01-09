@@ -1,23 +1,25 @@
 import React, { use } from "react";
 import { ArrowRight, Heart, Sparkles } from "lucide-react";
-
+import { FiGift, FiTruck } from "react-icons/fi";
+import { GiCakeSlice, GiFlowerPot } from "react-icons/gi"
 // Import images
-import bestSellerImg from "../../assets/collections-image/best-seller.jpg";
-import bridalBouquetImg from "../../assets/collections-image/bridal-bouque.jpg";
+import birthdaypic from "../../assets/collections/Birthday-Cake-1.webp";
+import Anniversary from "../../assets/collections/anniversary-love-9914310ca-aaa_0.avif";
+import Wedding from "../../assets/collections/weddingg.webp";
+import housewarming from "../../assets/collections/housewarming.webp";
+import bbyshower from "../../assets/collections/babyshower.webp";
+import lovaromance from "../../assets/collections/getwellsoon.jpg";
+
 import loveAffectionImg from "../../assets/collections-image/love-affection.avif";
-import anniversaryImg from "../../assets/collections-image/anniversary.webp";
-import birthdayImg from "../../assets/collections-image/birthday-flower.webp";
-import flowerBouquetImg from "../../assets/collections-image/flower-bouque.avif";
+import redRoseImg from "../../assets/blossoms-image/chrismas.jpg";
+import pinkRoseImg from "../../assets/blossoms-image/lorhi.jpg";
+import whiteRoseImg from "../../assets/blossoms-image/holi.jpg";
+import yellowRoseImg from "../../assets/blossoms-image/eid.webp";
 
-import redRoseImg from "../../assets/blossoms-image/red-rose.jpg";
-import pinkRoseImg from "../../assets/blossoms-image/pink-rose.avif";
-import whiteRoseImg from "../../assets/blossoms-image/white-rose.jpg";
-import yellowRoseImg from "../../assets/blossoms-image/yellow-rose.jpeg";
-
-import roseBouquetImg from "../../assets/shop-by-flower-image/rose-bouque.webp";
-import lillyBouquetImg from "../../assets/shop-by-flower-image/lilly-bouque.webp";
-import orchidsBouquetImg from "../../assets/shop-by-flower-image/orchids-bouque.jpg";
-
+import roseBouquetImg from "../../assets/shop-by-flower-image/flowerandcake.webp";
+import lillyBouquetImg from "../../assets/shop-by-flower-image/flowerandbookew.webp";
+import orchidsBouquetImg from "../../assets/shop-by-flower-image/flowerandteddy.jpeg";
+import cakeandteddy from "../../assets/shop-by-flower-image/cakeandteddy.avif";
 import flowerChocolateImg from "../../assets/floral-image/flower-chocolate.webp";
 import flowerTeddyImg from "../../assets/floral-image/flower-teddy.jpg";
 import allFlowerComboImg from "../../assets/floral-image/all-flower-combo.avif";
@@ -52,25 +54,52 @@ import { Navigate, useNavigate } from "react-router-dom";
 const Home = () => {
   const navigate = useNavigate();
   const collections = [
-    { id: 1, title: "Best Sellers", image: bestSellerImg, description: "Our most loved arrangements" },
-    { id: 2, title: "Love & Affection", image: loveAffectionImg, description: "Express your deepest emotions" },
-    { id: 3, title: "Bridal Bouquets", image: bridalBouquetImg, description: "Elegant arrangements for your special day" },
-    { id: 4, title: "Anniversary", image: anniversaryImg, description: "Celebrate timeless love" },
-    { id: 5, title: "Birthday Flowers", image: birthdayImg, description: "Make their day unforgettable" },
-    { id: 6, title: "Flower Bouquets", image: flowerBouquetImg, description: "Classic elegance in every petal" },
+    { id: 1, title: "Birthday", image: birthdaypic, description: "Our most loved arrangements" },
+    { id: 2, title: "Anniversary", image: Anniversary, description: "Express your deepest emotions" },
+    { id: 3, title: "Wedding", image: Wedding, description: "Elegant arrangements for your special day" },
+    { id: 4, title: "House Warming", image: housewarming, description: "Celebrate timeless love" },
+    { id: 5, title: "Baby Shower", image: bbyshower, description: "Make their day unforgettable" },
+    { id: 6, title: "Love n Romance", image: lovaromance, description: "Classic elegance in every petal" },
+    { id: 7, title: "Get Well Soon", image: getWellSoonImg, description: "Classic elegance in every petal" },
   ];
 
-  const blossomsByHues = [
-    { id: 1, title: "Red Roses", image: redRoseImg, color: "Red" },
-    { id: 2, title: "Pink Roses", image: pinkRoseImg, color: "Pink" },
-    { id: 3, title: "White Roses", image: whiteRoseImg, color: "White" },
-    { id: 4, title: "Yellow Roses", image: yellowRoseImg, color: "Yellow" },
+  const festivalCollection = [
+    {
+      id: 1,
+      title: "Christmas",
+      image: redRoseImg,
+      color: "Red",
+      description: "Celebrate the warmth and joy of Christmas with the vibrant red of love and cheer."
+    },
+    {
+      id: 2,
+      title: "Lohri",
+      image: pinkRoseImg,
+      color: "Pink",
+      description: "Welcome the harvest season with Lohri’s festive spirit, wrapped in soft, cheerful pink."
+    },
+    {
+      id: 3,
+      title: "Holi",
+      image: whiteRoseImg,
+      color: "White",
+      description: "Dive into the festival of colors with Holi, starting fresh with the purity of white."
+    },
+    {
+      id: 4,
+      title: "Eid Al Fitr",
+      image: yellowRoseImg,
+      color: "Yellow",
+      description: "Mark Eid Al Fitr with golden yellow hues, symbolizing joy, prosperity, and new beginnings."
+    },
   ];
 
-  const shopByFlower = [
-    { id: 1, title: "Rose Bouquet", image: roseBouquetImg },
-    { id: 2, title: "Lilies Bouquet", image: lillyBouquetImg },
-    { id: 3, title: "Orchids Bouquet", image: orchidsBouquetImg },
+
+  const shopByCombo = [
+    { id: 1, title: "Flowers & Cakes", image: roseBouquetImg },
+    { id: 2, title: "Flowers & Chocolates", image: lillyBouquetImg },
+    { id: 3, title: "Flowers & Teddy", image: orchidsBouquetImg },
+    { id: 4, title: "Cakes & Teddy", image: cakeandteddy },
   ];
 
   const floralAssortments = [
@@ -85,10 +114,10 @@ const Home = () => {
     { id: 3, title: "Get Well Soon", image: getWellSoonImg },
   ];
   const categories = [
-    { id: 1, title: "Anniversary", img: anniversary1 },
-    { id: 2, title: "Birthday", img: birthday1 },
-    { id: 3, title: "Gift for Her", img: giftforher },
-    { id: 4, title: "Gift for Him", img: giftforhim },
+    { id: 1, title: "Husband", img: anniversary1 },
+    { id: 2, title: "Wife", img: birthday1 },
+    { id: 3, title: "Her", img: giftforher },
+    { id: 4, title: "Him", img: giftforhim },
   ];
 
   const mainCategories = [
@@ -141,12 +170,10 @@ const Home = () => {
       {/* Small Posters Carousel */}
       {/* Small Posters Carousel */}
       <section className="py-8 bg-white">
-
-
-        <div className="overflow-x-auto flex gap-5 px-4 sm:px-6 lg:px-8 scroll-smooth snap-x snap-mandatory">
-          {[hero1, hero2, hero3, hero4].map((item) => (
+        <div className="overflow-x-auto flex gap-5 px-4 sm:px-6 lg:px-8 scroll-smooth snap-x snap-mandatory hide-scrollbar">
+          {[hero1, hero2, hero3, hero4].map((item, idx) => (
             <div
-              key={item}
+              key={idx}
               className="
           min-w-[220px]          /* mobile */
           sm:min-w-[280px]       /* tablet */
@@ -166,42 +193,37 @@ const Home = () => {
             </div>
           ))}
         </div>
+
+        {/* Hide scrollbar styles */}
+        <style jsx>{`
+    .hide-scrollbar {
+      -ms-overflow-style: none; /* IE & Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+  `}</style>
       </section>
 
 
-      <section className="py-8 bg-gradient-to-b from-white to-grey-50">
+
+      <section className="py-8 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Heading */}
+          {/* Optional: Heading */}
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-serif text-[#8B0000]">Our Categories</h2>
+            <p className="text-gray-600 text-base md:text-lg">Explore what suits your taste</p>
+          </div>
 
-
-          {/* Category Grid */}
-          <style>
-            {`
-    .hide-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-  `}
-          </style>
-
-          <div className="w-full md:overflow-x-auto md:hide-scrollbar">
-            <div
-              className="
-      grid grid-cols-3 gap-4 px-3
-      md:flex md:gap-5 md:min-w-max
-    "
-            >
+          {/* Carousel */}
+          <div className="w-full overflow-x-auto hide-scrollbar">
+            <div className="flex gap-4 md:gap-5 py-4 snap-x snap-mandatory scroll-smooth">
               {mainCategories.map((item, idx) => (
                 <div
                   key={idx}
-                  className="
-          cursor-pointer
-          md:w-56 md:flex-shrink-0
-        "
+                  className="flex-shrink-0 w-48 sm:w-52 md:w-56 snap-center cursor-pointer"
                   onClick={() => navigate(`/product/${item.title}`)}
                 >
                   {/* Image */}
@@ -209,11 +231,7 @@ const Home = () => {
                     <img
                       src={item.img}
                       alt={item.title}
-                      className="
-              w-full h-40
-              md:h-48
-              object-cover transition-transform duration-500 group-hover:scale-105
-            "
+                      className="w-full h-40 md:h-48 object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
                   </div>
@@ -226,12 +244,21 @@ const Home = () => {
               ))}
             </div>
           </div>
-
-
-
-
         </div>
+
+        {/* Hide scrollbar styles */}
+        <style jsx>{`
+    .hide-scrollbar {
+      -ms-overflow-style: none; /* IE & Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+  `}</style>
       </section>
+
+
 
       {/* Build Your Own Hamper Section */}
       <section
@@ -278,261 +305,339 @@ const Home = () => {
 
 
       <section className="py-16 bg-gradient-to-b from-[#fff5f2] to-white">
-  <div className="max-w-7xl mx-auto px-4">
-    {/* Section Title */}
-    <h2 className="text-4xl text-center mb-12 text-[#8B0000] font-serif">
-      Shop By Occasions & Relations
-    </h2>
+        <div className="max-w-7xl mx-auto px-4">
+          {/* Section Title */}
+          <h2 className="text-4xl text-center mb-12 text-[#8B0000] font-serif">
+            Shop By Occasions & Relations
+          </h2>
 
-    {/* Categories Grid */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-      {categories.map((category) => (
-        <div
-          key={category.id}
-          className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer"
-        >
-          {/* Image */}
-          <div className="overflow-hidden">
-            <img
-              src={category.img}
-              alt={category.title}
-              className="w-full h-64 object-cover transition-transform duration-500 hover:scale-110"
-            />
-          </div>
+          {/* Categories Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                onClick={() => navigate(`/product/${category.title}`)}
+                className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer"
+              >
+                {/* Image */}
+                <div className="overflow-hidden">
+                  <img
+                    src={category.img}
+                    alt={category.title}
+                    className="w-full h-64 object-cover transition-transform duration-500 hover:scale-110"
+                  />
+                </div>
 
-          {/* Text */}
-          <div className="p-6 text-center">
-            <h3 className="text-xl font-semibold text-[#8B0000] mb-2">
-              {category.title}
-            </h3>
-            <p className="text-gray-500 text-sm">
-              Explore our curated selection for this category
-            </p>
+                {/* Text */}
+                <div className="p-6 text-center">
+                  <h3 className="text-xl font-semibold text-[#8B0000] mb-2">
+                    {category.title}
+                  </h3>
+                  <p className="text-gray-500 text-sm">
+                    Explore our curated selection for this category
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Collections Section */}
 
-<section className="py-4 bg-white">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    {/* Section Header */}
-    <div className="text-center mb-12">
-      <h2 className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
-        Our Collections
-      </h2>
-      <p className="font-body text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
-        Curated with passion, designed with elegance
-      </p>
-    </div>
-
-    {/* Symmetric Grid */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-      {collections.map((collection) => (
-        <div
-          key={collection.id}
-          className="group relative overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-200"
-          onClick={() => navigate(`/product/${collection.title}`)}
-        >
-          {/* Image */}
-          <div className="relative w-full h-64 sm:h-56 md:h-72 lg:h-80 overflow-hidden rounded-t-2xl">
-            <img
-              src={collection.image}
-              alt={collection.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          </div>
-
-          {/* Text */}
-          <div className="p-4 md:p-5 text-center">
-            <h3 className="font-display text-lg md:text-xl font-semibold text-[#8B0000] mb-2 group-hover:text-[#e74c3c] transition-colors duration-300">
-              {collection.title}
-            </h3>
-            <p className="font-body text-sm md:text-base text-gray-700">
-              {collection.description}
+      <section className="py-4 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
+              Our Occasions Collections
+            </h2>
+            <p className="font-body text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+              Curated with passion, designed with elegance
             </p>
           </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
 
+          {/* Carousel */}
+          <div className="carousel-container overflow-x-auto flex space-x-4 py-4 scroll-smooth snap-x snap-mandatory">
+            {collections.map((collection) => (
+              <div
+                key={collection.id}
+                className="carousel-item flex-shrink-0 w-64 sm:w-72 md:w-80 bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden snap-center cursor-pointer group transition-all duration-500 hover:shadow-xl"
+                onClick={() => navigate(`/product/${collection.title}`)}
+              >
+                {/* Image */}
+                <div className="relative w-full h-56 sm:h-48 md:h-56 overflow-hidden rounded-t-2xl">
+                  <img
+                    src={collection.image}
+                    alt={collection.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+
+                {/* Text */}
+                <div className="p-3 md:p-4 text-center">
+                  <h3 className="font-display text-lg md:text-lg font-semibold text-[#8B0000] mb-1 group-hover:text-[#e74c3c] transition-colors duration-300">
+                    {collection.title}
+                  </h3>
+                  <p className="font-body text-sm md:text-base text-gray-700">
+                    {collection.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Hide scrollbar */}
+        <style jsx>{`
+    .carousel-container {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+    .carousel-container::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+  `}</style>
+      </section>
 
 
 
 
       {/* Blossoms By Hues Section */}
       <section className="py-8 bg-gradient-to-b from-[#fff5f2] to-white">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    {/* Section Header */}
-    <div className="text-center mb-10 sm:mb-12 md:mb-16">
-      <h2 className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
-        Blossoms By Hues
-      </h2>
-      <p className="font-body text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
-        Discover the perfect shade to express your emotions
-      </p>
-    </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
+              Celebrate Festivals in Full Color
+            </h2>
+            <p className="font-body text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+              Explore a spectrum of colors that capture every emotion and make your festival moments unforgettable.
+            </p>
 
-    {/* Grid */}
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-      {blossomsByHues.map((blossom) => (
-        <div
-          key={blossom.id}
-          className="group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-500 cursor-pointer"
-          onClick={() => navigate(`/product/${blossom.title}`)}
-        >
-          {/* Image */}
-          <div className="relative h-36 sm:h-40 md:h-64 lg:h-72 overflow-hidden rounded-t-2xl">
-            <img
-              src={blossom.image}
-              alt={blossom.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
           </div>
 
-          {/* Text & Color */}
-          <div className="p-4 sm:p-5 md:p-6 text-center">
-            <div className="inline-block px-3 py-1 bg-[#8B0000]/90 backdrop-blur-sm border border-[#8B0000]/30 rounded-full mb-2">
-              <span className="text-xs sm:text-sm text-white font-semibold uppercase tracking-wide">
-                {blossom.color}
-              </span>
+          {/* Carousel */}
+          {/* Carousel */}
+          <div className="flex justify-center">
+            <div className="overflow-x-auto flex gap-4 md:gap-5 scroll-smooth snap-x snap-mandatory hide-scrollbar py-2">
+              {festivalCollection.map((blossom) => (
+                <div
+                  key={blossom.id}
+                  className="flex-shrink-0 w-48 sm:w-52 md:w-60 lg:w-64 snap-center group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-500 cursor-pointer"
+                  onClick={() => navigate(`/product/${blossom.title}`)}
+                >
+                  {/* Image */}
+                  <div className="relative h-36 sm:h-40 md:h-48 lg:h-56 overflow-hidden rounded-t-2xl">
+                    <img
+                      src={blossom.image}
+                      alt={blossom.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+
+                  {/* Text & Color */}
+                  <div className="p-3 sm:p-4 md:p-5 text-center">
+                    <div className="inline-block px-3 py-1 bg-[#8B0000]/90 backdrop-blur-sm border border-[#8B0000]/30 rounded-full mb-2">
+                      <span className="text-xs sm:text-sm text-white font-semibold uppercase tracking-wide">
+                        {blossom.title}
+                      </span>
+                    </div>
+                    <h3 className="font-display text-sm sm:text-base md:text-sm font-small text-gray-400">
+                      {blossom.description}
+                    </h3>
+                  </div>
+                </div>
+              ))}
             </div>
-            <h3 className="font-display text-sm sm:text-base md:text-lg font-medium text-gray-800">
-              {blossom.title}
-            </h3>
           </div>
+
         </div>
-      ))}
-    </div>
-  </div>
-</section>
 
+        {/* Hide scrollbar styles */}
+        <style jsx>{`
+    .hide-scrollbar {
+      -ms-overflow-style: none; /* IE & Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+  `}</style>
+      </section>
 
-      {/* Shop by Flower Type Section */}
-      <section className="py-8 sm:py-8 md:py-8 lg:py-8 bg-primary-white">
+      <section className="py-16 bg-gradient-to-b from-[#fff5f2] to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-light text-black-charcoal mb-4">
-              Shop by Flower Type
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-serif text-[#8B0000] mb-3">
+              Why Choose Us
             </h2>
-            <p className="font-body text-grey-700 text-base md:text-lg max-w-2xl mx-auto">
-              Each flower tells a unique story
+            <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+              We make every occasion special with our flowers, cakes, and gifts.
             </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {shopByFlower.map((flower) => (
-              <div
-                key={flower.id}
-                className="group relative overflow-hidden bg-primary-white border border-grey-200 shadow-soft hover:shadow-elegant transition-all duration-500 cursor-pointer rounded-xl"
-              >
-                <div className="relative h-40 sm:h-48 md:h-96 overflow-hidden" onClick={() => navigate(`/product/${flower.title}`)}>
-                  <img
-                    src={flower.image}
-                    alt={flower.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6 lg:p-8">
-                    <h3 className="font-display text-sm sm:text-base md:text-2xl lg:text-3xl font-light text-primary-white mb-2 md:mb-4 tracking-tight">
-                      {flower.title}
-                    </h3>
-                    <div className="flex items-center text-primary-white gap-1 md:group-hover:gap-2 transition-all duration-300">
-                      <span className="font-body text-[10px] sm:text-xs uppercase tracking-wider font-light">Shop Now</span>
-                      <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:opacity-0 md:group-hover:opacity-100 md:transform md:-translate-x-2 md:group-hover:translate-x-0 transition-all duration-300" strokeWidth={2} />
+
+          {/* USP Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            {/* USP 1 */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
+              <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
+                <GiFlowerPot className="w-12 h-12" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-800 mb-2">Fresh & Premium Flowers</h3>
+              <p className="text-gray-500 text-sm">Handpicked blooms delivered fresh to your doorstep.</p>
+            </div>
+
+            {/* USP 2 */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
+              <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
+                <GiCakeSlice className="w-12 h-12" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-800 mb-2">Delicious Custom Cakes</h3>
+              <p className="text-gray-500 text-sm">Bespoke cakes baked with love for every occasion.</p>
+            </div>
+
+            {/* USP 3 */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
+              <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
+                <FiGift className="w-12 h-12" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-800 mb-2">Thoughtful Gift Selection</h3>
+              <p className="text-gray-500 text-sm">Curated gifts to make every celebration memorable.</p>
+            </div>
+
+            {/* USP 4 */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
+              <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
+                <FiTruck className="w-12 h-12" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-800 mb-2">Fast & Reliable Delivery</h3>
+              <p className="text-gray-500 text-sm">We make sure your surprises reach on time, every time.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-8 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
+              Shop by Combo Type
+            </h2>
+            <p className="font-body text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+              Each Combo tells a unique story
+            </p>
+          </div>
+
+          {/* Carousel */}
+          {/* Carousel */}
+          <div className="flex justify-center">
+            <div className="overflow-x-auto flex gap-4 md:gap-5 scroll-smooth snap-x snap-mandatory hide-scrollbar py-2">
+              {shopByCombo.map((blossom) => (
+                <div
+                  key={blossom.id}
+                  className="flex-shrink-0 w-48 sm:w-52 md:w-60 lg:w-64 snap-center group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-500 cursor-pointer"
+                  onClick={() => navigate(`/product/${blossom.title}`)}
+                >
+                  {/* Image */}
+                  <div className="relative h-36 sm:h-40 md:h-48 lg:h-56 overflow-hidden rounded-t-2xl">
+                    <img
+                      src={blossom.image}
+                      alt={blossom.title}
+                      title={blossom.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+
+                  {/* Text & Color */}
+                  <div className="p-3 sm:p-4 md:p-5 text-center">
+                    <div className="inline-block px-2 py-0.5 bg-[#8B0000]/80 backdrop-blur-sm border border-[#8B0000]/20 rounded-full mb-1 transition-all duration-300 hover:bg-[#8B0000]/100">
+                      <span className="text-[10px] sm:text-xs text-white font-medium uppercase tracking-wider">
+                        {blossom.title}
+                      </span>
                     </div>
+
+
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* Hide scrollbar styles */}
+        <style jsx>{`
+    .hide-scrollbar {
+      -ms-overflow-style: none; /* IE & Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+  `}</style>
+      </section>
+
+
+      <section className="py-16 bg-gradient-to-b from-[#fff5f2] to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-serif text-[#8B0000] mb-4">
+              Who We Are
+            </h2>
+            <p className="text-gray-600 text-base md:text-lg max-w-3xl mx-auto">
+              At Redheart, gifting is more than just exchanging products — it’s about expressing emotions, celebrating relationships, and creating unforgettable memories. Every bouquet, cake, plant, and gift hamper is crafted with care, creativity, and a touch of love.
+            </p>
+          </div>
+
+          {/* Offerings / Features */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-10">
+            {/* Flowers */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
+              <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
+                🌹
               </div>
-            ))}
+              <h3 className="text-lg md:text-xl font-medium text-gray-800 mb-2">Flowers for Every Emotion</h3>
+              <p className="text-gray-500 text-sm md:text-base">
+                From roses to exotic blooms, we have a flower for every mood and moment.
+              </p>
+            </div>
+
+            {/* Cakes */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
+              <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
+                🍰
+              </div>
+              <h3 className="text-lg md:text-xl font-medium text-gray-800 mb-2">Cakes for Every Celebration</h3>
+              <p className="text-gray-500 text-sm md:text-base">
+                Customisable cakes in various flavours and designs to make every occasion sweeter.
+              </p>
+            </div>
+
+            {/* Gifts & Plants */}
+            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
+              <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
+                🎁
+              </div>
+              <h3 className="text-lg md:text-xl font-medium text-gray-800 mb-2">Plants & Personalised Gifts</h3>
+              <p className="text-gray-500 text-sm md:text-base">
+                Air-purifying plants, succulents, and curated gift hampers to make moments memorable.
+              </p>
+            </div>
+          </div>
+
+          {/* Call to Action / Promise */}
+          <div className="mt-12 text-center">
+            <p className="text-gray-700 text-lg md:text-xl max-w-2xl mx-auto">
+              At Redheart, every gift is a promise — a promise to deliver happiness with heart, on time, every time.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Floral Assortments Section */}
-      <section className="py-8 sm:py-12 md:py-24 lg:py-32 bg-red-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-light text-black-charcoal mb-4">
-              Floral Assortments
-            </h2>
-            <p className="font-body text-grey-700 text-base md:text-lg max-w-2xl mx-auto">
-              Perfect combinations for every occasion
-            </p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {floralAssortments.map((item) => (
-              <div
-                key={item.id}
-                className="group relative overflow-hidden bg-primary-white border border-grey-200 shadow-soft hover:shadow-elegant transition-all duration-500 cursor-pointer rounded-xl"
-              >
-                <div className="relative h-40 sm:h-48 md:h-80 overflow-hidden" onClick={() => navigate(`/product/${item.title}`)}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-                <div className="p-3 sm:p-4 md:p-6 lg:p-8 border-t border-grey-100">
-                  <h3 className="font-display text-sm sm:text-base md:text-xl lg:text-2xl font-light text-black-charcoal mb-2 md:mb-3 group-hover:text-accent-rose-600 transition-colors duration-300 tracking-tight">
-                    {item.title}
-                  </h3>
-                  <p className="font-body text-xs sm:text-sm text-grey-600 mb-3 md:mb-5 font-light leading-relaxed">{item.description}</p>
-                  <div className="flex items-center text-accent-rose-600 gap-1 md:group-hover:gap-2 transition-all duration-300">
-                    <span className="font-body text-[10px] sm:text-xs uppercase tracking-wider font-light">Explore</span>
-                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:opacity-0 md:group-hover:opacity-100 md:transform md:-translate-x-2 md:group-hover:translate-x-0 transition-all duration-300" strokeWidth={2} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Occasions Section */}
-      <section id="occasions" className="py-8 sm:py-8 md:py-8 lg:py-8 bg-primary-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-light text-black-charcoal mb-4">
-              Perfect for Every Occasion
-            </h2>
-            <p className="font-body text-grey-700 text-base md:text-lg max-w-2xl mx-auto">
-              Thoughtful arrangements for life's special moments
-            </p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {occasions.map((occasion) => (
-              <div
-                key={occasion.id}
-                className="group relative overflow-hidden bg-primary-white border border-grey-200 shadow-soft hover:shadow-elegant transition-all duration-500 cursor-pointer rounded-xl"
-              >
-                <div className="relative h-40 sm:h-48 md:h-96 overflow-hidden" onClick={() => navigate(`/product/${occasion.title}`)}>
-                  <img
-                    src={occasion.image}
-                    alt={occasion.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6 lg:p-8">
-                    <h3 className="font-display text-sm sm:text-base md:text-2xl lg:text-3xl font-light text-primary-white mb-2 md:mb-4 tracking-tight">
-                      {occasion.title}
-                    </h3>
-                    <div className="flex items-center text-primary-white gap-1 md:group-hover:gap-2 transition-all duration-300">
-                      <span className="font-body text-[10px] sm:text-xs uppercase tracking-wider font-light">Shop Now</span>
-                      <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:opacity-0 md:group-hover:opacity-100 md:transform md:-translate-x-2 md:group-hover:translate-x-0 transition-all duration-300" strokeWidth={2} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="py-20 md:py-28 lg:py-32 bg-gradient-to-br from-accent-rose-50/50 via-accent-pink-50/30 to-grey-50/50 border-t border-grey-200">

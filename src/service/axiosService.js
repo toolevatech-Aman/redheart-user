@@ -3,7 +3,7 @@ import * as localStorageService from "./localStorageService";
 import { LocalStorageKeys } from "../constants/localStorageKeys";
 
 const apiClient = axios.create({
-  baseURL: "https://backend.redheart.in/api",
+  baseURL: "http://localhost:8000/api",
   timeout: 20000,
   headers: {
     "Content-Type": "application/json",
@@ -12,7 +12,8 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorageService.getValue(LocalStorageKeys.AuthToken);
+    const token = localStorage.getItem("authToken");
+    console.log("Auth Token:", token);
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },

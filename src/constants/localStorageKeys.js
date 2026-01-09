@@ -1,5 +1,5 @@
 export const LocalStorageKeys = {
-  AuthToken: "auth_token",
+  AuthToken: "authToken",
   RefreshToken: "refresh_token",
   User: "user",
 };
