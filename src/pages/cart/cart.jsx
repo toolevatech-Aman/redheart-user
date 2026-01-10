@@ -16,13 +16,14 @@ import {
   Award
 } from "lucide-react";
 import { message } from "../../comman/toaster-message/toasterMessage";
+import { DeliveryModal } from "./deliverySlot";
 
 const Cart = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [isDeliveryModalOpen, setIsDeliveryModalOpen] = React.useState(false);
   // Load cart from localStorage
   useEffect(() => {
     const loadCart = () => {
@@ -475,7 +476,8 @@ const Cart = () => {
                   const checkoutItems = cartItems.filter((_, i) => selectedItems.includes(i));
                   localStorage.setItem("cart", JSON.stringify(checkoutItems));
                   window.dispatchEvent(new CustomEvent("cartCountUpdated"));
-                  navigate("/checkout");
+                  // navigate("/checkout");
+                  setIsDeliveryModalOpen(true)
                 }}
                 disabled={selectedItems.length === 0}
                 className="w-full px-4 py-3 sm:py-3.5 bg-accent-rose-600 hover:bg-accent-rose-700 disabled:bg-grey-300 disabled:cursor-not-allowed text-primary-white font-body text-sm font-light tracking-wide rounded-full transition-colors duration-300 shadow-soft hover:shadow-elegant mb-4 sm:mb-5"
@@ -502,6 +504,7 @@ const Cart = () => {
           </div>
         </div>
       </div>
+        <DeliveryModal isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} />
     </div>
   );
 };

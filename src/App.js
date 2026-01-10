@@ -6,6 +6,7 @@ import Router from './router';
 import ScrollToTop from "./ScrollToTop";
 import CookieBanner from './cookiesBanner';
 import WhatsAppWeget from './whatsappWidget';
+import ToastContainer from './comman/toaster-message/toasterMessage';
 
 function AppContent() {
 
@@ -24,6 +25,7 @@ function App() {
         <AxiosInterceptorProvider>
           <WhatsAppWeget/>
         <CookieBanner/>
+        <ToastContainer />
           <AppContent />
    
         </AxiosInterceptorProvider>
