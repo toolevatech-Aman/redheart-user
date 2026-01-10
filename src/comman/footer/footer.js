@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Heart, Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import logo from "../../assets/redHeartLogoo.png";
+import { getPageContentApi } from "../../service/pageContent";
 
 const Footer = () => {
+  const [overlayHtml, setOverlayHtml] = useState("");
   const currentYear = new Date().getFullYear();
+const currentPage = window.location.pathname.split("/").filter(Boolean).pop();
 
+console.log(currentPage, "currentPage");
+  useEffect(() => {
+    const fetchContent = async () => {
+
+      try {
+        const result = await getPageContentApi(currentPage || "home");
+        setOverlayHtml(result.htmlCode);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchContent();
+  }, [currentPage]);
   const quickLinks = [
     { name: "About Us", path: "/about" },
     { name: "Contact Us", path: "/contact" },
@@ -35,6 +52,14 @@ const Footer = () => {
   ];
 
   return (
+     <div className="relative">
+    {/* HTML Overlay */}
+    {overlayHtml && (
+      <div
+        className=" w-full z-50"
+        dangerouslySetInnerHTML={{ __html: overlayHtml }}
+      />
+    )}
     <footer className="bg-black-soft text-primary-white border-t border-grey-800">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
@@ -193,6 +218,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </div>
   );
 };
 

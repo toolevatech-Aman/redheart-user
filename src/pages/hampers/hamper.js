@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getHamperProduct } from "../../service/addOnHamper";
 
-const steps = ["Flowers", "Cakes", "Chocolate", "Plants"];
+const steps = ["Flowers", "Cakes", "Chocolate", "Plants","Gifts"];
 
 const HamperBuilder = () => {
   const [stepIndex, setStepIndex] = useState(0);

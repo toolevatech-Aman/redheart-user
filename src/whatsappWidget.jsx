@@ -13,8 +13,8 @@ const WhatsAppWeget = () => {
             position="right"
             widgetWidth="300px"
             widgetWidthMobile="260px"
-            autoOpen={true}
-            autoOpenTimer={5000}
+            autoOpen={false}
+            autoOpenTimer={false}
             messageBox={true}
             messageBoxTxt="Hi there! I’d love to know what fresh flowers or bouquets are available today 🌷"
             iconSize="50"

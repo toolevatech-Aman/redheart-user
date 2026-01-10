@@ -8,23 +8,34 @@ const deliveryOptions = [
     price: 199,
     slots: ["7:00 AM - 9:00 AM"],
     note: "Delivered anytime in the selected time slot.",
-    checkAvailability: (now) => ({
-      available: now.getHours() < 20,
-      nextAvailable: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 7, 0),
-    }),
+    checkAvailability: (now) => {
+      const available = now.getHours() < 20;
+      const nextAvailable = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + (available ? 0 : 1),
+        7,
+        0
+      );
+      return { available, nextAvailable };
+    },
   },
   {
     title: "30-60 Minutes Delivery",
     price: 69,
     slots: ["30-60 Minutes from order"],
     note: "Delivered quickly within the selected slot.",
-    checkAvailability: (now) => ({
-      available: now.getHours() >= 9 && now.getHours() < 19,
-      nextAvailable:
-        now.getHours() < 9
-          ? new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0)
-          : new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 9, 0),
-    }),
+    checkAvailability: (now) => {
+      const available = now.getHours() >= 9 && now.getHours() < 19;
+      const nextAvailable = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + (now.getHours() >= 19 ? 1 : 0),
+        9,
+        0
+      );
+      return { available, nextAvailable };
+    },
   },
   {
     title: "Standard Delivery",
@@ -32,11 +43,12 @@ const deliveryOptions = [
     slots: ["9:00 - 13:00", "12:00 - 15:00", "15:00 - 18:00", "18:00 - 21:00", "20:00 - 22:00"],
     note: "Delivered anytime within the selected slot.",
     checkAvailability: (now, slot) => {
+      const startHour = parseInt(slot.split(" - ")[0]);
       const endHour = parseInt(slot.split(" - ")[1].split(":")[0]);
       const available = now.getHours() < endHour;
       const nextAvailable = available
-        ? null
-        : new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, parseInt(slot.split(" - ")[0]), 0);
+        ? now
+        : new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, startHour, 0);
       return { available, nextAvailable };
     },
   },
@@ -44,17 +56,18 @@ const deliveryOptions = [
     title: "Fixed Time Delivery",
     price: 199,
     slots: [
-      "10:00 - 11:00","11:00 - 12:00","12:00 - 13:00","13:00 - 14:00",
-      "14:00 - 15:00","15:00 - 16:00","16:00 - 17:00","17:00 - 18:00",
-      "18:00 - 19:00","19:00 - 20:00","20:00 - 21:00","21:00 - 22:00","22:00 - 23:00",
+      "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00", "13:00 - 14:00",
+      "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00", "17:00 - 18:00",
+      "18:00 - 19:00", "19:00 - 20:00", "20:00 - 21:00", "21:00 - 22:00", "22:00 - 23:00",
     ],
     note: "Delivered at the exact selected time.",
     checkAvailability: (now, slot) => {
+      const startHour = parseInt(slot.split(" - ")[0]);
       const endHour = parseInt(slot.split(" - ")[1].split(":")[0]);
       const available = now.getHours() < endHour;
       const nextAvailable = available
-        ? null
-        : new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 10, 0);
+        ? now
+        : new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, startHour, 0);
       return { available, nextAvailable };
     },
   },
@@ -63,10 +76,11 @@ const deliveryOptions = [
     price: 249,
     slots: ["23:00 - 00:00"],
     note: "Delivered in the midnight slot.",
-    checkAvailability: (now) => ({
-      available: now.getHours() < 21,
-      nextAvailable: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 0),
-    }),
+    checkAvailability: (now) => {
+      const available = now.getHours() < 21;
+      const nextAvailable = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 0);
+      return { available, nextAvailable };
+    },
   },
 ];
 
@@ -87,28 +101,37 @@ export const DeliveryModal = ({ isOpen, onClose }) => {
     const updatedOptions = deliveryOptions.map((opt) => {
       const slotsWithStatus = opt.slots.map((slot) => {
         const { available, nextAvailable } = opt.checkAvailability(now, slot);
-        return { slot, available, nextAvailable };
+        const displaySlot = available
+  ? slot
+  : `${slot} (Next: ${nextAvailable.toLocaleString()})`;
+
+        return {
+          slot: displaySlot,
+          available,
+          originalSlot: slot,
+          nextAvailable,
+        };
       });
-      const anyAvailable = slotsWithStatus.some((s) => s.available);
-      return { ...opt, slotsWithStatus, available: anyAvailable };
+      return { ...opt, slotsWithStatus };
     });
     setOptionsWithStatus(updatedOptions);
   }, [isOpen]);
 
- const handleProceed = () => {
-  if (selectedOption && selectedSlot) {
-    navigate("/checkout", {
-      state: {
-        deliveryOption: {
-          title: selectedOption.title,
-          price: selectedOption.price,
+  const handleProceed = () => {
+    if (selectedOption && selectedSlot) {
+      const selectedDateTime = selectedSlot.nextAvailable || new Date();
+      navigate("/checkout", {
+        state: {
+          deliveryOption: {
+            title: selectedOption.title,
+            price: selectedOption.price,
+          },
+          slot: selectedSlot.originalSlot,
+          date: selectedDateTime,
         },
-        slot: selectedSlot,
-      },
-    });
-  }
-};
-
+      });
+    }
+  };
 
   return (
     <>
@@ -138,19 +161,20 @@ export const DeliveryModal = ({ isOpen, onClose }) => {
               <div
                 key={idx}
                 className={`border rounded-2xl p-4 transition-all ${
-                  option.available ? "bg-white hover:shadow-xl cursor-pointer" : "bg-gray-100 opacity-70"
+                  option.slotsWithStatus.some((s) => s.available)
+                    ? "bg-white hover:shadow-xl cursor-pointer"
+                    : "bg-gray-100 opacity-70"
                 }`}
               >
                 <div
-                  className="flex justify-between items-center mb-3"
-                  onClick={() => option.available && setSelectedOption(option) && setSelectedSlot(null)}
+                  className="flex justify-between items-center mb-3 cursor-pointer"
+                  onClick={() => {
+                    setSelectedOption(option);
+                    setSelectedSlot(null);
+                  }}
                 >
-                  <h3 className={`text-lg font-semibold ${option.available ? "text-gray-800" : "text-gray-400"}`}>
-                    {option.title}
-                  </h3>
-                  <span className={`font-bold ${option.available ? "text-red-600" : "text-gray-400"}`}>
-                    {formatCurrency(option.price)}
-                  </span>
+                  <h3 className="text-lg font-semibold text-gray-800">{option.title}</h3>
+                  <span className="font-bold text-red-600">{formatCurrency(option.price)}</span>
                 </div>
 
                 <p className="text-gray-500 text-sm mb-2">{option.note}</p>
@@ -160,29 +184,17 @@ export const DeliveryModal = ({ isOpen, onClose }) => {
                     {option.slotsWithStatus.map((slotObj, sidx) => (
                       <button
                         key={sidx}
-                        onClick={() => slotObj.available && setSelectedSlot(slotObj.slot)}
-                        disabled={!slotObj.available}
+                        onClick={() => setSelectedSlot(slotObj)}
                         className={`px-4 py-2 rounded-full border text-sm font-medium transition-all
-                          ${slotObj.available
-                            ? selectedSlot === slotObj.slot
-                              ? "bg-red-600 text-white border-red-600"
-                              : "bg-white text-gray-700 border-gray-300 hover:bg-red-50"
-                            : "bg-gray-200 text-gray-400 border-gray-200 cursor-not-allowed"}
-                        `}
+                          ${selectedSlot?.originalSlot === slotObj.originalSlot
+                            ? "bg-red-600 text-white border-red-600"
+                            : "bg-white text-gray-700 border-gray-300 hover:bg-red-50"
+                          }`}
                       >
                         {slotObj.slot}
                       </button>
                     ))}
                   </div>
-                )}
-
-                {!option.available && (
-                  <p className="text-gray-500 text-xs italic mt-1">
-                    Next available:{" "}
-                    {formatTime(
-                      option.slotsWithStatus.find((s) => s.nextAvailable)?.nextAvailable
-                    )}
-                  </p>
                 )}
               </div>
             ))}

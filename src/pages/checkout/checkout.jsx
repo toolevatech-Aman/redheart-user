@@ -30,6 +30,7 @@ const Checkout = () => {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   console.log(appliedCoupon, "appliedCoupon");
   const [couponDiscount, setCouponDiscount] = useState(0);
+const [orderNote, setOrderNote] = useState('');
 
   // Address management
   const [savedAddresses, setSavedAddresses] = useState([]);
@@ -61,12 +62,19 @@ const Checkout = () => {
   const countries = ["India"];
   const [deliveryOption, setDeliveryOption] = useState(null);
   const [slot, setSlot] = useState(null);
+  const [deliveryDate, setDeliveryDate] = useState(null);
   console.log(deliveryOption, "deliveryOption");
   console.log(slot, "slot");
   // Set initial state from location.state
   useEffect(() => {
     if (location.state && location.state.deliveryOption && location.state.slot) {
       setDeliveryOption(location.state.deliveryOption);
+      const date = new Date(location.state.date); // Convert string to Date
+      const formattedDate = `${String(date.getDate()).padStart(2, "0")}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}-${String(date.getFullYear()).slice(-2)}`;
+      setDeliveryDate(formattedDate)
+
       setSlot(location.state.slot);
     } else {
       // If no data, redirect back to cart
@@ -1048,7 +1056,7 @@ const Checkout = () => {
                       )}
 
                       {/* Slot */}
-                      Time Slot : {slot && <span className="block mt-1 sm:inline sm:mt-0">{slot}</span>}
+                      Delivery Slot : {slot && <span className="block mt-1 sm:inline sm:mt-0">{deliveryDate} {slot}</span>}
                     </div>
                   </div>
 
@@ -1082,6 +1090,20 @@ const Checkout = () => {
                       </span>
                     </div>
                   </div>
+                </div>
+                <div className="mb-4 sm:mb-5">
+                  <label htmlFor="orderNote" className="sr-only">
+                    Order Note
+                  </label>
+                  <textarea
+                    id="orderNote"
+                    name="orderNote"
+                    placeholder="Note"
+                    className="w-full px-4 py-2 text-sm font-light text-gray-700 placeholder-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-rose-500 focus:border-accent-rose-500 transition-colors duration-300"
+                    rows={3}
+                    value={orderNote}
+                    onChange={(e) => setOrderNote(e.target.value)}
+                  />
                 </div>
 
                 <button
