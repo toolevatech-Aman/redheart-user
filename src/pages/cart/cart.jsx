@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  ShoppingBag, 
-  Trash2, 
-  Plus, 
-  Minus, 
+import {
+  ShoppingBag,
+  Trash2,
+  Plus,
+  Minus,
   Check,
   ArrowLeft,
   Package,
@@ -40,7 +40,7 @@ const Cart = () => {
     };
 
     loadCart();
-    
+
     // Listen for storage changes (when cart is updated from other pages)
     const handleStorageChange = (e) => {
       if (e.key === "cart") {
@@ -48,10 +48,10 @@ const Cart = () => {
       }
     };
     window.addEventListener("storage", handleStorageChange);
-    
+
     // Custom event for same-tab updates
     window.addEventListener("cartUpdated", loadCart);
-    
+
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("cartUpdated", loadCart);
@@ -87,12 +87,12 @@ const Cart = () => {
   // Update quantity
   const updateQuantity = (index, newQuantity) => {
     if (newQuantity < 1) return;
-    
+
     const updatedCart = [...cartItems];
     updatedCart[index].quantity = newQuantity;
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-    
+
     // Trigger cart update event
     window.dispatchEvent(new CustomEvent("cartCountUpdated"));
   };
@@ -102,14 +102,14 @@ const Cart = () => {
     const updatedCart = cartItems.filter((_, i) => i !== index);
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-    
+
     // Update selected items indices
     setSelectedItems((prev) => {
       return prev
         .filter((i) => i !== index)
         .map((i) => (i > index ? i - 1 : i));
     });
-    
+
     // Trigger cart update event
     window.dispatchEvent(new CustomEvent("cartCountUpdated"));
   };
@@ -223,7 +223,7 @@ const Cart = () => {
                   className="sr-only"
                 />
                 <div
-                  className={`w-4 h-4 border border-grey-300 rounded transition-all duration-300 flex items-center justify-center Rs {
+                  className={`w-4 h-4 border border-grey-300 rounded transition-all duration-300 flex items-center justify-center Rs{
                     selectedItems.length === cartItems.length && cartItems.length > 0
                       ? "bg-accent-rose-600 border-accent-rose-600"
                       : "bg-primary-white group-hover:border-accent-rose-400"
@@ -262,11 +262,10 @@ const Cart = () => {
                 return (
                   <div
                     key={index}
-                    className={`group bg-primary-white border transition-all duration-300 ${
-                      isSelected
+                    className={`group bg-primary-white border transition-all duration-300 ${isSelected
                         ? "border-accent-rose-600 shadow-soft"
                         : "border-grey-200 hover:border-grey-300"
-                    }`}
+                      }`}
                   >
                     <div className="p-3 sm:p-4 md:p-5">
                       <div className="flex gap-3 sm:gap-4 md:gap-5">
@@ -280,11 +279,10 @@ const Cart = () => {
                               className="sr-only"
                             />
                             <div
-                              className={`w-4 h-4 border transition-all duration-300 flex items-center justify-center ${
-                                isSelected
+                              className={`w-4 h-4 border transition-all duration-300 flex items-center justify-center ${isSelected
                                   ? "bg-accent-rose-600 border-accent-rose-600"
                                   : "border-grey-300 group-hover:border-accent-rose-400 bg-primary-white"
-                              }`}
+                                }`}
                             >
                               {isSelected && (
                                 <Check className="w-3 h-3 text-primary-white" strokeWidth={3} />
@@ -329,32 +327,50 @@ const Cart = () => {
                                   <Trash2 className="w-4 h-4" strokeWidth={2} />
                                 </button>
                               </div>
-                              
+
                               {/* Add-ons */}
                               {item.add_ons && item.add_ons.length > 0 && (
                                 <div className="mb-2">
-                                  <div className="flex flex-wrap gap-1.5">
+                                  <div className="flex flex-wrap gap-2">
                                     {item.add_ons.map((addOn, addOnIndex) => (
-                                      <span
+                                      <div
                                         key={addOnIndex}
-                                        className="inline-block px-2 py-0.5 bg-accent-rose-50 text-accent-rose-700 border border-accent-rose-200 text-xs font-body font-light"
+                                        className="flex items-center gap-2 px-2 py-1 bg-accent-rose-50 border border-accent-rose-200 rounded text-accent-rose-700 text-xs font-light"
                                       >
-                                        {addOn.name}
-                                      </span>
+                                        {/* Add-on Image */}
+                                        {addOn.image_url && (
+                                          <img
+                                            src={addOn.image_url}
+                                            alt={addOn.name}
+                                            className="w-6 h-6 object-cover rounded-full border"
+                                          />
+                                        )}
+
+                                        {/* Add-on Name and Price */}
+                                        <div className="flex flex-col leading-none">
+                                          <span className="font-body">{addOn.name}</span>
+                                          {addOn.selling_price && (
+                                            <span className="text-[10px] text-accent-rose-500">
+                                              ₹{addOn.selling_price.toFixed(2)}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
                                     ))}
                                   </div>
                                 </div>
                               )}
 
+
                               {/* Price */}
                               <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
                                 <span className="font-display text-base sm:text-lg font-light text-black-charcoal">
-                                  Rs {item.selling_price.toFixed(2)}
+                                  Rs{item.selling_price.toFixed(2)}
                                 </span>
                                 {item.original_price > item.selling_price && (
                                   <>
                                     <span className="font-body text-xs text-grey-500 line-through font-light">
-                                      Rs {item.original_price.toFixed(2)}
+                                      Rs{item.original_price.toFixed(2)}
                                     </span>
                                     <span className="px-1.5 py-0.5 bg-accent-rose-100 text-accent-rose-700 text-[10px] font-body font-light">
                                       Save {Math.round(((item.original_price - item.selling_price) / item.original_price) * 100)}%
@@ -386,7 +402,7 @@ const Cart = () => {
                                 <div className="text-right sm:text-left">
                                   <p className="font-body text-[10px] text-grey-500 font-light mb-0.5">Total</p>
                                   <span className="font-display text-base sm:text-lg font-light text-black-charcoal">
-                                    Rs {itemTotal.toFixed(2)}
+                                    Rs{itemTotal.toFixed(2)}
                                   </span>
                                 </div>
                               </div>
@@ -414,7 +430,7 @@ const Cart = () => {
                     Subtotal ({totalItems} {totalItems === 1 ? "item" : "items"})
                   </span>
                   <span className="font-display text-sm sm:text-base font-light text-black-charcoal">
-                    Rs {subtotal.toFixed(2)}
+                    Rs{subtotal.toFixed(2)}
                   </span>
                 </div>
 
@@ -426,7 +442,7 @@ const Cart = () => {
                     {shipping === 0 ? (
                       <span className="text-success">Free</span>
                     ) : (
-                      `Rs ${shipping.toFixed(2)}`
+                      `Rs${shipping.toFixed(2)}`
                     )}
                   </span>
                 </div>
@@ -434,7 +450,7 @@ const Cart = () => {
                 {subtotal > 0 && subtotal < 50 && (
                   <div className="bg-accent-rose-50 border border-accent-rose-200 p-2.5 sm:p-3">
                     <p className="font-body text-xs text-accent-rose-700 font-light">
-                      Add <span className="font-medium">Rs {(50 - subtotal).toFixed(2)}</span> more for free shipping
+                      Add <span className="font-medium">Rs{(50 - subtotal).toFixed(2)}</span> more for free shipping
                     </p>
                   </div>
                 )}
@@ -443,7 +459,7 @@ const Cart = () => {
                   <div className="flex justify-between items-center">
                     <span className="font-display text-base sm:text-lg font-light text-black-charcoal">Total</span>
                     <span className="font-display text-xl sm:text-2xl font-light text-black-charcoal">
-                      Rs {total.toFixed(2)}
+                      Rs{total.toFixed(2)}
                     </span>
                   </div>
                 </div>

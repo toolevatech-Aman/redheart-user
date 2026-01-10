@@ -5,6 +5,63 @@ import RecentlyViewed from "./RecentlyViewed";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
 import { message } from "../../comman/toaster-message/toasterMessage";
+import { getAddOnProductExcept } from "../../service/addOnHamper";
+import AddOnModal from "./addOnModal";
+import { FaShippingFast, FaLeaf, FaLock, FaGift, FaHeart } from "react-icons/fa";
+const ProductUSPs = () => {
+  const usps = [
+    {
+      icon: <FaShippingFast className="text-red-600 text-xl" />,
+      title: "Fast Delivery",
+      desc: "Same-day & scheduled delivery available",
+    },
+    {
+      icon: <FaLeaf className="text-green-600 text-xl" />,
+      title: "Freshness Guaranteed",
+      desc: "Handpicked & quality-checked products",
+    },
+    {
+      icon: <FaGift className="text-pink-600 text-xl" />,
+      title: "Free Message Card",
+      desc: "Add a personalized note with every gift",
+    },
+    {
+      icon: <FaLock className="text-purple-600 text-xl" />,
+      title: "Secure Payments",
+      desc: "100% safe & encrypted checkout",
+    },
+    {
+      icon: <FaHeart className="text-red-500 text-xl" />,
+      title: "Loved by Thousands",
+      desc: "Trusted gifting brand across India",
+    },
+  ];
+
+  return (
+    <div className="mt-6 rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
+      <h3 className="text-sm font-semibold mb-4 text-neutral-900">
+        Why Choose Us
+      </h3>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {usps.map((usp, index) => (
+          <div
+            key={index}
+            className="flex items-start gap-3 bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition"
+          >
+            <div className="flex-shrink-0">{usp.icon}</div>
+            <div>
+              <p className="text-sm font-semibold text-neutral-900">
+                {usp.title}
+              </p>
+              <p className="text-xs text-neutral-600">{usp.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 const Accordion = ({ title, children, initialOpen = false }) => {
   const [open, setOpen] = useState(initialOpen);
 
@@ -28,8 +85,13 @@ const ProductDescriptionPage = () => {
   const location = useLocation();
   const { id } = location.state || {};
   const [open, setOpen] = useState(false);
-
+  const [addOnOpen, setAddOnOpen] = useState(false);
+  const [addOnData, setAddOnData] = useState([]);
+  console.log("AddOn Data", addOnData);
   const [product, setProduct] = useState(null);
+  const [lastCartProductId, setLastCartProductId] = useState(null);
+
+  console.log((product));
   const [loading, setLoading] = useState(true);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedAddOns, setSelectedAddOns] = useState([]);
@@ -54,7 +116,10 @@ const ProductDescriptionPage = () => {
         : [...prev, addon]
     );
   };
-
+  const getAddon = async (category) => {
+    const res = await getAddOnProductExcept(category);
+    setAddOnData(res);
+  }
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -70,11 +135,12 @@ const ProductDescriptionPage = () => {
   // Determine prices
   const displayOriginal = selectedVariant?.original_price || product.original_price;
   const displaySelling = selectedVariant?.selling_price || product.selling_price;
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!product) return;
 
     const cartItem = {
-      _id: selectedVariant?._id || product._id,
+      productId: selectedVariant?._id || product.product_id,
+      _id: product._id,
       name: product.name,
       variant_name: selectedVariant?.variant_name || "",
       image_url: selectedVariant?.image_url || product.media.primary_image_url,
@@ -86,12 +152,33 @@ const ProductDescriptionPage = () => {
         name: a.name,
         selling_price: a.selling_price,
         quantity: 1,
+        image_url: a.image_url || "",
       })),
     };
 
     dispatch(addToCart(cartItem));
 
     message.success("Added to cart!");
+    setLastCartProductId(cartItem.productId);
+    await getAddon(product.categorization.category_name);
+    setAddOnOpen(true);
+  };
+  const appendAddOnsToCart = (newAddOns) => {
+    if (!lastCartProductId || newAddOns.length === 0) return;
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const updatedCart = cart.map((item) => {
+      if (item.productId === lastCartProductId) {
+        return {
+          ...item,
+          add_ons: [...(item.add_ons || []), ...newAddOns],
+        };
+      }
+      return item;
+    });
+
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   return (
@@ -349,7 +436,7 @@ const ProductDescriptionPage = () => {
             </div>
           </div>
 
-
+          <ProductUSPs />
 
           {/* CTA */}
           <div className="pt-6 flex gap-4">
@@ -363,6 +450,18 @@ const ProductDescriptionPage = () => {
 
         </div>
       </div>
+      {addOnOpen && (
+        <AddOnModal
+          isOpen={addOnOpen}
+          onClose={() => setAddOnOpen(false)}
+          addOnData={addOnData}
+          onProceed={(newAddOns) => {
+            appendAddOnsToCart(newAddOns);
+            setAddOnOpen(false);
+          }}
+        />
+      )}
+
       <RecentlyViewed />
     </div>
   );

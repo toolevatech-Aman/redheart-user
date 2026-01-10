@@ -18,6 +18,7 @@ import {
   ChevronDown,
   ChevronUp
 } from "lucide-react";
+import { GetUser, UpdateUser } from "../../service/user";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const Checkout = () => {
 
   // Address management
   const [savedAddresses, setSavedAddresses] = useState([]);
+  console.log("Saved Addresses:", savedAddresses);
   const [billingAddressType, setBillingAddressType] = useState("manual"); // "saved" or "manual"
   const [shippingAddressType, setShippingAddressType] = useState("manual"); // "saved" or "manual"
   const [selectedBillingAddress, setSelectedBillingAddress] = useState(null);
@@ -49,8 +51,8 @@ const Checkout = () => {
   const [showBillingCountryDropdown, setShowBillingCountryDropdown] = useState(false);
   const [showShippingCountryDropdown, setShowShippingCountryDropdown] = useState(false);
   const [showModalCountryDropdown, setShowModalCountryDropdown] = useState(false);
-
-  const countries = ["United States", "Canada", "United Kingdom", "Australia", "India", "Germany", "France", "Italy", "Spain", "Japan"];
+  const [user, setUser] = useState(null);
+  const countries = ["India"];
 
   // Form states
   const [billingInfo, setBillingInfo] = useState({
@@ -58,15 +60,15 @@ const Checkout = () => {
     lastName: "",
     email: "",
     phone: "",
-    address: "",
+    street: "",
     city: "",
     state: "",
     zipCode: "",
-    country: "United States",
+    country: "India",
     addressType: "home"
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentMethod, setPaymentMethod] = useState("cod");
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
     cardName: "",
@@ -89,18 +91,16 @@ const Checkout = () => {
       try {
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
         setCartItems(cart);
-        const addresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
-        setSavedAddresses(addresses);
         setIsLoading(false);
       } catch (error) {
         console.error("Error loading data:", error);
         setCartItems([]);
-        setSavedAddresses([]);
         setIsLoading(false);
       }
     };
 
     loadData();
+    fetchUser()
   }, []);
 
   // Close dropdowns when clicking outside
@@ -116,29 +116,40 @@ const Checkout = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  // Save addresses to localStorage
-  const saveAddressesToStorage = (addresses) => {
-    localStorage.setItem("savedAddresses", JSON.stringify(addresses));
-    setSavedAddresses(addresses);
+  const fetchUser = async () => {
+    try {
+      const res = await GetUser();
+      setUser(res.user);
+      setSavedAddresses(res.user.addresses || []);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // Add new address
-  const handleAddAddress = () => {
-    if (!billingInfo.firstName || !billingInfo.lastName || !billingInfo.address || 
-        !billingInfo.city || !billingInfo.zipCode) {
+  const handleAddAddress = async () => {
+    if (!billingInfo.firstName || !billingInfo.lastName || !billingInfo.street ||
+      !billingInfo.city || !billingInfo.zipCode) {
       alert("Please fill in all required fields");
       return;
     }
 
-    const newAddress = {
-      id: Date.now().toString(),
-      ...billingInfo,
-      label: `${billingInfo.firstName} ${billingInfo.lastName} - ${billingInfo.addressType === "home" ? "Home" : "Work"}`
+    const payload = {
+      label: billingInfo.addressType,     // "home"
+      street: billingInfo.street,
+      city: billingInfo.city,
+      state: billingInfo.state,
+      postalCode: billingInfo.zipCode,
+      country: billingInfo.country,       // "India"
+      isDefault: false,
+      phone: billingInfo.phone
     };
 
-    const updatedAddresses = [...savedAddresses, newAddress];
-    saveAddressesToStorage(updatedAddresses);
+    const res = await UpdateUser({ addresses: [payload] });
+
+    if(res.success){
+     await fetchUser();
+    }
     setShowAddAddressModal(false);
     setBillingInfo({
       firstName: "",
@@ -171,7 +182,7 @@ const Checkout = () => {
         : addr
     );
 
-    saveAddressesToStorage(updatedAddresses);
+
     setShowAddAddressModal(false);
     setEditingAddress(null);
     setBillingInfo({
@@ -192,7 +203,7 @@ const Checkout = () => {
   const handleDeleteAddress = (id) => {
     if (window.confirm("Are you sure you want to delete this address?")) {
       const updatedAddresses = savedAddresses.filter(addr => addr.id !== id);
-      saveAddressesToStorage(updatedAddresses);
+
       if (selectedBillingAddress?.id === id) {
         setSelectedBillingAddress(null);
         setBillingAddressType("manual");
@@ -241,7 +252,7 @@ const Checkout = () => {
   // Apply coupon
   const handleApplyCoupon = () => {
     if (couponCode.trim() === "") return;
-    
+
     const coupons = {
       "SAVE10": { discount: 10, type: "percentage" },
       "FLOWER20": { discount: 20, type: "percentage" },
@@ -307,14 +318,14 @@ const Checkout = () => {
   // Handle place order
   const handlePlaceOrder = (e) => {
     e.preventDefault();
-    
+
     // Validate billing
     if (billingAddressType === "saved" && !selectedBillingAddress) {
       alert("Please select a saved billing address");
       return;
     }
-    if (billingAddressType === "manual" && (!billingInfo.firstName || !billingInfo.lastName || !billingInfo.email || 
-        !billingInfo.address || !billingInfo.city || !billingInfo.zipCode)) {
+    if (billingAddressType === "manual" && (!billingInfo.firstName || !billingInfo.lastName || !billingInfo.email ||
+      !billingInfo.address || !billingInfo.city || !billingInfo.zipCode)) {
       alert("Please fill in all required billing fields");
       return;
     }
@@ -325,16 +336,16 @@ const Checkout = () => {
         alert("Please select a saved shipping address");
         return;
       }
-      if (shippingAddressType === "manual" && (!shippingAddress.address || 
-          !shippingAddress.city || !shippingAddress.zipCode)) {
+      if (shippingAddressType === "manual" && (!shippingAddress.address ||
+        !shippingAddress.city || !shippingAddress.zipCode)) {
         alert("Please fill in shipping address");
         return;
       }
     }
 
     // Validate payment
-    if (paymentMethod === "card" && (!cardInfo.cardNumber || !cardInfo.cardName || 
-        !cardInfo.expiryDate || !cardInfo.cvv)) {
+    if (paymentMethod === "card" && (!cardInfo.cardNumber || !cardInfo.cardName ||
+      !cardInfo.expiryDate || !cardInfo.cvv)) {
       alert("Please fill in all card details");
       return;
     }
@@ -441,48 +452,67 @@ const Checkout = () => {
                 {openSections.products && (
                   <div className="px-4 sm:px-5 md:px-6 pb-4 sm:pb-5 md:pb-6">
                     <div className="space-y-3 sm:space-y-4">
-                  {cartItems.map((item, index) => {
-                    const itemTotal = calculateItemTotal(item);
-                    return (
-                      <div key={index} className="flex gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-grey-200 last:border-0 last:pb-0">
-                        <div className="flex-shrink-0">
-                          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 overflow-hidden bg-grey-100 border border-grey-200">
-                            <img
-                              src={item.image_url || "https://via.placeholder.com/200x200/F5F5F5/E0E0E0?text=Product"}
-                              alt={item.name}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.target.src = "https://via.placeholder.com/200x200/F5F5F5/E0E0E0?text=Product";
-                              }}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-display text-sm sm:text-base font-light text-black-charcoal mb-1 tracking-tight truncate">
-                            {item.name}
-                          </h3>
-                          <p className="font-body text-xs sm:text-sm text-grey-600 font-light mb-1">
-                            {item.variant_name} × {item.quantity}
-                          </p>
-                          {item.add_ons && item.add_ons.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mb-2">
-                              {item.add_ons.map((addOn, addOnIndex) => (
-                                <span
-                                  key={addOnIndex}
-                                  className="inline-block px-2 py-0.5 bg-accent-rose-50 text-accent-rose-700 border border-accent-rose-200 text-[10px] sm:text-xs font-body font-light"
-                                >
-                                  {addOn.name}
-                                </span>
-                              ))}
+                      {cartItems.map((item, index) => {
+                        const itemTotal = calculateItemTotal(item);
+                        return (
+                          <div key={index} className="flex gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-grey-200 last:border-0 last:pb-0">
+                            <div className="flex-shrink-0">
+                              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 overflow-hidden bg-grey-100 border border-grey-200">
+                                <img
+                                  src={item.image_url || "https://via.placeholder.com/200x200/F5F5F5/E0E0E0?text=Product"}
+                                  alt={item.name}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.target.src = "https://via.placeholder.com/200x200/F5F5F5/E0E0E0?text=Product";
+                                  }}
+                                />
+                              </div>
                             </div>
-                          )}
-                          <p className="font-display text-sm sm:text-base font-light text-black-charcoal">
-                            ${itemTotal.toFixed(2)}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-display text-sm sm:text-base font-light text-black-charcoal mb-1 tracking-tight truncate">
+                                {item.name}
+                              </h3>
+                              <p className="font-body text-xs sm:text-sm text-grey-600 font-light mb-1">
+                                {item.variant_name} × {item.quantity}
+                              </p>
+                              {item.add_ons && item.add_ons.length > 0 && (
+                                <div className="mb-2">
+                                  <div className="flex flex-wrap gap-2">
+                                    {item.add_ons.map((addOn, addOnIndex) => (
+                                      <div
+                                        key={addOnIndex}
+                                        className="flex items-center gap-2 px-2 py-1 bg-accent-rose-50 border border-accent-rose-200 rounded text-accent-rose-700 text-xs font-light"
+                                      >
+                                        {/* Add-on Image */}
+                                        {addOn.image_url && (
+                                          <img
+                                            src={addOn.image_url}
+                                            alt={addOn.name}
+                                            className="w-6 h-6 object-cover rounded-full border"
+                                          />
+                                        )}
+
+                                        {/* Add-on Name and Price */}
+                                        <div className="flex flex-col leading-none">
+                                          <span className="font-body">{addOn.name}</span>
+                                          {addOn.selling_price && ( 
+                                            <span className="text-[10px] text-accent-rose-500">
+                                              ₹{addOn.selling_price.toFixed(2)}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              <p className="font-display text-sm sm:text-base font-light text-black-charcoal">
+                                Rs {itemTotal.toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -547,262 +577,258 @@ const Checkout = () => {
                     </div>
 
                     {billingAddressType === "saved" ? (
-                  <div className="space-y-3">
-                    {savedAddresses.length === 0 ? (
-                      <div className="text-center py-6 border border-grey-200 bg-grey-50">
-                        <p className="font-body text-sm text-grey-600 font-light mb-3">No saved addresses</p>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setBillingAddressType("manual");
-                            setShowAddAddressModal(true);
-                          }}
-                          className="px-4 py-2 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body text-xs font-light transition-colors duration-300 rounded-full"
-                        >
-                          Add Address
-                        </button>
-                      </div>
-                    ) : (
-                      savedAddresses.map((address) => (
-                        <div
-                          key={address.id}
-                          className={`p-4 border-2 cursor-pointer transition-all duration-300 ${
-                            selectedBillingAddress?.id === address.id
-                              ? "border-accent-rose-600 bg-accent-rose-50/30"
-                              : "border-grey-200 hover:border-grey-300 bg-primary-white"
-                          }`}
-                          onClick={() => handleSelectBillingAddress(address)}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                {address.addressType === "home" ? (
-                                  <Home className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
-                                ) : (
-                                  <Building2 className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
-                                )}
-                                <span className="font-display text-sm font-light text-black-charcoal">
-                                  {address.firstName} {address.lastName}
-                                </span>
-                                <span className="px-2 py-0.5 bg-grey-100 text-grey-600 text-[10px] font-body font-light uppercase">
-                                  {address.addressType}
-                                </span>
-                              </div>
-                              <p className="font-body text-xs sm:text-sm text-grey-600 font-light mb-1">
-                                {address.address}
-                              </p>
-                              <p className="font-body text-xs sm:text-sm text-grey-600 font-light">
-                                {address.city}, {address.state} {address.zipCode}
-                              </p>
-                              <p className="font-body text-xs text-grey-500 font-light mt-1">
-                                {address.email} {address.phone && `• ${address.phone}`}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2 ml-4">
-                              {selectedBillingAddress?.id === address.id && (
-                                <div className="w-5 h-5 bg-accent-rose-600 rounded-full flex items-center justify-center">
-                                  <Check className="w-3 h-3 text-primary-white" strokeWidth={3} />
-                                </div>
-                              )}
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleEditAddress(address);
-                                }}
-                                className="p-1.5 text-grey-400 hover:text-accent-rose-600 transition-colors duration-300"
-                              >
-                                <Edit2 className="w-4 h-4" strokeWidth={2} />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteAddress(address.id);
-                                }}
-                                className="p-1.5 text-grey-400 hover:text-accent-rose-600 transition-colors duration-300"
-                              >
-                                <Trash2 className="w-4 h-4" strokeWidth={2} />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    <div>
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        First Name <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="firstName"
-                        value={billingInfo.firstName}
-                        onChange={handleBillingChange}
-                        required
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        Last Name <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={billingInfo.lastName}
-                        onChange={handleBillingChange}
-                        required
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        Email <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={billingInfo.email}
-                        onChange={handleBillingChange}
-                        required
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        Phone
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={billingInfo.phone}
-                        onChange={handleBillingChange}
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        Address <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="address"
-                        value={billingInfo.address}
-                        onChange={handleBillingChange}
-                        required
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        City <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="city"
-                        value={billingInfo.city}
-                        onChange={handleBillingChange}
-                        required
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        State
-                      </label>
-                      <input
-                        type="text"
-                        name="state"
-                        value={billingInfo.state}
-                        onChange={handleBillingChange}
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        ZIP Code <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="zipCode"
-                        value={billingInfo.zipCode}
-                        onChange={handleBillingChange}
-                        required
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div className="relative country-dropdown-container">
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        Country
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowBillingCountryDropdown(!showBillingCountryDropdown);
-                          setShowShippingCountryDropdown(false);
-                          setShowModalCountryDropdown(false);
-                        }}
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300 flex items-center justify-between"
-                      >
-                        <span>{billingInfo.country}</span>
-                        <ChevronDown className={`w-4 h-4 text-grey-600 transition-transform duration-300 ${showBillingCountryDropdown ? 'rotate-180' : ''}`} strokeWidth={2} />
-                      </button>
-                      {showBillingCountryDropdown && (
-                        <div className="absolute z-10 w-full mt-1 bg-primary-white border border-grey-200 shadow-elegant max-h-48 overflow-y-auto">
-                          {countries.map((country) => (
+                      <div className="space-y-3">
+                        {savedAddresses.length === 0 ? (
+                          <div className="text-center py-6 border border-grey-200 bg-grey-50">
+                            <p className="font-body text-sm text-grey-600 font-light mb-3">No saved addresses</p>
                             <button
-                              key={country}
                               type="button"
                               onClick={() => {
-                                setBillingInfo({ ...billingInfo, country });
-                                setShowBillingCountryDropdown(false);
+                                setBillingAddressType("manual");
+                                setShowAddAddressModal(true);
                               }}
-                              className={`w-full text-left px-3 py-2 font-body text-sm font-light hover:bg-grey-50 transition-colors duration-300 ${
-                                billingInfo.country === country ? 'bg-accent-rose-50 text-accent-rose-600' : 'text-black-charcoal'
-                              }`}
+                              className="px-4 py-2 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body text-xs font-light transition-colors duration-300 rounded-full"
                             >
-                              {country}
+                              Add Address
                             </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        Address Type
-                      </label>
-                      <div className="flex gap-3">
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="addressType"
-                            value="home"
-                            checked={billingInfo.addressType === "home"}
-                            onChange={handleBillingChange}
-                            className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
-                          />
-                          <Home className="w-4 h-4 text-grey-600" strokeWidth={2} />
-                          <span className="font-body text-sm font-light text-black-charcoal">Home</span>
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="addressType"
-                            value="work"
-                            checked={billingInfo.addressType === "work"}
-                            onChange={handleBillingChange}
-                            className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
-                          />
-                          <Building2 className="w-4 h-4 text-grey-600" strokeWidth={2} />
-                          <span className="font-body text-sm font-light text-black-charcoal">Work</span>
-                        </label>
+                          </div>
+                        ) : (
+                          savedAddresses.map((address) => (
+                            <div
+                              key={address._id}
+                              className={`p-4 border-2 cursor-pointer transition-all duration-300 ${selectedBillingAddress?._id === address._id
+                                ? "border-accent-rose-600 bg-accent-rose-50/30"
+                                : "border-grey-200 hover:border-grey-300 bg-primary-white"
+                                }`}
+                              onClick={() => handleSelectBillingAddress(address)}
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    {address.addressType === "home" ? (
+                                      <Home className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
+                                    ) : (
+                                      <Building2 className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
+                                    )}
+
+                                    <span className="px-2 py-0.5 bg-grey-100 text-grey-600 text-[10px] font-body font-light uppercase">
+                                      {address.street}
+                                    </span>
+                                  </div>
+                                  <p className="font-body text-xs sm:text-sm text-grey-600 font-light mb-1">
+                                    {address.address}
+                                  </p>
+                                  <p className="font-body text-xs sm:text-sm text-grey-600 font-light">
+                                    {address.city}, {address.state} {address.zipCode}
+                                  </p>
+                                  <p className="font-body text-xs text-grey-500 font-light mt-1">
+                                    {address.email} {address.phone && `• ${address.phone}`}
+                                  </p>
+                                </div>
+                                {/* <div className="flex items-center gap-2 ml-4">
+                                  {selectedBillingAddress?.id === address.id && (
+                                    <div className="w-5 h-5 bg-accent-rose-600 rounded-full flex items-center justify-center">
+                                      <Check className="w-3 h-3 text-primary-white" strokeWidth={3} />
+                                    </div>
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleEditAddress(address);
+                                    }}
+                                    className="p-1.5 text-grey-400 hover:text-accent-rose-600 transition-colors duration-300"
+                                  >
+                                    <Edit2 className="w-4 h-4" strokeWidth={2} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDeleteAddress(address.id);
+                                    }}
+                                    className="p-1.5 text-grey-400 hover:text-accent-rose-600 transition-colors duration-300"
+                                  >
+                                    <Trash2 className="w-4 h-4" strokeWidth={2} />
+                                  </button>
+                                </div> */}
+                              </div>
+                            </div>
+                          ))
+                        )}
                       </div>
-                    </div>
-                  </div>
-                )}
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div>
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            First Name <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="firstName"
+                            value={billingInfo.firstName}
+                            onChange={handleBillingChange}
+                            required
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            Last Name <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="lastName"
+                            value={billingInfo.lastName}
+                            onChange={handleBillingChange}
+                            required
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            Email <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            value={billingInfo.email}
+                            onChange={handleBillingChange}
+                            required
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            Phone
+                          </label>
+                          <input
+                            type="tel"
+                            name="phone"
+                            value={billingInfo.phone}
+                            onChange={handleBillingChange}
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            Street <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="street"
+                            value={billingInfo.street}
+                            onChange={handleBillingChange}
+                            required
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            City <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="city"
+                            value={billingInfo.city}
+                            onChange={handleBillingChange}
+                            required
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            State
+                          </label>
+                          <input
+                            type="text"
+                            name="state"
+                            value={billingInfo.state}
+                            onChange={handleBillingChange}
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            ZIP Code <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="zipCode"
+                            value={billingInfo.zipCode}
+                            onChange={handleBillingChange}
+                            required
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div className="relative country-dropdown-container">
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            Country
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowBillingCountryDropdown(!showBillingCountryDropdown);
+                              setShowShippingCountryDropdown(false);
+                              setShowModalCountryDropdown(false);
+                            }}
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300 flex items-center justify-between"
+                          >
+                            <span>{billingInfo.country}</span>
+                            <ChevronDown className={`w-4 h-4 text-grey-600 transition-transform duration-300 ${showBillingCountryDropdown ? 'rotate-180' : ''}`} strokeWidth={2} />
+                          </button>
+                          {showBillingCountryDropdown && (
+                            <div className="absolute z-10 w-full mt-1 bg-primary-white border border-grey-200 shadow-elegant max-h-48 overflow-y-auto">
+                              {countries.map((country) => (
+                                <button
+                                  key={country}
+                                  type="button"
+                                  onClick={() => {
+                                    setBillingInfo({ ...billingInfo, country });
+                                    setShowBillingCountryDropdown(false);
+                                  }}
+                                  className={`w-full text-left px-3 py-2 font-body text-sm font-light hover:bg-grey-50 transition-colors duration-300 ${billingInfo.country === country ? 'bg-accent-rose-50 text-accent-rose-600' : 'text-black-charcoal'
+                                    }`}
+                                >
+                                  {country}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            Address Type
+                          </label>
+                          <div className="flex gap-3">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="radio"
+                                name="addressType"
+                                value="home"
+                                checked={billingInfo.addressType === "home"}
+                                onChange={handleBillingChange}
+                                className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
+                              />
+                              <Home className="w-4 h-4 text-grey-600" strokeWidth={2} />
+                              <span className="font-body text-sm font-light text-black-charcoal">Home</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="radio"
+                                name="addressType"
+                                value="work"
+                                checked={billingInfo.addressType === "work"}
+                                onChange={handleBillingChange}
+                                className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
+                              />
+                              <Building2 className="w-4 h-4 text-grey-600" strokeWidth={2} />
+                              <span className="font-body text-sm font-light text-black-charcoal">Work</span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     {billingAddressType === "manual" && (
                       <button
                         type="button"
@@ -893,150 +919,148 @@ const Checkout = () => {
                           </div>
                         </div>
                         {shippingAddressType === "saved" ? (
-                      <div className="space-y-3">
-                        {savedAddresses.length === 0 ? (
-                          <div className="text-center py-6 border border-grey-200 bg-grey-50">
-                            <p className="font-body text-sm text-grey-600 font-light mb-3">No saved addresses</p>
-                            <button
-                              type="button"
-                              onClick={() => setShippingAddressType("manual")}
-                              className="px-4 py-2 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body text-xs font-light transition-colors duration-300 rounded-full"
-                            >
-                              Enter Manually
-                            </button>
+                          <div className="space-y-3">
+                            {savedAddresses.length === 0 ? (
+                              <div className="text-center py-6 border border-grey-200 bg-grey-50">
+                                <p className="font-body text-sm text-grey-600 font-light mb-3">No saved addresses</p>
+                                <button
+                                  type="button"
+                                  onClick={() => setShippingAddressType("manual")}
+                                  className="px-4 py-2 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body text-xs font-light transition-colors duration-300 rounded-full"
+                                >
+                                  Enter Manually
+                                </button>
+                              </div>
+                            ) : (
+                              savedAddresses.map((address) => (
+                                <div
+                                  key={address.id}
+                                  className={`p-4 border-2 cursor-pointer transition-all duration-300 ${selectedShippingAddress?.id === address.id
+                                    ? "border-accent-rose-600 bg-accent-rose-50/30"
+                                    : "border-grey-200 hover:border-grey-300 bg-primary-white"
+                                    }`}
+                                  onClick={() => handleSelectShippingAddress(address)}
+                                >
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-2">
+                                        {address.addressType === "home" ? (
+                                          <Home className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
+                                        ) : (
+                                          <Building2 className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
+                                        )}
+                                        <span className="font-display text-sm font-light text-black-charcoal">
+                                          {address.firstName} {address.lastName}
+                                        </span>
+                                        <span className="px-2 py-0.5 bg-grey-100 text-grey-600 text-[10px] font-body font-light uppercase">
+                                          {address.addressType}
+                                        </span>
+                                      </div>
+                                      <p className="font-body text-xs sm:text-sm text-grey-600 font-light mb-1">
+                                        {address.street}
+                                      </p>
+                                      <p className="font-body text-xs sm:text-sm text-grey-600 font-light">
+                                        {address.city}, {address.state} {address.zipCode}
+                                      </p>
+                                    </div>
+                                    {selectedShippingAddress?._id === address._id && (
+                                      <div className="w-5 h-5 bg-accent-rose-600 rounded-full flex items-center justify-center ml-4">
+                                        <Check className="w-3 h-3 text-primary-white" strokeWidth={3} />
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              ))
+                            )}
                           </div>
                         ) : (
-                          savedAddresses.map((address) => (
-                            <div
-                              key={address.id}
-                              className={`p-4 border-2 cursor-pointer transition-all duration-300 ${
-                                selectedShippingAddress?.id === address.id
-                                  ? "border-accent-rose-600 bg-accent-rose-50/30"
-                                  : "border-grey-200 hover:border-grey-300 bg-primary-white"
-                              }`}
-                              onClick={() => handleSelectShippingAddress(address)}
-                            >
-                              <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-2">
-                                    {address.addressType === "home" ? (
-                                      <Home className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
-                                    ) : (
-                                      <Building2 className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
-                                    )}
-                                    <span className="font-display text-sm font-light text-black-charcoal">
-                                      {address.firstName} {address.lastName}
-                                    </span>
-                                    <span className="px-2 py-0.5 bg-grey-100 text-grey-600 text-[10px] font-body font-light uppercase">
-                                      {address.addressType}
-                                    </span>
-                                  </div>
-                                  <p className="font-body text-xs sm:text-sm text-grey-600 font-light mb-1">
-                                    {address.address}
-                                  </p>
-                                  <p className="font-body text-xs sm:text-sm text-grey-600 font-light">
-                                    {address.city}, {address.state} {address.zipCode}
-                                  </p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                            <div className="sm:col-span-2">
+                              <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                                Street <span className="text-accent-rose-600">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={shippingAddress.street}
+                                onChange={(e) => setShippingAddress({ ...shippingAddress, street: e.target.value })}
+                                required={!shippingAddress.sameAsBilling}
+                                className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                              />
+                            </div>
+                            <div>
+                              <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                                City <span className="text-accent-rose-600">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={shippingAddress.city}
+                                onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
+                                required={!shippingAddress.sameAsBilling}
+                                className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                              />
+                            </div>
+                            <div>
+                              <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                                State
+                              </label>
+                              <input
+                                type="text"
+                                value={shippingAddress.state}
+                                onChange={(e) => setShippingAddress({ ...shippingAddress, state: e.target.value })}
+                                className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                              />
+                            </div>
+                            <div>
+                              <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                                ZIP Code <span className="text-accent-rose-600">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={shippingAddress.zipCode}
+                                onChange={(e) => setShippingAddress({ ...shippingAddress, zipCode: e.target.value })}
+                                required={!shippingAddress.sameAsBilling}
+                                className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                              />
+                            </div>
+                            <div className="relative country-dropdown-container">
+                              <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                                Country
+                              </label>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setShowShippingCountryDropdown(!showShippingCountryDropdown);
+                                  setShowBillingCountryDropdown(false);
+                                  setShowModalCountryDropdown(false);
+                                }}
+                                className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300 flex items-center justify-between"
+                              >
+                                <span>{shippingAddress.country}</span>
+                                <ChevronDown className={`w-4 h-4 text-grey-600 transition-transform duration-300 ${showShippingCountryDropdown ? 'rotate-180' : ''}`} strokeWidth={2} />
+                              </button>
+                              {showShippingCountryDropdown && (
+                                <div className="absolute z-10 w-full mt-1 bg-primary-white border border-grey-200 shadow-elegant max-h-48 overflow-y-auto">
+                                  {countries.map((country) => (
+                                    <button
+                                      key={country}
+                                      type="button"
+                                      onClick={() => {
+                                        setShippingAddress({ ...shippingAddress, country });
+                                        setShowShippingCountryDropdown(false);
+                                      }}
+                                      className={`w-full text-left px-3 py-2 font-body text-sm font-light hover:bg-grey-50 transition-colors duration-300 ${shippingAddress.country === country ? 'bg-accent-rose-50 text-accent-rose-600' : 'text-black-charcoal'
+                                        }`}
+                                    >
+                                      {country}
+                                    </button>
+                                  ))}
                                 </div>
-                                {selectedShippingAddress?.id === address.id && (
-                                  <div className="w-5 h-5 bg-accent-rose-600 rounded-full flex items-center justify-center ml-4">
-                                    <Check className="w-3 h-3 text-primary-white" strokeWidth={3} />
-                                  </div>
-                                )}
-                              </div>
+                              )}
                             </div>
-                          ))
+                          </div>
                         )}
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                        <div className="sm:col-span-2">
-                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                            Address <span className="text-accent-rose-600">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            value={shippingAddress.address}
-                            onChange={(e) => setShippingAddress({ ...shippingAddress, address: e.target.value })}
-                            required={!shippingAddress.sameAsBilling}
-                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                          />
-                        </div>
-                        <div>
-                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                            City <span className="text-accent-rose-600">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            value={shippingAddress.city}
-                            onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
-                            required={!shippingAddress.sameAsBilling}
-                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                          />
-                        </div>
-                        <div>
-                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                            State
-                          </label>
-                          <input
-                            type="text"
-                            value={shippingAddress.state}
-                            onChange={(e) => setShippingAddress({ ...shippingAddress, state: e.target.value })}
-                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                          />
-                        </div>
-                        <div>
-                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                            ZIP Code <span className="text-accent-rose-600">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            value={shippingAddress.zipCode}
-                            onChange={(e) => setShippingAddress({ ...shippingAddress, zipCode: e.target.value })}
-                            required={!shippingAddress.sameAsBilling}
-                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                          />
-                        </div>
-                        <div className="relative country-dropdown-container">
-                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                            Country
-                          </label>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setShowShippingCountryDropdown(!showShippingCountryDropdown);
-                              setShowBillingCountryDropdown(false);
-                              setShowModalCountryDropdown(false);
-                            }}
-                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300 flex items-center justify-between"
-                          >
-                            <span>{shippingAddress.country}</span>
-                            <ChevronDown className={`w-4 h-4 text-grey-600 transition-transform duration-300 ${showShippingCountryDropdown ? 'rotate-180' : ''}`} strokeWidth={2} />
-                          </button>
-                          {showShippingCountryDropdown && (
-                            <div className="absolute z-10 w-full mt-1 bg-primary-white border border-grey-200 shadow-elegant max-h-48 overflow-y-auto">
-                              {countries.map((country) => (
-                                <button
-                                  key={country}
-                                  type="button"
-                                  onClick={() => {
-                                    setShippingAddress({ ...shippingAddress, country });
-                                    setShowShippingCountryDropdown(false);
-                                  }}
-                                  className={`w-full text-left px-3 py-2 font-body text-sm font-light hover:bg-grey-50 transition-colors duration-300 ${
-                                    shippingAddress.country === country ? 'bg-accent-rose-50 text-accent-rose-600' : 'text-black-charcoal'
-                                  }`}
-                                >
-                                  {country}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                      </>
                     )}
-                  </>
-                )}
                   </div>
                 )}
               </div>
@@ -1060,122 +1084,122 @@ const Checkout = () => {
                 </button>
                 {openSections.payment && (
                   <div className="px-4 sm:px-5 md:px-6 pb-4 sm:pb-5 md:pb-6">
-                <div className="space-y-3 mb-4">
-                  <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="card"
-                      checked={paymentMethod === "card"}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
-                    />
-                    <CreditCard className="w-5 h-5 text-grey-600 group-hover:text-accent-rose-600 transition-colors duration-300" strokeWidth={2} />
-                    <span className="font-body text-sm font-light text-black-charcoal">Credit/Debit Card</span>
-                  </label>
-                  <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="paypal"
-                      checked={paymentMethod === "paypal"}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
-                    />
-                    <span className="font-body text-sm font-light text-black-charcoal">PayPal</span>
-                  </label>
-                  <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="cod"
-                      checked={paymentMethod === "cod"}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
-                    />
-                    <span className="font-body text-sm font-light text-black-charcoal">Cash on Delivery</span>
-                  </label>
-                </div>
+                    <div className="space-y-3 mb-4">
+                      {/* <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="card"
+                          checked={paymentMethod === "card"}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
+                          className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
+                        />
+                        <CreditCard className="w-5 h-5 text-grey-600 group-hover:text-accent-rose-600 transition-colors duration-300" strokeWidth={2} />
+                        <span className="font-body text-sm font-light text-black-charcoal">Credit/Debit Card</span>
+                      </label>
+                      <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="paypal"
+                          checked={paymentMethod === "paypal"}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
+                          className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
+                        />
+                        <span className="font-body text-sm font-light text-black-charcoal">PayPal</span>
+                      </label> */}
+                      <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="cod"
+                          checked={paymentMethod === "cod"}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
+                          className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
+                        />
+                        <span className="font-body text-sm font-light text-black-charcoal">Cash on Delivery</span>
+                      </label>
+                    </div>
 
-                {paymentMethod === "card" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-grey-200">
-                    <div className="sm:col-span-2">
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        Card Number <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="cardNumber"
-                        value={cardInfo.cardNumber}
-                        onChange={handleCardChange}
-                        placeholder="1234 5678 9012 3456"
-                        required
-                        maxLength={19}
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        Cardholder Name <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="cardName"
-                        value={cardInfo.cardName}
-                        onChange={handleCardChange}
-                        placeholder="John Doe"
-                        required
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        Expiry Date <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="expiryDate"
-                        value={cardInfo.expiryDate}
-                        onChange={handleCardChange}
-                        placeholder="MM/YY"
-                        required
-                        maxLength={5}
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                        CVV <span className="text-accent-rose-600">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="cvv"
-                        value={cardInfo.cvv}
-                        onChange={handleCardChange}
-                        placeholder="123"
-                        required
-                        maxLength={3}
-                        className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                    </div>
-                  </div>
-                )}
+                    {paymentMethod === "card" && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-grey-200">
+                        <div className="sm:col-span-2">
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            Card Number <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="cardNumber"
+                            value={cardInfo.cardNumber}
+                            onChange={handleCardChange}
+                            placeholder="1234 5678 9012 3456"
+                            required
+                            maxLength={19}
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            Cardholder Name <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="cardName"
+                            value={cardInfo.cardName}
+                            onChange={handleCardChange}
+                            placeholder="John Doe"
+                            required
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            Expiry Date <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="expiryDate"
+                            value={cardInfo.expiryDate}
+                            onChange={handleCardChange}
+                            placeholder="MM/YY"
+                            required
+                            maxLength={5}
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
+                            CVV <span className="text-accent-rose-600">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="cvv"
+                            value={cardInfo.cvv}
+                            onChange={handleCardChange}
+                            placeholder="123"
+                            required
+                            maxLength={3}
+                            className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                        </div>
+                      </div>
+                    )}
 
-                {paymentMethod === "paypal" && (
-                  <div className="pt-4 border-t border-grey-200">
-                    <p className="font-body text-sm text-grey-600 font-light">
-                      You will be redirected to PayPal to complete your payment.
-                    </p>
-                  </div>
-                )}
+                    {paymentMethod === "paypal" && (
+                      <div className="pt-4 border-t border-grey-200">
+                        <p className="font-body text-sm text-grey-600 font-light">
+                          You will be redirected to PayPal to complete your payment.
+                        </p>
+                      </div>
+                    )}
 
-                {paymentMethod === "cod" && (
-                  <div className="pt-4 border-t border-grey-200">
-                    <p className="font-body text-sm text-grey-600 font-light">
-                      Pay with cash when your order is delivered.
-                    </p>
-                  </div>
-                )}
+                    {paymentMethod === "cod" && (
+                      <div className="pt-4 border-t border-grey-200">
+                        <p className="font-body text-sm text-grey-600 font-light">
+                          Pay with cash when your order is delivered.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -1202,63 +1226,63 @@ const Checkout = () => {
                 </button>
                 {openSections.coupons && (
                   <div className="px-4 sm:px-5 pb-4 sm:pb-5">
-                {appliedCoupon ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-accent-rose-50 border border-accent-rose-200">
-                      <div>
-                        <p className="font-body text-sm font-light text-accent-rose-700">
-                          {appliedCoupon}
-                        </p>
-                        <p className="font-body text-xs text-grey-600 font-light">
-                          Applied
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleRemoveCoupon}
-                        className="text-accent-rose-600 hover:text-accent-rose-700 transition-colors duration-300"
-                      >
-                        <Trash2 className="w-4 h-4" strokeWidth={2} />
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value)}
-                        placeholder="Enter coupon code"
-                        className="flex-1 px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleApplyCoupon}
-                        className="px-4 py-2.5 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body text-sm font-light transition-colors duration-300 rounded-full"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                    <div className="pt-3 border-t border-grey-200">
-                      <p className="font-body text-xs text-grey-600 font-light mb-2">Available Offers:</p>
-                      <div className="space-y-1.5">
-                        <div className="flex items-center justify-between p-2 bg-grey-50 border border-grey-200">
-                          <span className="font-body text-xs font-light text-black-charcoal">SAVE10</span>
-                          <span className="font-body text-xs font-light text-accent-rose-600">10% OFF</span>
-                        </div>
-                        <div className="flex items-center justify-between p-2 bg-grey-50 border border-grey-200">
-                          <span className="font-body text-xs font-light text-black-charcoal">FLOWER20</span>
-                          <span className="font-body text-xs font-light text-accent-rose-600">20% OFF</span>
-                        </div>
-                        <div className="flex items-center justify-between p-2 bg-grey-50 border border-grey-200">
-                          <span className="font-body text-xs font-light text-black-charcoal">FREESHIP</span>
-                          <span className="font-body text-xs font-light text-accent-rose-600">Free Shipping</span>
+                    {appliedCoupon ? (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-accent-rose-50 border border-accent-rose-200">
+                          <div>
+                            <p className="font-body text-sm font-light text-accent-rose-700">
+                              {appliedCoupon}
+                            </p>
+                            <p className="font-body text-xs text-grey-600 font-light">
+                              Applied
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleRemoveCoupon}
+                            className="text-accent-rose-600 hover:text-accent-rose-700 transition-colors duration-300"
+                          >
+                            <Trash2 className="w-4 h-4" strokeWidth={2} />
+                          </button>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                )}
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={couponCode}
+                            onChange={(e) => setCouponCode(e.target.value)}
+                            placeholder="Enter coupon code"
+                            className="flex-1 px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleApplyCoupon}
+                            className="px-4 py-2.5 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body text-sm font-light transition-colors duration-300 rounded-full"
+                          >
+                            Apply
+                          </button>
+                        </div>
+                        <div className="pt-3 border-t border-grey-200">
+                          <p className="font-body text-xs text-grey-600 font-light mb-2">Available Offers:</p>
+                          <div className="space-y-1.5">
+                            <div className="flex items-center justify-between p-2 bg-grey-50 border border-grey-200">
+                              <span className="font-body text-xs font-light text-black-charcoal">SAVE10</span>
+                              <span className="font-body text-xs font-light text-accent-rose-600">10% OFF</span>
+                            </div>
+                            <div className="flex items-center justify-between p-2 bg-grey-50 border border-grey-200">
+                              <span className="font-body text-xs font-light text-black-charcoal">FLOWER20</span>
+                              <span className="font-body text-xs font-light text-accent-rose-600">20% OFF</span>
+                            </div>
+                            <div className="flex items-center justify-between p-2 bg-grey-50 border border-grey-200">
+                              <span className="font-body text-xs font-light text-black-charcoal">FREESHIP</span>
+                              <span className="font-body text-xs font-light text-accent-rose-600">Free Shipping</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -1275,7 +1299,7 @@ const Checkout = () => {
                       Subtotal ({cartItems.length} {cartItems.length === 1 ? "item" : "items"})
                     </span>
                     <span className="font-display text-sm sm:text-base font-light text-black-charcoal">
-                      ${subtotal.toFixed(2)}
+                      Rs {subtotal.toFixed(2)}
                     </span>
                   </div>
 
@@ -1287,7 +1311,7 @@ const Checkout = () => {
                       {shipping === 0 ? (
                         <span className="text-success">Free</span>
                       ) : (
-                        `$${shipping.toFixed(2)}`
+                        `Rs ${shipping.toFixed(2)}`
                       )}
                     </span>
                   </div>
@@ -1297,7 +1321,7 @@ const Checkout = () => {
                       Tax
                     </span>
                     <span className="font-display text-sm sm:text-base font-light text-black-charcoal">
-                      ${tax.toFixed(2)}
+                      Rs {tax.toFixed(2)}
                     </span>
                   </div>
 
@@ -1307,7 +1331,7 @@ const Checkout = () => {
                         Discount ({appliedCoupon})
                       </span>
                       <span className="font-display text-sm sm:text-base font-light text-success">
-                        -${couponDiscount.toFixed(2)}
+                        -Rs {couponDiscount.toFixed(2)}
                       </span>
                     </div>
                   )}
@@ -1316,7 +1340,7 @@ const Checkout = () => {
                     <div className="flex justify-between items-center">
                       <span className="font-display text-base sm:text-lg font-light text-black-charcoal">Total</span>
                       <span className="font-display text-xl sm:text-2xl font-light text-black-charcoal">
-                        ${total.toFixed(2)}
+                        Rs {total.toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -1352,7 +1376,7 @@ const Checkout = () => {
 
         {/* Add/Edit Address Modal */}
         {showAddAddressModal && (
-          <div 
+          <div
             className="fixed inset-0 bg-black-soft/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={(e) => {
               if (e.target === e.currentTarget) {
@@ -1392,7 +1416,7 @@ const Checkout = () => {
                       city: "",
                       state: "",
                       zipCode: "",
-                      country: "United States",
+                      country: "India",
                       addressType: "home"
                     });
                   }}
@@ -1454,12 +1478,12 @@ const Checkout = () => {
                 </div>
                 <div className="sm:col-span-2">
                   <label className="block font-body text-xs sm:text-sm font-light text-black-charcoal mb-1.5">
-                    Address <span className="text-accent-rose-600">*</span>
+                    street <span className="text-accent-rose-600">*</span>
                   </label>
                   <input
                     type="text"
-                    name="address"
-                    value={billingInfo.address}
+                    name="street"
+                    value={billingInfo.street}
                     onChange={handleBillingChange}
                     required
                     className="w-full px-3 py-2.5 bg-grey-50 border border-grey-200 text-black-charcoal font-body text-sm font-light focus:outline-none focus:border-accent-rose-600 transition-colors duration-300"
@@ -1529,9 +1553,8 @@ const Checkout = () => {
                             setBillingInfo({ ...billingInfo, country });
                             setShowModalCountryDropdown(false);
                           }}
-                          className={`w-full text-left px-3 py-2 font-body text-sm font-light hover:bg-grey-50 transition-colors duration-300 ${
-                            billingInfo.country === country ? 'bg-accent-rose-50 text-accent-rose-600' : 'text-black-charcoal'
-                          }`}
+                          className={`w-full text-left px-3 py-2 font-body text-sm font-light hover:bg-grey-50 transition-colors duration-300 ${billingInfo.country === country ? 'bg-accent-rose-50 text-accent-rose-600' : 'text-black-charcoal'
+                            }`}
                         >
                           {country}
                         </button>
@@ -1589,11 +1612,11 @@ const Checkout = () => {
                       lastName: "",
                       email: "",
                       phone: "",
-                      address: "",
+                      street: "",
                       city: "",
                       state: "",
                       zipCode: "",
-                      country: "United States",
+                      country: "India",
                       addressType: "home"
                     });
                   }}
