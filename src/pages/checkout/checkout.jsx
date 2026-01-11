@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { GetUser, UpdateUser } from "../../service/user";
 import { message } from "../../comman/toaster-message/toasterMessage";
+import { createOrderApi } from "../../service/orderService";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const Checkout = () => {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   console.log(appliedCoupon, "appliedCoupon");
   const [couponDiscount, setCouponDiscount] = useState(0);
-const [orderNote, setOrderNote] = useState('');
+  const [orderNote, setOrderNote] = useState('');
 
   // Address management
   const [savedAddresses, setSavedAddresses] = useState([]);
@@ -63,6 +64,7 @@ const [orderNote, setOrderNote] = useState('');
   const [deliveryOption, setDeliveryOption] = useState(null);
   const [slot, setSlot] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
+  const [isOrderLoading, setIsOrderLoading] = useState(false);
   console.log(deliveryOption, "deliveryOption");
   console.log(slot, "slot");
   // Set initial state from location.state
@@ -385,7 +387,7 @@ const [orderNote, setOrderNote] = useState('');
   };
 
   // Handle place order
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
     if (selectedShippingAddress === null) {
@@ -408,13 +410,58 @@ const [orderNote, setOrderNote] = useState('');
       alert("Please fill in all card details");
       return;
     }
+    const payload = {
+      shippingAddress: {
+        firstName: selectedShippingAddress.firstName,
+        lastName: selectedShippingAddress.lastName,
+        street: selectedShippingAddress.street,
+        city: selectedShippingAddress.city,
+        state: selectedShippingAddress.state,
+        postalCode: selectedShippingAddress.zipCode,
+        country: selectedShippingAddress.country,
+        phone: selectedShippingAddress.phone,
+        isDefault: selectedShippingAddress.isDefault || false
+      },
+      billingAddress: {
+        firstName: selectedBillingAddress.firstName,
+        lastName: selectedBillingAddress.lastName,
+        street: selectedBillingAddress.street,
+        city: selectedBillingAddress.city,
+        state: selectedBillingAddress.state,
+        postalCode: selectedBillingAddress.zipCode,
+        country: selectedBillingAddress.country,
+        phone: selectedBillingAddress.phone
+      },
+      cartItems: cartItems,
+      paymentMode: paymentMethod,
+      deliveryDate: deliveryDate,      // from your state
+      deliverySlot: slot,              // from your state
+      shippingCharges: deliveryOption?.price || 0,
+      coupanApplied: appliedCoupon || null,
+      coupanDiscount: couponDiscount || 0,
+      totalShipmentPrice: deliveryOption?.price || 0,
+      totalProductPrice: subtotal,
+      totalPrice: total,
+       orderNote: orderNote || "",
+    };
+    setIsOrderLoading(true)
+    try {
+      const response = await createOrderApi(payload);
+      console.log("Order created:", response);
+
+      localStorage.removeItem("cart");
+      window.dispatchEvent(new CustomEvent("cartCountUpdated"));
+      message.success("Order placed successfully!");
+      navigate("/"); // redirect to homepage or order success page
+    } catch (error) {
+      console.error("Error creating order:", error);
+      message.error("Failed to place order. Please try again.");
+    }
+    finally {
+      setIsOrderLoading(false);
+    }
 
 
-    // Process order
-    // alert("Order placed successfully! Redirecting...");
-    // localStorage.removeItem("cart");
-    // window.dispatchEvent(new CustomEvent("cartCountUpdated"));
-    // navigate("/");
   };
 
   if (isLoading) {
@@ -1109,10 +1156,11 @@ const [orderNote, setOrderNote] = useState('');
                 <button
                   type="submit"
                   onClick={handlePlaceOrder}
+                  disabled={isOrderLoading}
                   className="w-full px-4 py-3 sm:py-3.5 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body text-sm font-light tracking-wide rounded-full transition-colors duration-300 shadow-soft hover:shadow-elegant mb-4 sm:mb-5 flex items-center justify-center gap-2"
                 >
                   <Lock className="w-4 h-4" strokeWidth={2} />
-                  Place Order
+                  {isOrderLoading ? "Processing..." : "Place Order"}
                 </button>
 
                 {/* Trust Badges */}

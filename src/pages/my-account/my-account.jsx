@@ -25,6 +25,7 @@ import { formatDate, getOrderStatusColor } from "../../utils/utils";
 import { message } from "../../comman/toaster-message/toasterMessage";
 import { SavedAddressesModal } from "./SavedAddressesModal";
 import { EditProfileModal } from "./EditProfileModal";
+import Orders from "../orders/orders";
 
 // Default empty address
 const defaultAddress = {
@@ -303,81 +304,13 @@ const MyAccount = () => {
 
           {/* Right Column */}
           <div className="lg:col-span-2">
-            <div className="bg-primary-white border border-grey-200 p-5 sm:p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="font-display text-lg sm:text-xl font-light text-black-charcoal flex items-center gap-2">
-                  <FiShoppingBag className="w-5 h-5 text-accent-rose-600" />
-                  Recent Orders
-                </h2>
-                {orders.length > 0 && (
-                  <button
-                    onClick={() => navigate("/orders")}
-                    className="font-body text-sm text-accent-rose-600 hover:text-accent-rose-700 font-light transition-colors duration-300 flex items-center gap-1"
-                  >
-                    View All
-                    <FiArrowRight className="w-4 h-4" />
-                  </button>
-                )}
+            <div className="bg-primary-white border border-grey-200 ">
+             
+              <Orders/>
               </div>
 
-              {orders.length === 0 ? (
-                <div className="text-center py-12">
-                  <FiPackage className="w-16 h-16 text-grey-300 mx-auto mb-4" />
-                  <p className="font-display text-lg font-light text-black-charcoal mb-2">
-                    No orders yet
-                  </p>
-                  <p className="font-body text-sm text-grey-600 font-light mb-6">
-                    Start shopping to see your orders here
-                  </p>
-                  <button
-                    onClick={() => navigate("/")}
-                    className="px-6 py-3 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body text-sm font-light rounded-full transition-colors duration-300"
-                  >
-                    Start Shopping
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {orders.slice(0, 5).map((order) => (
-                    <div
-                      key={order.id}
-                      className="border border-grey-200 p-4 sm:p-5 hover:border-grey-300 transition-colors duration-300"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <span className="font-display text-sm font-light text-black-charcoal">
-                              Order #{order.orderNumber || order.id}
-                            </span>
-                            <span
-                              className={`px-2 py-0.5 text-xs font-body font-light rounded-full ${getOrderStatusColor(
-                                order.status
-                              )}`}
-                            >
-                              {order.status || "Processing"}
-                            </span>
-                          </div>
-                          <p className="font-body text-xs text-grey-600 font-light mb-1">
-                            {formatDate(order.orderDate || order.createdAt)}
-                          </p>
-                          <p className="font-body text-sm text-black-charcoal font-light">
-                            {order.items?.length || 0}{" "}
-                            {order.items?.length === 1 ? "item" : "items"} • $
-                            {order.total?.toFixed(2) || "0.00"}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => navigate(`/orders?orderId=${order.id}`)}
-                          className="px-4 py-2 border border-grey-200 hover:border-accent-rose-600 text-accent-rose-600 font-body text-xs font-light rounded-full transition-colors duration-300 whitespace-nowrap"
-                        >
-                          View Details
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+           
+      
           </div>
         </div>
       </div>
