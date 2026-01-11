@@ -17,14 +17,20 @@ import {
 } from "lucide-react";
 import { message } from "../../comman/toaster-message/toasterMessage";
 import { DeliveryModal } from "./deliverySlot";
+import { useDispatch } from "react-redux";
+import { clearBuyNowItem } from "../../store/buyNowSlice";
 
 const Cart = () => {
   const navigate = useNavigate();
+   const dispatch = useDispatch();
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeliveryModalOpen, setIsDeliveryModalOpen] = React.useState(false);
   // Load cart from localStorage
+   useEffect(() => {
+      dispatch(clearBuyNowItem());
+    }, [dispatch]);
   useEffect(() => {
     const loadCart = () => {
       try {

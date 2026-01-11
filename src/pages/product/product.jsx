@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { X, ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
 import { getProduct } from "../../service/products";
+import logo from "../../assets/RedHeart-Logo-02.png";
 import {
   SubCategoryFilters,
   FestivalFilters,
@@ -81,7 +82,7 @@ const Product = () => {
       relationship: selectedFilters.relationship.join(","),
       color: selectedFilters.color.join(","),
       page: pageNo,
-      limit: 16,
+      limit: 12,
     };
 
     try {
@@ -124,25 +125,25 @@ const Product = () => {
     });
   };
 
- const handleProductClick = (slug, id, product) => {
-  // Save product in localStorage
-  const stored = JSON.parse(localStorage.getItem("recentProducts")) || [];
+  const handleProductClick = (slug, id, product) => {
+    // Save product in localStorage
+    const stored = JSON.parse(localStorage.getItem("recentProducts")) || [];
 
-  // Remove if product already exists to avoid duplicates
-  const filtered = stored.filter((p) => p._id !== product._id);
+    // Remove if product already exists to avoid duplicates
+    const filtered = stored.filter((p) => p._id !== product._id);
 
-  // Add current product to the start
-  filtered.unshift(product);
+    // Add current product to the start
+    filtered.unshift(product);
 
-  // Keep only last 8
-  if (filtered.length > 8) filtered.pop();
+    // Keep only last 8
+    if (filtered.length > 8) filtered.pop();
 
-  // Save back to localStorage
-  localStorage.setItem("recentProducts", JSON.stringify(filtered));
+    // Save back to localStorage
+    localStorage.setItem("recentProducts", JSON.stringify(filtered));
 
-  // Navigate to product page
-  navigate(`/product/${category}/${slug}`, { state: { id } });
-};
+    // Navigate to product page
+    navigate(`/product/${category}/${slug}`, { state: { id } });
+  };
 
 
   const calculateDiscount = (original, selling) =>
@@ -235,30 +236,45 @@ const Product = () => {
       )}
 
       {/* Products */}
-      <InfiniteScroll
-        dataLength={products.length}
-        next={() => setPage((prev) => prev + 1)}
-        hasMore={hasMore}
-        scrollThreshold="50%"
-        loader={
-          <div className="flex justify-center py-10">
-            <div className="w-8 h-8 border-4 border-rose-600 border-t-transparent rounded-full animate-spin" />
-          </div>
-        }
-      >
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-          {products.map((p) => (
-            <ProductCard
-              key={p._id}
-              product={p}
-              currentImageIndex={currentImages[p._id] || 0}
-              selectImage={selectImage}
-              handleProductClick={(slug, id) => handleProductClick(slug, id, p)} 
-              calculateDiscount={calculateDiscount}
-            />
-          ))}
+      {products.length === 0 && !loading ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <img
+            src={logo}
+            alt="No products"
+            className="w-32 h-32 mb-4"
+          />
+          <h2 className="text-xl font-semibold text-gray-700">
+            Oops! No products found.
+          </h2>
+          <p className="text-gray-500 mt-2">
+            We're working hard to fill this category. Check back soon or try another filter!
+          </p>
         </div>
-      </InfiniteScroll>
+      ) : (
+        <InfiniteScroll
+          dataLength={products.length}
+          next={() => setPage((prev) => prev + 1)}
+          hasMore={hasMore}
+          scrollThreshold="50%"
+          loader={
+            <div className="flex justify-center py-10">
+              <div className="w-8 h-8 border-4 border-rose-600 border-t-transparent rounded-full animate-spin" />
+            </div>
+          }
+        >
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+            {products.map((p) => (
+              <ProductCard
+                key={p._id}
+                product={p}
+                currentImageIndex={currentImages[p._id] || 0}
+                selectImage={selectImage}
+                handleProductClick={(slug, id) => handleProductClick(slug, id, p)}
+                calculateDiscount={calculateDiscount}
+              />
+            ))}
+          </div>
+        </InfiniteScroll>)}
     </div>
   );
 };

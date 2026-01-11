@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { getHamperProduct } from "../../service/addOnHamper";
+import { clearBuyNowItem, setBuyNowItem } from "../../store/buyNowSlice";
+import { useDispatch } from "react-redux";
+import { DeliveryModal } from "../cart/deliverySlot";
 
-const steps = ["Flowers", "Cakes", "Chocolate", "Plants","Gifts"];
+const steps = ["Flowers", "Cakes", "Chocolate", "Plants", "Gifts"];
 
 const HamperBuilder = () => {
+  const dispatch = useDispatch();
   const [stepIndex, setStepIndex] = useState(0);
   const [products, setProducts] = useState([]);
   const [hamper, setHamper] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const[isDeliveryModalOpen,setIsDeliveryModalOpen ]=useState(false)
+  console.log(isDeliveryModalOpen,"isDE")
   const currentCategory = steps[stepIndex];
-
+  useEffect(() => {
+    dispatch(clearBuyNowItem());
+  }, [dispatch]);
   useEffect(() => {
     fetchProducts(currentCategory);
   }, [currentCategory]);
@@ -55,11 +62,44 @@ const HamperBuilder = () => {
     (sum, item) => sum + item.sellingPrice * item.quantity,
     0
   );
+   const SellingPrice = hamper.reduce(
+    (sum, item) => sum + item.originalPrice * item.quantity,
+    0
+  );
+
 
   const getQuantity = (productId) => {
     const item = hamper.find((i) => i._id === productId);
     return item ? item.quantity : 0;
   };
+  const handleClickHamper =()=>{
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, '0');
+    
+    const datePart = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+    const timePart = `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+    
+     const cartItem = {
+      productId: `REDHEARTHAMPER_${datePart}_${timePart}`,
+      name: "Personalize Hamper",
+      variant_name: "Hamper",
+      image_url: "https://firebasestorage.googleapis.com/v0/b/redheart-d841c.firebasestorage.app/o/product-images%2Fhamer.jpeg?alt=media&token=3da45b91-3f97-4eb6-81bc-e916e4672f82",
+      selling_price: 0,
+      original_price:0 ,
+      quantity: 1,
+      add_ons: hamper.map((a) => ({
+        _id: a._id,
+        name: a.name,
+        selling_price: a.sellingPrice,
+        quantity: a.quantity,
+        image_url: a.image || "",
+      })),
+    };
+    console.log(cartItem,"cartItem from hamerr")
+    dispatch(setBuyNowItem(cartItem));
+    setIsDeliveryModalOpen(true)
+    
+  }
 
   return (
     <div className="min-h-screen bg-[#fff8f5] text-gray-900 flex flex-col font-sans">
@@ -73,11 +113,10 @@ const HamperBuilder = () => {
         {steps.map((step, index) => (
           <div
             key={step}
-            className={`px-6 py-2 rounded-full font-semibold border-2 text-sm transition-all ${
-              index === stepIndex
+            className={`px-6 py-2 rounded-full font-semibold border-2 text-sm transition-all ${index === stepIndex
                 ? "bg-[#c0392b] text-white border-[#c0392b]"
                 : "border-gray-300 text-gray-600 hover:bg-[#fbeae6] cursor-pointer"
-            }`}
+              }`}
             onClick={() => setStepIndex(index)}
           >
             {step}
@@ -164,11 +203,10 @@ const HamperBuilder = () => {
             <button
               disabled={stepIndex === 0}
               onClick={() => setStepIndex(stepIndex - 1)}
-              className={`px-6 py-2 rounded-full font-semibold border-2 transition ${
-                stepIndex === 0
+              className={`px-6 py-2 rounded-full font-semibold border-2 transition ${stepIndex === 0
                   ? "border-gray-300 text-gray-300 cursor-not-allowed"
                   : "border-gray-400 text-gray-700 hover:bg-[#fbeae6]"
-              }`}
+                }`}
             >
               Back
             </button>
@@ -234,7 +272,7 @@ const HamperBuilder = () => {
               </div>
 
               {stepIndex === steps.length - 1 && (
-                <button className="mt-4 w-full bg-gradient-to-r from-[#c0392b] to-[#e74c3c] text-white py-3 rounded-full hover:from-[#e74c3c] hover:to-[#c0392b] transition">
+                <button className="mt-4 w-full bg-gradient-to-r from-[#c0392b] to-[#e74c3c] text-white py-3 rounded-full hover:from-[#e74c3c] hover:to-[#c0392b] transition" onClick={handleClickHamper}>
                   Checkout Hamper
                 </button>
               )}
@@ -242,6 +280,9 @@ const HamperBuilder = () => {
           )}
         </div>
       </div>
+
+
+  <DeliveryModal isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} />
 
       {/* Loader CSS */}
       <style>

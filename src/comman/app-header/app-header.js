@@ -407,7 +407,7 @@ useEffect(() => {
                   {/* Sidebar Header */}
                   <div className="sticky top-0 z-10 bg-gradient-to-b from-primary-white to-grey-50/30 border-b border-grey-200 px-6 py-5 flex items-center justify-between backdrop-blur-sm">
                     <div className="flex items-center space-x-3">
-                      <img src={logo} alt="RedHeart Logo" className="h-10 w-auto" />
+                      <img src={logo} alt="RedHeart Logo" className="h-14 w-auto" />
                       <div className="flex flex-col">
                         <span className="font-elegant text-2xl text-accent-rose-600 leading-none">Red Heart</span>
                         <span className="font-body text-[10px] text-grey-600 tracking-wider uppercase">Menu</span>

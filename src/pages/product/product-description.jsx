@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getProductById } from "../../service/products";
 import RecentlyViewed from "./RecentlyViewed";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,8 @@ import { message } from "../../comman/toaster-message/toasterMessage";
 import { getAddOnProductExcept } from "../../service/addOnHamper";
 import AddOnModal from "./addOnModal";
 import { FaShippingFast, FaLeaf, FaLock, FaGift, FaHeart } from "react-icons/fa";
+import { clearBuyNowItem, setBuyNowItem } from "../../store/buyNowSlice";
+import { DeliveryModal } from "../cart/deliverySlot";
 const ProductUSPs = () => {
   const usps = [
     {
@@ -82,6 +84,7 @@ const Accordion = ({ title, children, initialOpen = false }) => {
 
 const ProductDescriptionPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const { id } = location.state || {};
   const [open, setOpen] = useState(false);
@@ -89,8 +92,14 @@ const ProductDescriptionPage = () => {
   const [addOnData, setAddOnData] = useState([]);
   console.log("AddOn Data", addOnData);
   const [product, setProduct] = useState(null);
+  const [isAddonLoader, setIsAddOnLoader] = useState(false);
   const [lastCartProductId, setLastCartProductId] = useState(null);
-
+  const [buyBackProcess, setBuyBackProcess] = useState(false);
+  const [addOnBuyBackData, setAddOnBuyBackData] = useState([]);
+  const [deliveryModalOpen, setDeliveryModalOpen] = useState(false);
+  const [selectedDelivery, setSelectedDelivery] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
   console.log((product));
   const [loading, setLoading] = useState(true);
   const [selectedVariant, setSelectedVariant] = useState(null);
@@ -100,7 +109,9 @@ const ProductDescriptionPage = () => {
     if (!id) return;
     fetchProduct();
   }, [id]);
-
+  useEffect(() => {
+    dispatch(clearBuyNowItem());
+  }, [dispatch]);
   const fetchProduct = async () => {
     setLoading(true);
     const res = await getProductById(id);
@@ -117,8 +128,19 @@ const ProductDescriptionPage = () => {
     );
   };
   const getAddon = async (category) => {
-    const res = await getAddOnProductExcept(category);
-    setAddOnData(res);
+    setIsAddOnLoader(true)
+    try {
+      const res = await getAddOnProductExcept(category);
+      setAddOnData(res);
+    }
+
+    catch (err) {
+      console.error("Add-on fetch error:", err);
+    }
+    finally {
+      setIsAddOnLoader(false)
+    }
+
   }
   if (loading)
     return (
@@ -127,7 +149,15 @@ const ProductDescriptionPage = () => {
       </div>
     );
 
-  if (!product) return null;
+  if (!product)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white text-center p-4">
+        <div>
+          <h2 className="text-2xl font-bold mb-2">Launching Soon!</h2>
+          <p className="text-neutral-600">This product will be available shortly. Stay tuned!</p>
+        </div>
+      </div>
+    );
 
   // Determine which image to show
   const displayImage = selectedVariant?.image_url || mainImage;
@@ -180,7 +210,32 @@ const ProductDescriptionPage = () => {
 
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
+  const buyNowItem = {
+    productId: selectedVariant?._id || product._id,
+    name: product.name,
+    variant_name: selectedVariant?.variant_name || "",
+    image_url:
+      selectedVariant?.image_url || product.media.primary_image_url,
+    selling_price:
+      selectedVariant?.selling_price || product.selling_price,
+    original_price:
+      selectedVariant?.original_price || product.original_price,
+    quantity: 1,
+    add_ons: selectedAddOns,
+  };
+  const handleBuyNowClick = async () => {
+    if (!product) return;
 
+
+
+    // Load addon suggestions (optional)
+    await getAddon(product.categorization.category_name);
+
+    dispatch(setBuyNowItem(buyNowItem));
+
+    setBuyBackProcess(true);
+    setAddOnOpen(true);
+  };
   return (
     <div className="bg-white text-black">
       <div className=" mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 px-6 py-6">
@@ -440,12 +495,22 @@ const ProductDescriptionPage = () => {
 
           {/* CTA */}
           <div className="pt-6 flex gap-4">
-            <button className="flex-1 py-3 rounded-full border border-black text-black font-medium hover:bg-black hover:text-white transition text-sm" onClick={handleAddToCart}>
-              Add to Cart
+            <button
+              className="flex-1 py-3 rounded-full border border-black text-black font-medium hover:bg-black hover:text-white transition text-sm"
+              onClick={handleAddToCart}
+              disabled={isAddonLoader}
+            >
+              {isAddonLoader ? "Adding magic ✨" : "Add to Cart"}
             </button>
-            <button className="flex-1 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition text-sm">
-              Buy Now
+
+            <button
+              className="flex-1 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition text-sm"
+              onClick={handleBuyNowClick}
+              disabled={isAddonLoader}
+            >
+              {isAddonLoader ? "Zooming to checkout 🚀" : "Buy Now"}
             </button>
+
           </div>
 
         </div>
@@ -456,11 +521,23 @@ const ProductDescriptionPage = () => {
           onClose={() => setAddOnOpen(false)}
           addOnData={addOnData}
           onProceed={(newAddOns) => {
-            appendAddOnsToCart(newAddOns);
+            if (buyBackProcess) {
+              dispatch(
+                setBuyNowItem({
+                  ...buyNowItem,
+                  add_ons: [...selectedAddOns, ...newAddOns],
+                })
+              );
+              setIsDeliveryModalOpen(true)
+            } else {
+              appendAddOnsToCart(newAddOns);
+            }
             setAddOnOpen(false);
           }}
         />
       )}
+
+      <DeliveryModal isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} />
 
       <RecentlyViewed />
     </div>

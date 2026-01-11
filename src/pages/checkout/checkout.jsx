@@ -21,31 +21,29 @@ import {
 import { GetUser, UpdateUser } from "../../service/user";
 import { message } from "../../comman/toaster-message/toasterMessage";
 import { createOrderApi } from "../../service/orderService";
+import { useDispatch, useSelector } from "react-redux";
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const buyNowItem = useSelector((state) => state.buyNow.item);
   const location = useLocation();
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
-  console.log(appliedCoupon, "appliedCoupon");
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [orderNote, setOrderNote] = useState('');
 
   // Address management
   const [savedAddresses, setSavedAddresses] = useState([]);
-  console.log("Saved Addresses:", savedAddresses);
   const [billingAddressType, setBillingAddressType] = useState("manual"); // "saved" or "manual"
   const [shippingAddressType, setShippingAddressType] = useState("manual"); // "saved" or "manual"
   const [selectedBillingAddress, setSelectedBillingAddress] = useState(null);
-  console.log(selectedBillingAddress, "selectedBillingAddress");
   const [selectedShippingAddress, setSelectedShippingAddress] = useState(null);
-  console.log(selectedShippingAddress, "selectedShippingAddress");
   const [showAddAddressModal, setShowAddAddressModal] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
   const [coupons, setCoupons] = useState([])
-  console.log(coupons, "coupons");
   // Accordion states
   const [openSections, setOpenSections] = useState({
     products: true,
@@ -65,8 +63,6 @@ const Checkout = () => {
   const [slot, setSlot] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
   const [isOrderLoading, setIsOrderLoading] = useState(false);
-  console.log(deliveryOption, "deliveryOption");
-  console.log(slot, "slot");
   // Set initial state from location.state
   useEffect(() => {
     if (location.state && location.state.deliveryOption && location.state.slot) {
@@ -80,7 +76,7 @@ const Checkout = () => {
       setSlot(location.state.slot);
     } else {
       // If no data, redirect back to cart
-      navigate("/cart");
+      // navigate("/cart");
     }
   }, [location.state, navigate]);
 
@@ -117,22 +113,32 @@ const Checkout = () => {
   });
 
   // Load cart and saved addresses from localStorage
-  useEffect(() => {
-    const loadData = () => {
-      try {
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCartItems(cart);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error loading data:", error);
-        setCartItems([]);
-        setIsLoading(false);
-      }
-    };
+ useEffect(() => {
+  const loadCart = () => {
+    if (buyNowItem) {
+      // If coming from Buy Now, use only this item
+      setCartItems([buyNowItem]);
+      console.log(buyNowItem,"checkooutbyy")
+      setIsLoading(false);
+      return;
+    }
 
-    loadData();
-    fetchUser()
-  }, []);
+    // Normal flow — existing logic
+    try {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      setCartItems(cart);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error loading cart:", error);
+      setCartItems([]);
+      setIsLoading(false);
+    }
+  };
+
+  loadCart();
+  fetchUser(); // keep your existing fetchUser call
+}, [buyNowItem]);
+
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -287,18 +293,14 @@ const Checkout = () => {
 
   // Apply coupon
   const handleApplyCoupon = (codeOrCoupon = couponCode) => {
-    // Normalize input: get the code string
     const code = typeof codeOrCoupon === "string" ? codeOrCoupon.trim() : codeOrCoupon?.code?.trim();
     if (!code) return alert("Please enter a valid coupon code");
     console.log(code, "code");
-    // Find coupon in the array (case-insensitive)
+
     const coupon = coupons.find(c => c.code?.trim().toUpperCase() === code.toUpperCase());
     if (!coupon) return alert("Invalid coupon code");
     console.log(coupon, "coupon");
-    // Calculate subtotal (based on your cartItems)
     const subtotal = cartItems.reduce((sum, item) => sum + calculateItemTotal(item), 0);
-
-    // Check minimum order value
     if (subtotal < Number(coupon.minOrderValue)) {
       return alert(`Minimum order value ₹${coupon.minOrderValue} required`);
     }
@@ -442,7 +444,7 @@ const Checkout = () => {
       totalShipmentPrice: deliveryOption?.price || 0,
       totalProductPrice: subtotal,
       totalPrice: total,
-       orderNote: orderNote || "",
+      orderNote: orderNote || "",
     };
     setIsOrderLoading(true)
     try {
@@ -603,8 +605,8 @@ const Checkout = () => {
                                         <div className="flex flex-col leading-none">
                                           <span className="font-body">{addOn.name}</span>
                                           {addOn.selling_price && (
-                                            <span className="text-[10px] text-accent-rose-500">
-                                              ₹{addOn.selling_price.toFixed(2)}
+                                            <span className="text-[10px] text-accent-rose-800 mt-2">
+                                              ₹{addOn.selling_price.toFixed(2)} x {addOn.quantity}
                                             </span>
                                           )}
                                         </div>
@@ -1099,7 +1101,7 @@ const Checkout = () => {
                           Free
                         </span>
                       ) : (
-                        <span className="block">Rs {shipping.toFixed(2)}</span>
+                        <span className="block">Rs {shipping?.toFixed(2)}</span>
                       )}
 
                       {/* Slot */}

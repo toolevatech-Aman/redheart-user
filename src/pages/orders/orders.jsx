@@ -381,9 +381,9 @@ const OrderDetailsModal = ({ order, activeTab, onClose }) => {
                       <p className="font-body text-xs text-grey-600 font-light mb-1">
                         Quantity: {item.quantity}
                       </p>
-                      <p className="font-display text-sm font-light text-black-charcoal">
+                     { item.name !=="Personalize Hamper"&& <p className="font-display text-sm font-light text-black-charcoal">
                         ₹{item.selling_price.toFixed(2)}
-                      </p>
+                      </p>}
 
                       {/* Add-ons */}
                       {item.add_ons && item.add_ons.length > 0 && (
@@ -394,7 +394,7 @@ const OrderDetailsModal = ({ order, activeTab, onClose }) => {
                               className="flex items-center gap-2 text-sm text-grey-600"
                             >
                               <span>+ {addon.name}</span>
-                              <span>₹{addon.selling_price.toFixed(2)}</span>
+                              <span>₹{addon.selling_price.toFixed(2)} x {addon.quantity}</span>
                             </div>
                           ))}
                         </div>
