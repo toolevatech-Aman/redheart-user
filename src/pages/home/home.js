@@ -114,10 +114,10 @@ const Home = () => {
     { id: 3, title: "Get Well Soon", image: getWellSoonImg },
   ];
   const categories = [
-    { id: 1, title: "Husband", img: anniversary1 },
-    { id: 2, title: "Wife", img: birthday1 },
-    { id: 3, title: "Her", img: giftforher },
-    { id: 4, title: "Him", img: giftforhim },
+    { id: 1, title: "Husband", img: anniversary1 ,description:"Because he deserves more than just a thank-you."},
+    { id: 2, title: "Wife", img: birthday1 ,description:"Turn everyday love into unforgettable moments."},
+    { id: 3, title: "Her", img: giftforher,description:"Surprises she’ll smile about all day." },
+    { id: 4, title: "Him", img: giftforhim ,description:"Gifts that speak louder than words."},
   ];
 
   const mainCategories = [
@@ -334,7 +334,7 @@ const Home = () => {
                     {category.title}
                   </h3>
                   <p className="text-gray-500 text-sm">
-                    Explore our curated selection for this category
+                    {category?.description}
                   </p>
                 </div>
               </div>

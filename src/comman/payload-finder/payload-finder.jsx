@@ -5,6 +5,7 @@ export const getPayloadKeyByItemName = ( itemName) => {
   const titleToPayloadKey = {
     "Shop by Flower Type": "subcategory_name",
     "Cakes": "subcategory_name",
+    "Plants": "subcategory_name",
     "Combos": "subcategory_name",
     "Loved Ones": "relationship",
     "Festival": "festival_tags",

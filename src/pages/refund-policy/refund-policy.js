@@ -131,10 +131,10 @@ const RefundPolicy = () => {
           7. Contact Us
         </h3>
         <p>
-          <span className="font-medium">Email:</span> support@redheart.in
+          <span className="font-medium">Email:</span> admin@redheart.in
         </p>
         <p>
-          <span className="font-medium">Phone:</span> +91-XXXXXXXXXX
+          <span className="font-medium">Phone:</span> +91-9275506722
         </p>
       </div>
 

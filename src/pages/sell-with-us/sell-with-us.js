@@ -120,7 +120,7 @@ const SellWithUs = () => {
             </p>
             <ul className="list-disc list-inside text-grey-700 font-light ml-4 space-y-1">
               <li>Email: <a href="mailto:partners@redheart.in" className="text-accent-rose-600">partners@redheart.in</a></li>
-              <li>Phone: +91‑XXXXXXXXXX</li>
+              <li>Phone: +91‑9275506722</li>
             </ul>
             <p className="font-body text-base text-grey-700 font-light mt-2">
               Join Redheart today and grow your business with India’s trusted gifting marketplace!

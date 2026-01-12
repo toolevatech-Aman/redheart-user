@@ -30,15 +30,17 @@ const setupAxiosInterceptors = (navigate) => {
     (response) => response,
     async (error) => {
       if (error?.name === "CanceledError") return Promise.reject(error);
-
+console.log("API ERROR INTERCEPTOR CALLED");
       const status = error?.response?.status;
       if (status === 401) {
-        cancelAllRequests("Access token expired. Logging out.");
-        localStorageService.clearAllExcept(["selectedCountry" , "cart"]);
-
         const currentPath = window.location.pathname + window.location.search;
-        console.log(currentPath,"cuurr")
+        console.log(currentPath, "cuurr")
         localStorageService.setValue("redirectAfterLogin", currentPath);
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("cookiesAccepted");
+        localStorage.removeItem("user");
+        navigate("/login");
+        
 
         navigate("/login");
         return Promise.reject(error);

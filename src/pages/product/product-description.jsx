@@ -494,14 +494,25 @@ const ProductDescriptionPage = () => {
           <ProductUSPs />
 
           {/* CTA */}
-          <div className="pt-6 flex gap-4">
+          {/* <div className="pt-6 flex gap-4">
             <button
               className="flex-1 py-3 rounded-full border border-black text-black font-medium hover:bg-black hover:text-white transition text-sm"
-              onClick={handleAddToCart}
+              onClick={() => {
+                if (lastCartProductId === (selectedVariant?._id || product.product_id)) {
+                  navigate("/cart"); // Go to Cart page
+                } else {
+                  handleAddToCart(); // Add to cart
+                }
+              }}
               disabled={isAddonLoader}
             >
-              {isAddonLoader ? "Adding magic ✨" : "Add to Cart"}
+              {lastCartProductId === (selectedVariant?._id || product.product_id)
+                ? "Go to Cart"
+                : isAddonLoader
+                  ? "Adding magic ✨"
+                  : "Add to Cart"}
             </button>
+
 
             <button
               className="flex-1 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition text-sm"
@@ -511,6 +522,34 @@ const ProductDescriptionPage = () => {
               {isAddonLoader ? "Zooming to checkout 🚀" : "Buy Now"}
             </button>
 
+          </div> */}
+          {/* CTA Buttons */}
+          <div className="lg:static fixed bottom-0 left-0 w-full bg-white p-4 flex gap-4 shadow-lg lg:shadow-none z-50 lg:justify-start lg:gap-4">
+            <button
+              className="flex-1 py-3 rounded-full border border-black text-black font-medium hover:bg-black hover:text-white transition text-sm"
+              onClick={() => {
+                if (lastCartProductId === (selectedVariant?._id || product.product_id)) {
+                  navigate("/cart");
+                } else {
+                  handleAddToCart();
+                }
+              }}
+              disabled={isAddonLoader}
+            >
+              {lastCartProductId === (selectedVariant?._id || product.product_id)
+                ? "Go to Cart"
+                : isAddonLoader
+                  ? "Adding magic ✨"
+                  : "Add to Cart"}
+            </button>
+
+            <button
+              className="flex-1 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition text-sm"
+              onClick={handleBuyNowClick}
+              disabled={isAddonLoader}
+            >
+              {isAddonLoader ? "Zooming to checkout 🚀" : "Buy Now"}
+            </button>
           </div>
 
         </div>

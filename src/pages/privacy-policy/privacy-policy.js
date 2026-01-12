@@ -123,7 +123,7 @@ const PrivacyPolicy = () => {
                 <li>Request deletion of your personal data (where legally applicable)</li>
               </ul>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mt-4">
-                To make such requests, email us at: support@redheart.in
+                To make such requests, email us at: admin@redheart.in
               </p>
             </div>
 
@@ -167,8 +167,8 @@ const PrivacyPolicy = () => {
               </p>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed">
                 Redheart Customer Support<br />
-                Email: support@redheart.in<br />
-                Phone: +91-XXXXXXXXXX
+                Email: admin@redheart.in<br />
+                Phone: +91-9275506722
               </p>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mt-6">
                 Thank you for trusting Redheart with your personal information.

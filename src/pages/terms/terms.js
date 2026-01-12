@@ -219,8 +219,8 @@ const Terms = () => {
               <p className="text-grey-700">
                 For questions or clarifications:<br />
                 Redheart Customer Support<br />
-                Email: support@redheart.in<br />
-                Phone: +91-XXXXXXXXXX
+                Email: admin@redheart.in<br />
+                Phone: +91-9275506722
               </p>
               <p className="text-grey-700 mt-6">
                 Thank you for choosing Redheart — where every gift speaks from the heart.

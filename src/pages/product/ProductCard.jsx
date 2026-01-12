@@ -72,8 +72,8 @@ const ProductCard = ({
                                     setCurrentImageIndex(idx);
                                 }}
                                 className={`w-2 h-2 rounded-full ${idx === currentImageIndex
-                                        ? "bg-rose-600"
-                                        : "bg-white/70"
+                                    ? "bg-rose-600"
+                                    : "bg-white/70"
                                     } border border-neutral-400`}
                             />
                         ))}
@@ -83,9 +83,10 @@ const ProductCard = ({
 
             {/* Content */}
             <div className="p-5 text-center">
-                <p className="mb-1 text-sm font-medium text-neutral-700 line-clamp-2">
+                <p className="mb-1 text-sm font-medium text-neutral-700 line-clamp-1 md:line-clamp-2">
                     {product.name}
                 </p>
+
 
                 <div className="flex justify-center items-center gap-2">
                     <p className="text-lg font-semibold">₹{product.selling_price}</p>

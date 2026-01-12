@@ -9,7 +9,7 @@ import WhatsAppWidget from "react-whatsapp-chat-widget";
 const WhatsAppWeget = () => {
     return (
         <WhatsAppWidget
-            phoneNo="+916200600070"
+            phoneNo="+919275506722"
             position="right"
             widgetWidth="300px"
             widgetWidthMobile="260px"

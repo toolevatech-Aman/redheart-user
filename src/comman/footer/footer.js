@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Heart, Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import logo from "../../assets/redHeartLogoo.png";
 import { getPageContentApi } from "../../service/pageContent";
+import { Linkedin } from "react-feather";
 
 const Footer = () => {
   const [overlayHtml, setOverlayHtml] = useState("");
@@ -33,7 +34,7 @@ console.log(currentPage, "currentPage");
   const customerService = [
     { name: "FAQ", path: "/faq" },
     { name: "Track Order", path: "/track-order" },
-    { name: "Coupans and Deals", path: "/gift-cards" },
+    { name: "Coupons and Deals", path: "/gift-cards" },
     { name: "Sell With Us", path: "/sell-with-us" },
   ];
 
@@ -45,10 +46,10 @@ console.log(currentPage, "currentPage");
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Youtube, href: "#", label: "YouTube" },
+    // { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Instagram, href: "https://www.instagram.com/redheart.in_official/", label: "Instagram" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/redheart-in/", label: "Linkedin" },
+    // { icon: Youtube, href: "#", label: "YouTube" },
   ];
 
   return (
@@ -89,11 +90,11 @@ console.log(currentPage, "currentPage");
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-grey-300">
                 <Phone className="w-4 h-4 text-accent-rose-600 flex-shrink-0" strokeWidth={1.5} />
-                <span className="font-body text-sm font-light">+91 XXXXXXXXX</span>
+                <span className="font-body text-sm font-light">+91 9275506722</span>
               </div>
               <div className="flex items-center space-x-3 text-grey-300">
                 <Mail className="w-4 h-4 text-accent-rose-600 flex-shrink-0" strokeWidth={1.5} />
-                <span className="font-body text-sm font-light">support@redheart.in</span>
+                <span className="font-body text-sm font-light">admin@redheart.in</span>
               </div>
               <div className="flex items-start space-x-3 text-grey-300">
                 <MapPin className="w-4 h-4 text-accent-rose-600 flex-shrink-0 mt-0.5" strokeWidth={1.5} />

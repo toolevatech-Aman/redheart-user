@@ -41,7 +41,7 @@ const AddOnModal = ({ isOpen, onClose, addOnData = [], onProceed }) => {
              onClick={() => onProceed([])}
             className="text-sm font-semibold text-red-500"
           >
-            Skip
+            Continue without Add-Ons
           </button>
         </div>
 

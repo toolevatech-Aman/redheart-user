@@ -23,6 +23,7 @@ function App() {
 
       <BrowserRouter>
         <AxiosInterceptorProvider>
+       
           <WhatsAppWeget/>
         <CookieBanner/>
         <ToastContainer />

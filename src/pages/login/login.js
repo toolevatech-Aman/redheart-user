@@ -13,7 +13,7 @@ export default function LoginWithOTP() {
   const [sessionId, setSessionId] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
-  
+
   const handleOtpChange = (value, index) => {
     if (/^\d?$/.test(value)) {
       const updated = [...otp];
@@ -51,12 +51,15 @@ export default function LoginWithOTP() {
       const res = await verifyOtpApi(sessionId, code, mobile);
       localStorage.setItem("authToken", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
-      
+
       console.log("Verified:", res);
 
       message.success("OTP Verified!");
-      navigate("/")
-      
+      const redirectPath = localStorage.getItem("redirectAfterLogin") || "/";
+      localStorage.removeItem("redirectAfterLogin"); // clear after use
+
+      navigate(redirectPath, { replace: true });
+
 
     } catch (err) {
       console.error("Verify Error:", err);

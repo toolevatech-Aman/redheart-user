@@ -64,9 +64,10 @@ export const SavedAddressesModal = ({
             >
               <div>
                 <p className="font-body text-sm font-light text-black-charcoal">
-                  {addr.label.charAt(0).toUpperCase() + addr.label.slice(1)}{" "}
+                  {(addr.label || "home").charAt(0).toUpperCase() + (addr.label || "home").slice(1)}{" "}
                   {addr.isDefault && "(Default)"}
                 </p>
+
                 <p className="font-body text-xs text-grey-600 font-light">
                   {addr.street}, {addr.city}, {addr.state} {addr.postalCode},{" "}
                   {addr.country}

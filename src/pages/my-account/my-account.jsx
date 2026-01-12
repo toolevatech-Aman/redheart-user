@@ -160,7 +160,9 @@ const MyAccount = () => {
 
   // ------------------- SIGN OUT -------------------
   const handleSignOut = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("cookiesAccepted");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
