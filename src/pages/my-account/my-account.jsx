@@ -105,30 +105,31 @@ const MyAccount = () => {
 
   // ------------------- ADD/UPDATE ADDRESS -------------------
   const handleSaveAddress = async (addressForm) => {
+    console.log("Saving Address:", addressForm);
     try {
       setLoading(true);
 
-      let updatedAddresses = [...(user.addresses || [])];
+      // let updatedAddresses = [...(user.addresses || [])];
 
       // If default, unset others
-      if (addressForm.isDefault) {
-        updatedAddresses = updatedAddresses.map((addr) => ({
-          ...addr,
-          isDefault: false,
-        }));
-      }
+      // if (addressForm.isDefault) {
+      //   updatedAddresses = updatedAddresses.map((addr) => ({
+      //     ...addr,
+      //     isDefault: false,
+      //   }));
+      // }
 
-      if (addressForm._id) {
-        // Update existing
-        updatedAddresses = updatedAddresses.map((addr) =>
-          addr._id === addressForm._id ? addressForm : addr
-        );
-      } else {
-        // Add new
-        updatedAddresses.push(addressForm);
-      }
+      // if (addressForm._id) {
+      //   // Update existing
+      //   updatedAddresses = updatedAddresses.map((addr) =>
+      //     addr._id === addressForm._id ? addressForm : addr
+      //   );
+      // } else {
+      //   // Add new
+      //   updatedAddresses.push(addressForm);
+      // }
 
-      await UpdateUser({ addresses: updatedAddresses });
+      await UpdateUser({ addresses: [addressForm] });
       await fetchUser();
 
       setEditingAddress(null);

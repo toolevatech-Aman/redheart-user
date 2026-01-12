@@ -15,6 +15,7 @@ import {
 } from "../../constants/filtersConstant";
 import ProductCard from "./ProductCard";
 import { getPayloadKeyByItemName } from "../../comman/payload-finder/payload-finder";
+import { getDescription } from "../../comman/H1Function/h1Functions";
 const buildInitialFilters = (filterData) => {
   const baseFilters = {
     category_name: '',
@@ -158,7 +159,7 @@ const Product = () => {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="border-b p-4 flex justify-between">
-        <h1 className="text-2xl capitalize">{category} Delivery</h1>
+        <h1 className="text-2xl capitalize">{getDescription(category)} </h1>
         {/* <button
           onClick={() => setShowFilters(true)}
           className="border px-4 py-2 flex gap-2"
