@@ -38,7 +38,7 @@ const AddOnModal = ({ isOpen, onClose, addOnData = [], onProceed }) => {
         <div className="flex items-center justify-between px-4 py-3 border-b">
           <h2 className="text-lg font-bold">Enhance Your Gift 🎁</h2>
           <button
-            onClick={onClose}
+             onClick={() => onProceed([])}
             className="text-sm font-semibold text-red-500"
           >
             Skip
