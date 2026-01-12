@@ -22,6 +22,7 @@ import { GetUser, UpdateUser } from "../../service/user";
 import { message } from "../../comman/toaster-message/toasterMessage";
 import { createOrderApi } from "../../service/orderService";
 import { useDispatch, useSelector } from "react-redux";
+import OrderConfirmation from "../thankyou/thankyou";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ const Checkout = () => {
   });
 
   // Custom dropdown states
+    const [orderPlaced, setOrderPlaced] = useState(false);
   const [showBillingCountryDropdown, setShowBillingCountryDropdown] = useState(false);
   const [showShippingCountryDropdown, setShowShippingCountryDropdown] = useState(false);
   const [showModalCountryDropdown, setShowModalCountryDropdown] = useState(false);
@@ -454,7 +456,7 @@ const Checkout = () => {
       localStorage.removeItem("cart");
       window.dispatchEvent(new CustomEvent("cartCountUpdated"));
       message.success("Order placed successfully!");
-      navigate("/"); // redirect to homepage or order success page
+         setOrderPlaced(true); // redirect to homepage or order success page
     } catch (error) {
       console.error("Error creating order:", error);
       message.error("Failed to place order. Please try again.");
@@ -1440,6 +1442,7 @@ const Checkout = () => {
           </div>
         )}
       </div>
+      {orderPlaced && <OrderConfirmation />}
     </div>
   );
 };

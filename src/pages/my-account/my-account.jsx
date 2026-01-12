@@ -176,9 +176,9 @@ const MyAccount = () => {
   // ------------------- RENDER -------------------
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-accent-rose-600">
-        <p>Loading...</p>
-      </div>
+      <div className="flex justify-center py-10 h-100vh">
+              <div className="w-8 h-8 border-4 border-rose-600 border-t-transparent rounded-full animate-spin" />
+            </div>
     );
   }
 
