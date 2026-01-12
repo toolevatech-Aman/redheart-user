@@ -203,14 +203,14 @@ export const SavedAddressesModal = ({
           </div>
         )}
 
-        {!editingAddress && !isAddingNew && (
-          <button
-            onClick={handleAddNewClick}
-            className="w-full mt-4 px-4 py-3 border border-accent-rose-600 hover:bg-accent-rose-50 text-accent-rose-600 font-body text-sm font-light rounded-full transition-colors duration-300 flex items-center justify-center gap-2"
-          >
-            <FiPlus className="w-4 h-4" /> Add New Address
-          </button>
-        )}
+        {/* {!editingAddress && !isAddingNew && (
+          // <button
+          //   onClick={handleAddNewClick}
+          //   className="w-full mt-4 px-4 py-3 border border-accent-rose-600 hover:bg-accent-rose-50 text-accent-rose-600 font-body text-sm font-light rounded-full transition-colors duration-300 flex items-center justify-center gap-2"
+          // >
+          //   <FiPlus className="w-4 h-4" /> Add New Address
+          // </button>
+        )} */}
       </div>
     </div>
   );

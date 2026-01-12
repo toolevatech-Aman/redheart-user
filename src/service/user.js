@@ -6,10 +6,11 @@ export const UpdateUser = async (payload) => {
   const response = await axiosService.Put("/user/profile", payload); // use PUT as backend route
   return response.data;
 };
-export const UpdateAddress = async (payload) => {
-  const response = await axiosService.Post("/user/address", payload);
+export const UpdateAddress = async (addressId, payload) => {
+  const response = await axiosService.Put(`/user/address/${addressId}`, payload);
   return response.data;
 };
+
 
 export const DeleteAddress = async (addressId) => {
   const response = await axiosService.Delete(`/user/address/${addressId}`);

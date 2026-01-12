@@ -128,8 +128,14 @@ const MyAccount = () => {
       //   // Add new
       //   updatedAddresses.push(addressForm);
       // }
-
-      await UpdateUser({ addresses: [addressForm] });
+      if (addressForm._id) {
+        // Update existing address
+        await UpdateAddress(addressForm._id, addressForm);
+      } else {
+        // Add new address
+        await UpdateUser({ addresses: [addressForm] });
+      }
+      // await UpdateUser({ addresses: [addressForm] });
       await fetchUser();
 
       setEditingAddress(null);
