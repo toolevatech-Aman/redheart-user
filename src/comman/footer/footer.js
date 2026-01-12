@@ -33,7 +33,7 @@ console.log(currentPage, "currentPage");
 
   const customerService = [
     { name: "FAQ", path: "/faq" },
-    { name: "Track Order", path: "/track-order" },
+    { name: " Orders", path: "/Orders" },
     { name: "Coupons and Deals", path: "/gift-cards" },
     { name: "Sell With Us", path: "/sell-with-us" },
   ];
