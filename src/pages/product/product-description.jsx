@@ -366,7 +366,7 @@ const ProductDescriptionPage = () => {
           </div> */}
           <div className="pt-2 space-y-2 text-sm">
             {/* Product Contents */}
-            <Accordion title="Product Contents" initialOpen={true}>
+            <Accordion title="Product Contains" initialOpen={true}>
               {/* Product Contents – Always Open */}
               <div className="pt-6">
 
