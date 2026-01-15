@@ -24,7 +24,7 @@ jobs:
         run: npm run build
 
       - name: Deploy to S3
-        uses: aws-actions/s3-sync@v2
+        uses: aws-actions/aws-s3-sync@v2
         with:
           source-dir: build
           bucket: ${{ secrets.AWS_BUCKET_NAME }}
