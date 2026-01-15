@@ -32,10 +32,10 @@ import cake from "../../assets/category-image/cake.webp"
 import combo from "../../assets/category-image/combo.jpeg"
 import plant from "../../assets/category-image/plant.avif"
 
-import hero1 from "../../assets/hero-image/hero-image1.jpg"
-import hero2 from "../../assets/hero-image/hero-image-2.jpg"
-import hero3 from "../../assets/hero-image/hero-image3.jpg"
-import hero4 from "../../assets/hero-image/hero-image4.webp"
+import hero1 from "../../assets/hero-image/WhatsApp Image 2026-01-15 at 20.00.43.jpeg"
+import hero2 from "../../assets/hero-image/WhatsApp Image 2026-01-15 at 20.02.45.jpeg"
+import hero3 from "../../assets/hero-image/WhatsApp Image 2026-01-15 at 20.29.24.jpeg"
+
 
 import categoryBg from "../../assets/background/herobackgroundcat.jpg"
 import anniversary1 from "../../assets/category-image/anniversary-1.webp"
@@ -171,7 +171,7 @@ const Home = () => {
       {/* Small Posters Carousel */}
       <section className="py-8 bg-white">
         <div className="overflow-x-auto flex gap-5 px-4 sm:px-6 lg:px-8 scroll-smooth snap-x snap-mandatory hide-scrollbar">
-          {[hero1, hero2, hero3, hero4].map((item, idx) => (
+          {[hero1, hero2,hero3].map((item, idx) => (
             <div
               key={idx}
               className="
