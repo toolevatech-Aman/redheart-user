@@ -32,11 +32,14 @@ import cake from "../../assets/category-image/cake.webp"
 import combo from "../../assets/category-image/combo.jpeg"
 import plant from "../../assets/category-image/plant.avif"
 
-import hero1 from "../../assets/hero-image/WhatsApp Image 2026-01-15 at 20.00.43.jpeg"
-import hero2 from "../../assets/hero-image/WhatsApp Image 2026-01-15 at 20.02.45.jpeg"
-import hero3 from "../../assets/hero-image/WhatsApp Image 2026-01-15 at 20.29.24.jpeg"
-import hero4 from "../../assets/hero-image/WhatsApp Image 2026-01-15 at 20.53.01.jpeg"
-
+import hero1 from "../../assets/hero-image/17768080-0BED-4D5D-BDD0-4C620CB29901_4_5005_c.jpeg"
+import hero2 from "../../assets/hero-image/728AF6B8-A0EA-48B7-BBB4-47A594B437BE_4_5005_c.jpeg"
+import hero3 from "../../assets/hero-image/7CC8073B-CB39-42FA-9EA8-A06FEFC1CE95_4_5005_c.jpeg"
+import hero4 from "../../assets/hero-image/85CC3076-3EAB-4BB9-B01E-1C9B31D8E8FF_4_5005_c.jpeg"
+import hero5 from "../../assets/hero-image/B3D3A4E6-90FE-4437-8905-2794D80B9A66_4_5005_c.jpeg"
+import hero6 from "../../assets/hero-image/B765D234-E0AE-4F39-A0D4-85A1883911B9_4_5005_c.jpeg"
+import hero7 from "../../assets/hero-image/BCD5580A-1738-4609-8EB3-CA8B4B54D4F6_4_5005_c.jpeg"
+import hero8 from "../../assets/hero-image/E4FA1C23-A9E0-4717-9D01-7BFE64221799_4_5005_c.jpeg"
 
 import categoryBg from "../../assets/background/herobackgroundcat.jpg"
 import anniversary1 from "../../assets/category-image/anniversary-1.webp"
@@ -131,6 +134,16 @@ const Home = () => {
     { title: "Hampers", img: hampers }
 
   ]
+  const heroes = [
+  { img: hero1, link: "/product/Birthday" },
+  { img: hero2, link: "/product/Valentine's%20Day" },
+  { img: hero3, link: "/product/Anniversary" },
+  { img: hero4, link: "/product/Plants" },
+  { img: hero5, link: "/product/Plants" },
+  { img: hero6, link: "/product/Chocolate%20Gifts" },
+  { img: hero7, link: "/product/Flowers" },
+  { img: hero8, link: "/product/Cakes" },
+];
   return (
     <div className="min-h-screen bg-primary-white">
       {/* Hero Section */}
@@ -172,7 +185,7 @@ const Home = () => {
       {/* Small Posters Carousel */}
       <section className="py-8 bg-white">
         <div className="overflow-x-auto flex gap-5 px-4 sm:px-6 lg:px-8 scroll-smooth snap-x snap-mandatory hide-scrollbar">
-          {[hero1, hero2,hero3 ,hero4].map((item, idx) => (
+          {heroes.map((item, idx) => (
             <div
               key={idx}
               className="
@@ -185,9 +198,10 @@ const Home = () => {
           overflow-hidden 
           shadow-lg
         "
+              onClick={() => navigate(item.link)}
             >
               <img
-                src={item}
+                src={item.img}
                 alt="Poster"
                 className="w-full h-64 sm:h-72 lg:h-80 object-cover"
               />
