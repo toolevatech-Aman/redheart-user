@@ -244,7 +244,8 @@ const deliveryOptions = [
   },
   {
     title: "30-60 Minutes Delivery",
-    price: 69,
+    // price: 69,
+    price: 1,
     slots: ["30-60 Minutes from order"],
     note: "Your gift will be delivered quickly within the selected slot.",
     checkAvailability: (now, slot, isToday) => {

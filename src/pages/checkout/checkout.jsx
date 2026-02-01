@@ -20,10 +20,19 @@ import {
 } from "lucide-react";
 import { GetUser, UpdateUser } from "../../service/user";
 import { message } from "../../comman/toaster-message/toasterMessage";
-import { createOrderApi } from "../../service/orderService";
+import { createOrderApi, verifyPaymentApi } from "../../service/orderService";
 import { useDispatch, useSelector } from "react-redux";
+import logo from "../../assets/RedHeart-Logo-02.png";
 import OrderConfirmation from "../thankyou/thankyou";
-
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -55,7 +64,7 @@ const Checkout = () => {
   });
 
   // Custom dropdown states
-    const [orderPlaced, setOrderPlaced] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
   const [showBillingCountryDropdown, setShowBillingCountryDropdown] = useState(false);
   const [showShippingCountryDropdown, setShowShippingCountryDropdown] = useState(false);
   const [showModalCountryDropdown, setShowModalCountryDropdown] = useState(false);
@@ -97,7 +106,8 @@ const Checkout = () => {
     addressType: "home"
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [paymentMethod, setPaymentMethod] = useState("COD");
+  console.log(paymentMethod, "paymentMethod");
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
     cardName: "",
@@ -115,31 +125,31 @@ const Checkout = () => {
   });
 
   // Load cart and saved addresses from localStorage
- useEffect(() => {
-  const loadCart = () => {
-    if (buyNowItem) {
-      // If coming from Buy Now, use only this item
-      setCartItems([buyNowItem]);
-      console.log(buyNowItem,"checkooutbyy")
-      setIsLoading(false);
-      return;
-    }
+  useEffect(() => {
+    const loadCart = () => {
+      if (buyNowItem) {
+        // If coming from Buy Now, use only this item
+        setCartItems([buyNowItem]);
+        console.log(buyNowItem, "checkooutbyy")
+        setIsLoading(false);
+        return;
+      }
 
-    // Normal flow — existing logic
-    try {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      setCartItems(cart);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error loading cart:", error);
-      setCartItems([]);
-      setIsLoading(false);
-    }
-  };
+      // Normal flow — existing logic
+      try {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        setCartItems(cart);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error loading cart:", error);
+        setCartItems([]);
+        setIsLoading(false);
+      }
+    };
 
-  loadCart();
-  fetchUser(); // keep your existing fetchUser call
-}, [buyNowItem]);
+    loadCart();
+    fetchUser(); // keep your existing fetchUser call
+  }, [buyNowItem]);
 
 
   // Close dropdowns when clicking outside
@@ -393,7 +403,12 @@ const Checkout = () => {
   // Handle place order
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
-
+    // 1️⃣ load script
+    const loaded = await loadRazorpayScript();
+    if (!loaded) {
+      message.error("Failed to load payment gateway. Try again.");
+      return;
+    }
     if (selectedShippingAddress === null) {
       message.error("Please select shipping address");
       return
@@ -408,12 +423,7 @@ const Checkout = () => {
     console.log(appliedCoupon, "appliedCoupon");
     console.log(couponDiscount, "couponDiscount");
 
-    // Validate payment
-    if (paymentMethod === "card" && (!cardInfo.cardNumber || !cardInfo.cardName ||
-      !cardInfo.expiryDate || !cardInfo.cvv)) {
-      alert("Please fill in all card details");
-      return;
-    }
+
     const payload = {
       shippingAddress: {
         firstName: selectedShippingAddress.firstName,
@@ -451,12 +461,66 @@ const Checkout = () => {
     setIsOrderLoading(true)
     try {
       const response = await createOrderApi(payload);
-      console.log("Order created:", response);
+      const razorpayOrder = response.data;
+      console.log(razorpayOrder, "razorpayOrder");
+      console.log(response, "orderResponse");
+      console.log(response.data, "orderResponse.data");
+      // 2️⃣ Open Razorpay Checkout
+      if (paymentMethod === "PREPAID") {
+        const options = {
+          key: 'rzp_live_SAUkt165C1iTKF',
+          amount: razorpayOrder.totalPrice * 100, // in paise
+          currency: "INR",
+          order_id: razorpayOrder.razorpayOrderId,
+          name: "RedHeart",
+          description: "Order Payment",
+          image: logo,
+          theme: { color: "#D32F2F" },// material red
 
-      localStorage.removeItem("cart");
-      window.dispatchEvent(new CustomEvent("cartCountUpdated"));
-      message.success("Order placed successfully!");
-         setOrderPlaced(true); // redirect to homepage or order success page
+
+          handler: async function (response) {
+            try {
+              // 3️⃣ Verify payment
+              await verifyPaymentApi({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              });
+
+              // 4️⃣ Success
+              localStorage.removeItem("cart");
+              window.dispatchEvent(new CustomEvent("cartCountUpdated"));
+              message.success("Payment successful & order placed!");
+              setOrderPlaced(true);
+
+            } catch (err) {
+              message.error("Payment verification failed");
+            }
+          },
+
+          prefill: {
+            name: `${selectedShippingAddress.firstName} ${selectedShippingAddress.lastName}`,
+            contact: selectedShippingAddress.phone
+          },
+
+          theme: { color: "#3399cc" }
+        }
+
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } else if (paymentMethod === "COD") {
+        // COD success flow
+        localStorage.removeItem("cart");
+        window.dispatchEvent(new CustomEvent("cartCountUpdated"));
+        message.success("Order placed successfully! Pay with cash on delivery.");
+        setOrderPlaced(true);
+      }
+
+      // localStorage.removeItem("cart");
+      // window.dispatchEvent(new CustomEvent("cartCountUpdated"));
+      // message.success("Order placed successfully!");
+      // setOrderPlaced(true); // redirect to homepage or order success page
     } catch (error) {
       console.error("Error creating order:", error);
       message.error("Failed to place order. Please try again.");
@@ -888,12 +952,23 @@ const Checkout = () => {
                         <input
                           type="radio"
                           name="paymentMethod"
-                          value="cod"
-                          checked={paymentMethod === "cod"}
+                          value="COD"
+                          checked={paymentMethod === "COD"}
                           onChange={(e) => setPaymentMethod(e.target.value)}
                           className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
                         />
                         <span className="font-body text-sm font-light text-black-charcoal">Cash on Delivery</span>
+                      </label>
+                      <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="PREPAID"
+                          checked={paymentMethod === "PREPAID"}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
+                          className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
+                        />
+                        <span className="font-body text-sm font-light text-black-charcoal">Prepaid</span>
                       </label>
                     </div>
 
@@ -961,21 +1036,21 @@ const Checkout = () => {
                       </div>
                     )}
 
-                    {paymentMethod === "paypal" && (
-                      <div className="pt-4 border-t border-grey-200">
-                        <p className="font-body text-sm text-grey-600 font-light">
-                          You will be redirected to PayPal to complete your payment.
-                        </p>
-                      </div>
-                    )}
-
-                    {paymentMethod === "cod" && (
+                    {paymentMethod === "COD" && (
                       <div className="pt-4 border-t border-grey-200">
                         <p className="font-body text-sm text-grey-600 font-light">
                           Pay with cash when your order is delivered.
                         </p>
                       </div>
                     )}
+                    {paymentMethod === "PREPAID" && (
+                      <div className="pt-4 border-t border-grey-200">
+                        <p className="font-body text-sm text-grey-600 font-light">
+                          Pay securely online via Razorpay. Your payment will be verified instantly after successful transaction.
+                        </p>
+                      </div>
+                    )}
+
                   </div>
                 )}
               </div>
