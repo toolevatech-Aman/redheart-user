@@ -40,6 +40,7 @@ const Checkout = () => {
   const location = useLocation();
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [addressLoading, setAddressLoading] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
@@ -106,7 +107,7 @@ const Checkout = () => {
     addressType: "home"
   });
 
-  const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [paymentMethod, setPaymentMethod] = useState("PREPAID");
   console.log(paymentMethod, "paymentMethod");
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
@@ -197,24 +198,35 @@ const Checkout = () => {
       lastName: billingInfo.lastName
     };
 
-    const res = await UpdateUser({ addresses: [payload] });
 
-    if (res.success) {
-      await fetchUser();
+    setAddressLoading(true);
+    try {
+      const res = await UpdateUser({ addresses: [payload] });
+      if (res.success) {
+        await fetchUser();
+      }
     }
-    setShowAddAddressModal(false);
-    setBillingInfo({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      country: "India",
-      addressType: "home"
-    });
+    catch (err) {
+
+    } finally {
+      setAddressLoading(false);
+      setShowAddAddressModal(false);
+      setBillingInfo({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "India",
+        addressType: "home"
+      });
+    }
+
+
+
   };
 
   // Edit address
@@ -948,7 +960,7 @@ const Checkout = () => {
                         />
                         <span className="font-body text-sm font-light text-black-charcoal">PayPal</span>
                       </label> */}
-                      <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
+                      {/* <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
                         <input
                           type="radio"
                           name="paymentMethod"
@@ -958,7 +970,7 @@ const Checkout = () => {
                           className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600"
                         />
                         <span className="font-body text-sm font-light text-black-charcoal">Cash on Delivery</span>
-                      </label>
+                      </label> */}
                       <label className="flex items-center gap-3 p-3 sm:p-4 border-2 border-grey-200 cursor-pointer hover:border-accent-rose-300 transition-all duration-300 group">
                         <input
                           type="radio"
@@ -1308,6 +1320,7 @@ const Checkout = () => {
                       addressType: "home"
                     });
                   }}
+
                   className="p-1.5 text-grey-400 hover:text-accent-rose-600 transition-colors duration-300"
                 >
                   <X className="w-5 h-5" strokeWidth={2} />
@@ -1486,8 +1499,31 @@ const Checkout = () => {
                 <button
                   type="button"
                   onClick={editingAddress ? handleUpdateAddress : handleAddAddress}
+                  disabled={addressLoading}
                   className="flex-1 px-4 py-3 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body text-sm font-light transition-colors duration-300 rounded-full"
                 >
+                  {addressLoading && (
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 01-8-8z"
+                      ></path>
+                    </svg>
+                  )}
                   {editingAddress ? "Update Address" : "Save Address"}
                 </button>
                 <button

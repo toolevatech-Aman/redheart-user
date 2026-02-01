@@ -90,10 +90,10 @@ const Orders = () => {
     activeTab === "orders"
       ? orders
       : orders.filter(
-          (order) =>
-            order.orderStatus?.toLowerCase() === "shipped" ||
-            order.orderStatus?.toLowerCase() === "delivered"
-        );
+        (order) =>
+          order.orderStatus?.toLowerCase() === "shipped" ||
+          order.orderStatus?.toLowerCase() === "delivered"
+      );
 
   if (loading) {
     return (
@@ -123,11 +123,10 @@ const Orders = () => {
           <div className="flex border-b border-grey-200">
             <button
               onClick={() => setActiveTab("orders")}
-              className={`flex-1 px-6 py-4 font-body text-sm font-light transition-colors duration-300 relative ${
-                activeTab === "orders"
-                  ? "text-accent-rose-600"
-                  : "text-grey-600 hover:text-black-charcoal"
-              }`}
+              className={`flex-1 px-6 py-4 font-body text-sm font-light transition-colors duration-300 relative ${activeTab === "orders"
+                ? "text-accent-rose-600"
+                : "text-grey-600 hover:text-black-charcoal"
+                }`}
             >
               <div className="flex items-center justify-center gap-2">
                 <Package className="w-4 h-4" strokeWidth={2} />
@@ -139,11 +138,10 @@ const Orders = () => {
             </button>
             <button
               onClick={() => setActiveTab("track")}
-              className={`flex-1 px-6 py-4 font-body text-sm font-light transition-colors duration-300 relative ${
-                activeTab === "track"
-                  ? "text-accent-rose-600"
-                  : "text-grey-600 hover:text-black-charcoal"
-              }`}
+              className={`flex-1 px-6 py-4 font-body text-sm font-light transition-colors duration-300 relative ${activeTab === "track"
+                ? "text-accent-rose-600"
+                : "text-grey-600 hover:text-black-charcoal"
+                }`}
             >
               <div className="flex items-center justify-center gap-2">
                 <Truck className="w-4 h-4" strokeWidth={2} />
@@ -332,32 +330,49 @@ const OrderDetailsModal = ({ order, activeTab, onClose }) => {
           <div className="space-y-6">
             {/* Order Status */}
             <div className="p-4 bg-grey-50 border border-grey-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-body text-xs text-grey-600 font-light mb-1">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 p-6 bg-white  rounded-xl border border-gray-200">
+
+                {/* Order Status */}
+                <div className="flex flex-col">
+                  <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-2">
                     Order Status
                   </p>
                   <span
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-body font-light rounded-full border ${getOrderStatusColor(
+                    className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full border ${getOrderStatusColor(
                       order.orderStatus
-                    )}`}
+                    )} bg-opacity-10`}
                   >
                     {order.orderStatus || "Pending"}
                   </span>
                 </div>
-                <div className="text-right">
-                  <p className="font-body text-xs text-grey-600 font-light mb-1">
-                    Delivery Date
+
+                {/* Delivery Info */}
+                <div className="text-right flex flex-col">
+                  <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">
+                   Expected Delivery Date
                   </p>
-                  <p className="font-body text-sm text-black-charcoal font-light">
+                  <p className="text-sm text-gray-800 font-medium">
                     {formatDate(order.deliveryDate)}
                   </p>
-                  <p className="font-body text-xs text-grey-600 font-light mt-1">
-                    Slot: {order.deliverySlot}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Slot: <span className="font-medium text-gray-700">{order.deliverySlot}</span>
                   </p>
                 </div>
+
+                {/* Payment Method */}
+                <div className="text-right flex flex-col">
+                  <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">
+                    Payment Method
+                  </p>
+                  <p className="text-sm text-gray-800 font-medium">
+                    {order.paymentStatus || "Not Paid"}
+                  </p>
+                </div>
+
               </div>
+
             </div>
+
 
             {/* Order Items */}
             <div>
@@ -381,7 +396,7 @@ const OrderDetailsModal = ({ order, activeTab, onClose }) => {
                       <p className="font-body text-xs text-grey-600 font-light mb-1">
                         Quantity: {item.quantity}
                       </p>
-                     { item.name !=="Personalize Hamper"&& <p className="font-display text-sm font-light text-black-charcoal">
+                      {item.name !== "Personalize Hamper" && <p className="font-display text-sm font-light text-black-charcoal">
                         ₹{item.selling_price.toFixed(2)}
                       </p>}
 
