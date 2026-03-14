@@ -150,9 +150,25 @@ const HiringForInternship = () => {
   };
 
   const renderQuestion = (q) => {
-    const type = validTypes.includes(q.type) ? q.type : "Input";
-    const options = Array.isArray(q.options) ? q.options : [];
+    let type = validTypes.includes(q.type) ? q.type : "Input";
+    let options = Array.isArray(q.options) ? q.options : [];
     const value = getAnswer(q.question);
+
+    const isSectorQuestion =
+      typeof q.question === "string" &&
+      q.question.trim() ===
+        "Which sector would you like to do an internship in within an e-commerce company?";
+
+    if (isSectorQuestion) {
+      type = "Radio";
+      options = [
+        "Marketing (Digital)",
+        "HR (Human Resource)",
+        "Tech (frontend)",
+        "Tech (Backend)",
+        "Supply Chain & Category",
+      ];
+    }
 
     if (type === "Checkbox") {
       return (
@@ -161,25 +177,25 @@ const HiringForInternship = () => {
           <div className="flex flex-wrap gap-3">
             {options.length
               ? options.map((opt) => (
-                  <label key={opt} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={isCheckboxChecked(q.question, opt)}
-                      onChange={(e) => handleCheckboxChange(q.question, opt, e.target.checked)}
-                      className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600 border-grey-300 rounded"
-                    />
-                    <span className="font-body text-sm text-grey-700">{opt}</span>
-                  </label>
-                ))
-              : (
+                <label key={opt} className="flex items-center gap-2 cursor-pointer">
                   <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => setAnswer(q.question, e.target.value)}
-                    placeholder="Your answer"
-                    className="flex-1 min-w-[200px] px-3 py-2 bg-grey-50 border border-grey-200 rounded-lg font-body text-sm focus:outline-none focus:border-accent-rose-600"
+                    type="checkbox"
+                    checked={isCheckboxChecked(q.question, opt)}
+                    onChange={(e) => handleCheckboxChange(q.question, opt, e.target.checked)}
+                    className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600 border-grey-300 rounded"
                   />
-                )}
+                  <span className="font-body text-sm text-grey-700">{opt}</span>
+                </label>
+              ))
+              : (
+                <input
+                  type="text"
+                  value={value}
+                  onChange={(e) => setAnswer(q.question, e.target.value)}
+                  placeholder="Your answer"
+                  className="flex-1 min-w-[200px] px-3 py-2 bg-grey-50 border border-grey-200 rounded-lg font-body text-sm focus:outline-none focus:border-accent-rose-600"
+                />
+              )}
           </div>
         </div>
       );
@@ -192,26 +208,26 @@ const HiringForInternship = () => {
           <div className="flex flex-wrap gap-3">
             {options.length
               ? options.map((opt) => (
-                  <label key={opt} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name={`radio-${q._id}`}
-                      checked={value === opt}
-                      onChange={() => setAnswer(q.question, opt)}
-                      className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600 border-grey-300"
-                    />
-                    <span className="font-body text-sm text-grey-700">{opt}</span>
-                  </label>
-                ))
-              : (
+                <label key={opt} className="flex items-center gap-2 cursor-pointer">
                   <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => setAnswer(q.question, e.target.value)}
-                    placeholder="Your answer"
-                    className="flex-1 min-w-[200px] px-3 py-2 bg-grey-50 border border-grey-200 rounded-lg font-body text-sm focus:outline-none focus:border-accent-rose-600"
+                    type="radio"
+                    name={`radio-${q._id}`}
+                    checked={value === opt}
+                    onChange={() => setAnswer(q.question, opt)}
+                    className="w-4 h-4 text-accent-rose-600 focus:ring-accent-rose-600 border-grey-300"
                   />
-                )}
+                  <span className="font-body text-sm text-grey-700">{opt}</span>
+                </label>
+              ))
+              : (
+                <input
+                  type="text"
+                  value={value}
+                  onChange={(e) => setAnswer(q.question, e.target.value)}
+                  placeholder="Your answer"
+                  className="flex-1 min-w-[200px] px-3 py-2 bg-grey-50 border border-grey-200 rounded-lg font-body text-sm focus:outline-none focus:border-accent-rose-600"
+                />
+              )}
           </div>
         </div>
       );
@@ -408,7 +424,7 @@ const HiringForInternship = () => {
               Why is there a one-time Registration & Onboarding Fee?
             </h2>
             <p className="font-body text-grey-700 leading-relaxed mb-6">
-              At Evatools Private Limited, we believe in treating our interns as future corporate leaders. This small, one-time investment of <strong className="text-accent-rose-700">₹499</strong> is dedicated entirely to your professional journey and ensures you receive a premium corporate experience from Day 1:
+              At Evatools Private Limited, we believe in treating our interns as future corporate leaders. This small, one-time investment of <strong className="text-accent-rose-700">₹999</strong> is dedicated entirely to your professional journey and ensures you receive a premium corporate experience from Day 1:
             </p>
             <ul className="space-y-4">
               {[
@@ -455,7 +471,7 @@ const HiringForInternship = () => {
               Application Form
             </h2>
             <p className="font-body text-sm text-grey-600 mt-1">
-              Answer the questions below and pay ₹499 to submit your application.
+              Answer the questions below and pay ₹999 to submit your application.
             </p>
           </div>
           <div className="p-6 sm:p-8">
@@ -468,15 +484,22 @@ const HiringForInternship = () => {
                   <button
                     type="submit"
                     disabled={submitLoading}
-                    className="w-full py-3.5 bg-accent-rose-600 hover:bg-accent-rose-700 disabled:opacity-70 text-primary-white font-body text-sm font-medium rounded-xl transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                    className="w-full py-3.5 bg-accent-rose-600 hover:bg-accent-rose-700 disabled:opacity-70 text-primary-white font-body text-sm font-medium rounded-xl transition-colors flex flex-col items-center justify-center gap-1 shadow-md hover:shadow-lg"
                   >
                     {submitLoading ? (
-                      <>
+                      <div className="flex items-center gap-2">
                         <Loader2 className="w-5 h-5 animate-spin" strokeWidth={2} />
                         Processing...
-                      </>
+                      </div>
                     ) : (
-                      "Submit & Pay ₹499"
+                      <>
+                        <div className="flex items-center gap-2">
+                          Pay and Submit
+                          <span className="line-through opacity-70">₹999</span>
+                          <span className="text-base font-semibold">₹499</span>
+                        </div>
+                        <span className="text-[10px] opacity-80">Limited Time Offer</span>
+                      </>
                     )}
                   </button>
                 </div>
