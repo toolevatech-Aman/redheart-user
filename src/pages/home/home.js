@@ -146,52 +146,16 @@ const Home = () => {
 ];
   return (
     <div className="min-h-screen bg-primary-white">
-      {/* Hero Section */}
-      {/* <section className="relative h-[70vh] md:h-[85vh] lg:h-[90vh] overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={loveAffectionImg}
-            alt="Premium Floral Arrangement"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
-        </div>
-        <div className="relative h-full flex items-center justify-center">
-          <div className="text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 bg-primary-white/95 backdrop-blur-md border border-grey-200/50 rounded-full">
-              <Sparkles className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
-              <span className="font-body text-xs sm:text-sm text-grey-700 tracking-[0.15em] uppercase font-light">Premium Florals</span>
-            </div>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-primary-white mb-6 leading-[1.1] tracking-tight">
-              Express Your
-              <span className="block text-primary-white mt-2"> Heart's Desire</span>
-            </h1>
-            <p className="font-body text-base sm:text-lg md:text-xl text-primary-white/95 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-              Discover our exquisite collection of premium flowers and gifts, crafted with love and elegance
-            </p>
-            <div className="flex justify-center items-center">
-              <a
-                href="#collections"
-                className="group px-8 sm:px-10 py-3 sm:py-4 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body font-light tracking-wide rounded-full transition-all duration-300 flex items-center gap-2 shadow-elegant hover:shadow-premium border border-accent-rose-700/30 text-sm sm:text-base"
-              >
-                Explore Collection
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" strokeWidth={2} />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section> */}
       {/* Small Posters Carousel */}
-      {/* Small Posters Carousel */}
-      <section className="py-8 bg-white">
+      <section className="py-10 md:py-12 bg-white">
         <div className="overflow-x-auto flex gap-5 px-4 sm:px-6 lg:px-8 scroll-smooth snap-x snap-mandatory hide-scrollbar">
           {heroes.map((item, idx) => (
             <div
               key={idx}
               className="
-          min-w-[220px]          /* mobile */
-          sm:min-w-[280px]       /* tablet */
-          lg:min-w-[430px]       /* laptop = 2.5 visible */
+          min-w-[240px]          /* mobile */
+          sm:min-w-[320px]       /* tablet */
+          lg:min-w-[500px]       /* laptop = 2.5 visible */
           snap-center 
           shrink-0 
           rounded-2xl 
@@ -203,7 +167,7 @@ const Home = () => {
               <img
                 src={item.img}
                 alt="Poster"
-                className="w-full h-64 sm:h-72 lg:h-80 object-cover"
+                className="w-full h-72 sm:h-80 lg:h-[28rem] object-cover"
               />
             </div>
           ))}
@@ -223,7 +187,7 @@ const Home = () => {
 
 
 
-      <section className="py-8 bg-gradient-to-b from-white to-gray-50">
+      <section className="py-10 md:py-12 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Optional: Heading */}
@@ -238,7 +202,7 @@ const Home = () => {
               {mainCategories.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex-shrink-0 w-48 sm:w-52 md:w-56 snap-center cursor-pointer"
+                  className="flex-shrink-0 w-56 sm:w-60 md:w-64 snap-center cursor-pointer"
                   onClick={() => navigate(`/product/${item.title}`)}
                 >
                   {/* Image */}
@@ -246,7 +210,7 @@ const Home = () => {
                     <img
                       src={item.img}
                       alt={item.title}
-                      className="w-full h-40 md:h-48 object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-44 md:h-52 object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
                   </div>
@@ -281,8 +245,8 @@ const Home = () => {
         onClick={() => navigate("/hamper")}
       >
         {/* Background Image */}
-        <div className="w-full h-64 sm:h-80 md:h-96 lg:h-96 overflow-hidden rounded-2xl">
-          <img
+        <div className="w-full h-72 sm:h-[22rem] md:h-[32rem] lg:h-[34rem] overflow-hidden rounded-2xl">
+           <img
             src={buildHamper}
             alt="Build Your Own Hamper"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -293,10 +257,10 @@ const Home = () => {
 
         {/* Text Content */}
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8">
-          <h2 className="font-display text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg">
+          <h2 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg">
             Build Your Own Hamper
           </h2>
-          <p className="mt-2 text-sm sm:text-base md:text-lg text-white/90 font-light drop-shadow-md">
+          <p className="mt-3 text-base sm:text-lg md:text-xl text-white/95 font-light drop-shadow-md">
             Choose flowers, gifts, and treats for your perfect combo
           </p>
 
@@ -319,7 +283,7 @@ const Home = () => {
       </section>
 
 
-      <section className="py-16 bg-gradient-to-b from-[#fff5f2] to-white">
+      <section className="py-12 md:py-14 bg-gradient-to-b from-[#fff5f2] to-white">
         <div className="max-w-7xl mx-auto px-4">
           {/* Section Title */}
           <h2 className="text-4xl text-center mb-12 text-[#8B0000] font-serif">
@@ -327,7 +291,7 @@ const Home = () => {
           </h2>
 
           {/* Categories Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {categories.map((category) => (
               <div
                 key={category.id}
@@ -339,7 +303,7 @@ const Home = () => {
                   <img
                     src={category.img}
                     alt={category.title}
-                    className="w-full h-64 object-cover transition-transform duration-500 hover:scale-110"
+                    className="w-full h-72 object-cover transition-transform duration-500 hover:scale-110"
                   />
                 </div>
 
@@ -360,7 +324,7 @@ const Home = () => {
 
       {/* Collections Section */}
 
-      <section className="py-4 bg-white">
+      <section className="py-6 md:py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-12">
@@ -377,11 +341,11 @@ const Home = () => {
             {collections.map((collection) => (
               <div
                 key={collection.id}
-                className="carousel-item flex-shrink-0 w-64 sm:w-72 md:w-80 bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden snap-center cursor-pointer group transition-all duration-500 hover:shadow-xl"
+                className="carousel-item flex-shrink-0 w-72 sm:w-80 md:w-96 bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden snap-center cursor-pointer group transition-all duration-500 hover:shadow-xl"
                 onClick={() => navigate(`/product/${collection.title}`)}
               >
                 {/* Image */}
-                <div className="relative w-full h-56 sm:h-48 md:h-56 overflow-hidden rounded-t-2xl">
+                  <div className="relative w-full h-64 sm:h-56 md:h-64 overflow-hidden rounded-t-2xl">
                   <img
                     src={collection.image}
                     alt={collection.title}
@@ -419,7 +383,7 @@ const Home = () => {
 
 
       {/* Blossoms By Hues Section */}
-      <section className="py-8 bg-gradient-to-b from-[#fff5f2] to-white">
+      <section className="py-10 md:py-12 bg-gradient-to-b from-[#fff5f2] to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-10 sm:mb-12 md:mb-16">
@@ -439,11 +403,11 @@ const Home = () => {
               {festivalCollection.map((blossom) => (
                 <div
                   key={blossom.id}
-                  className="flex-shrink-0 w-48 sm:w-52 md:w-60 lg:w-64 snap-center group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-500 cursor-pointer"
+                  className="flex-shrink-0 w-56 sm:w-60 md:w-72 lg:w-80 snap-center group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-500 cursor-pointer"
                   onClick={() => navigate(`/product/${blossom.title}`)}
                 >
                   {/* Image */}
-                  <div className="relative h-36 sm:h-40 md:h-48 lg:h-56 overflow-hidden rounded-t-2xl">
+                    <div className="relative h-44 sm:h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-2xl">
                     <img
                       src={blossom.image}
                       alt={blossom.title}
@@ -481,7 +445,7 @@ const Home = () => {
   `}</style>
       </section>
 
-      <section className="py-16 bg-gradient-to-b from-[#fff5f2] to-white">
+      <section className="py-12 md:py-14 bg-gradient-to-b from-[#fff5f2] to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-12">
@@ -496,9 +460,9 @@ const Home = () => {
           {/* USP Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {/* USP 1 */}
-            <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
+            <div className="flex flex-col items-center text-center p-6 md:p-8 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
-                <GiFlowerPot className="w-12 h-12" />
+                <GiFlowerPot className="w-14 h-14" />
               </div>
               <h3 className="text-lg font-medium text-gray-800 mb-2">Fresh & Premium Flowers</h3>
               <p className="text-gray-500 text-sm">Handpicked blooms delivered fresh to your doorstep.</p>
@@ -507,7 +471,7 @@ const Home = () => {
             {/* USP 2 */}
             <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
-                <GiCakeSlice className="w-12 h-12" />
+                <GiCakeSlice className="w-14 h-14" />
               </div>
               <h3 className="text-lg font-medium text-gray-800 mb-2">Delicious Custom Cakes</h3>
               <p className="text-gray-500 text-sm">Bespoke cakes baked with love for every occasion.</p>
@@ -516,7 +480,7 @@ const Home = () => {
             {/* USP 3 */}
             <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
-                <FiGift className="w-12 h-12" />
+                <FiGift className="w-14 h-14" />
               </div>
               <h3 className="text-lg font-medium text-gray-800 mb-2">Thoughtful Gift Selection</h3>
               <p className="text-gray-500 text-sm">Curated gifts to make every celebration memorable.</p>
@@ -525,7 +489,7 @@ const Home = () => {
             {/* USP 4 */}
             <div className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-500">
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
-                <FiTruck className="w-12 h-12" />
+                <FiTruck className="w-14 h-14" />
               </div>
               <h3 className="text-lg font-medium text-gray-800 mb-2">Fast & Reliable Delivery</h3>
               <p className="text-gray-500 text-sm">We make sure your surprises reach on time, every time.</p>
@@ -534,7 +498,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="py-8 bg-white">
+      <section className="py-10 md:py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-10 sm:mb-12 md:mb-16">
@@ -553,11 +517,11 @@ const Home = () => {
               {shopByCombo.map((blossom) => (
                 <div
                   key={blossom.id}
-                  className="flex-shrink-0 w-48 sm:w-52 md:w-60 lg:w-64 snap-center group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-500 cursor-pointer"
+                  className="flex-shrink-0 w-56 sm:w-60 md:w-72 lg:w-80 snap-center group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-500 cursor-pointer"
                   onClick={() => navigate(`/product/${blossom.title}`)}
                 >
                   {/* Image */}
-                  <div className="relative h-36 sm:h-40 md:h-48 lg:h-56 overflow-hidden rounded-t-2xl">
+                    <div className="relative h-44 sm:h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-2xl">
                     <img
                       src={blossom.image}
                       alt={blossom.title}

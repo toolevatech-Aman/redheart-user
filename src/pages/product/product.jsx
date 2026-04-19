@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { X, ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
 import { getProduct } from "../../service/products";
@@ -37,7 +37,44 @@ const buildInitialFilters = (filterData) => {
     [payloadKey]: [value],
   };
 };
+
+const buildFiltersFromSearch = (searchString) => {
+  const params = new URLSearchParams(searchString);
+  const filters = {
+    category_name: params.get("category") || "",
+    subcategory_name: [],
+    festival_tags: [],
+    occasion_tags: [],
+    special_occasion_tags: [],
+    type: [],
+    relationship: [],
+    color: [],
+  };
+
+  const map = {
+    subcategory: "subcategory_name",
+    festival: "festival_tags",
+    occasion: "occasion_tags",
+    special_occasion: "special_occasion_tags",
+    type: "type",
+    relationship: "relationship",
+    color: "color",
+  };
+
+  Object.entries(map).forEach(([searchKey, payloadKey]) => {
+    const value = params.get(searchKey);
+    if (value) {
+      filters[payloadKey] = value
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean);
+    }
+  });
+
+  return filters;
+};
 const Product = () => {
+  const location = useLocation();
   const { category } = useParams();
   const navigate = useNavigate();
 
@@ -61,10 +98,13 @@ const Product = () => {
     color: [],
   };
 
-  const filterFromCategory = getPayloadKeyByItemName(category);
+  const categoryFromQuery = new URLSearchParams(location.search).get("category");
+  const currentCategory = categoryFromQuery || category || "";
+  const searchFilters = buildFiltersFromSearch(location.search);
+  const filterFromCategory = getPayloadKeyByItemName(currentCategory);
 
   const [selectedFilters, setSelectedFilters] = useState(() =>
-    buildInitialFilters(filterFromCategory)
+    location.search ? searchFilters : buildInitialFilters(filterFromCategory)
   );
   /* ===================== API ===================== */
   const fetchProducts = async (pageNo) => {
@@ -105,11 +145,15 @@ const Product = () => {
     setPage(1);
     setHasMore(true);
     fetchProducts(1);
-  }, [category, selectedFilters]);
+  }, [currentCategory, selectedFilters]);
   useEffect(() => {
-    const filterFromCategory = getPayloadKeyByItemName(category);
-    setSelectedFilters(buildInitialFilters(filterFromCategory));
-  }, [category]);
+    const filterFromCategory = getPayloadKeyByItemName(currentCategory);
+    if (location.search) {
+      setSelectedFilters(buildFiltersFromSearch(location.search));
+    } else {
+      setSelectedFilters(buildInitialFilters(filterFromCategory));
+    }
+  }, [category, location.search]);
 
   /* ===================== PAGE CHANGE ===================== */
   useEffect(() => {
@@ -143,7 +187,7 @@ const Product = () => {
     localStorage.setItem("recentProducts", JSON.stringify(filtered));
 
     // Navigate to product page
-    navigate(`/product/${category}/${slug}`, { state: { id } });
+    navigate(`/product/${currentCategory}/${slug}`, { state: { id } });
   };
 
 
@@ -159,7 +203,7 @@ const Product = () => {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="border-b p-4 flex justify-between">
-        <h1 className="text-2xl capitalize">{getDescription(category)} </h1>
+        <h1 className="text-2xl capitalize">{getDescription(currentCategory)} </h1>
         {/* <button
           onClick={() => setShowFilters(true)}
           className="border px-4 py-2 flex gap-2"
@@ -177,7 +221,7 @@ const Product = () => {
               <a href="/categories" className="hover:text-gray-700 transition">Categories</a>
             </li> */}
             <li>/</li>
-            <li className="text-gray-900 font-medium">{category}</li>
+            <li className="text-gray-900 font-medium">{currentCategory}</li>
           </ol>
         </nav>
       </div>

@@ -31,7 +31,7 @@ const Contact = () => {
             Get in Touch
           </h1>
           <p className="font-body text-lg md:text-xl text-grey-700 font-light leading-relaxed max-w-2xl mx-auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. We'd love to hear from you.
+            Have questions about your order or need gifting advice? We're here to help and would love to hear from you. Reach out anytime!
           </p>
         </div>
       </section>
@@ -46,7 +46,7 @@ const Contact = () => {
                 Contact Information
               </h2>
               <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-8">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                We're here to help! Whether you have questions about your order, need gifting advice, or want to learn more about our services, feel free to reach out. Our team at RedHeart is dedicated to making your gifting experience seamless and memorable.
               </p>
 
               <div className="space-y-6">
@@ -58,8 +58,8 @@ const Contact = () => {
                     <h3 className="font-display text-lg font-light text-black-charcoal mb-1 tracking-tight">
                       Phone
                     </h3>
-                    <p className="font-body text-grey-700 font-light">+1 (555) 123-4567</p>
-                    <p className="font-body text-sm text-grey-600 font-light">Mon-Fri 9am-6pm EST</p>
+                    <p className="font-body text-grey-700 font-light">+91 9275506722</p>
+                    <p className="font-body text-sm text-grey-600 font-light">Mon-Sun 9am-9pm IST</p>
                   </div>
                 </div>
 
@@ -71,7 +71,7 @@ const Contact = () => {
                     <h3 className="font-display text-lg font-light text-black-charcoal mb-1 tracking-tight">
                       Email
                     </h3>
-                    <p className="font-body text-grey-700 font-light">hello@redheart.com</p>
+                    <p className="font-body text-grey-700 font-light">admin@redheart.in</p>
                     <p className="font-body text-sm text-grey-600 font-light">We respond within 24 hours</p>
                   </div>
                 </div>
@@ -85,9 +85,9 @@ const Contact = () => {
                       Address
                     </h3>
                     <p className="font-body text-grey-700 font-light">
-                      123 Flower Street<br />
-                      Garden City, NY 11530<br />
-                      United States
+                      RedHeart Gifting Pvt. Ltd.<br />
+                      Gurugram, Haryana<br />
+                      India
                     </p>
                   </div>
                 </div>

@@ -1,10 +1,23 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, User, ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
+import { Search, User, ShoppingBag, Menu, X, ChevronDown, Pencil, Truck, MapPin } from "lucide-react";
 import logo from "../../assets/RedHeart-Logo-02.png";
 import { getProduct } from "../../service/products";
 import { menuData } from "../../constants/menuData";
 import { useSelector } from "react-redux";
+
+const categoryDisplayNames = {
+  subcategories: "Subcategories",
+  festival: "Festival",
+  special: "Special Occasion",
+  occasion: "Occasion",
+  type: "Type",
+  relationship: "Relationship",
+  color: "Color"
+};
+
+const categoryOrder = ['subcategories', 'festival', 'special', 'occasion', 'type', 'relationship', 'color'];
+
 export default function Header() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -19,7 +32,20 @@ export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const mobileSearchRef = useRef(null);
+  const [deliveryLocation, setDeliveryLocation] = useState("Detecting location...");
+  const [isDetectingLocation, setIsDetectingLocation] = useState(false);
   const totalCount = useSelector((state) => state.cart.totalCount);
+
+  const getMenuItemHref = (menu, item) => {
+    const category = encodeURIComponent(menu.title);
+    const value = encodeURIComponent(item.name);
+    if (item.category) {
+      return `/p?category=${category}&${item.category}=${value}`;
+    } else {
+      // Subcategory (default)
+      return `/p?category=${category}&subcategory=${value}`;
+    }
+  };
 
   // Scroll effect for header shadow'
   useEffect(() => {
@@ -76,7 +102,21 @@ export default function Header() {
   useEffect(() => {
     const handler = setTimeout(() => {
       if (searchQuery.trim()) {
-        handleSearchSubmit({ preventDefault: () => { } });
+        const fetchSearchResults = async () => {
+          setIsDropdownOpen(true);
+          setLoading(true);
+          try {
+            const payload = { searchField: searchQuery, limit: 5 };
+            const res = await getProduct(payload);
+            setProducts(res.products || []);
+          } catch (err) {
+            console.error("API ERROR:", err);
+            setProducts([]);
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchSearchResults();
       } else {
         setProducts([]);
         setIsDropdownOpen(false);
@@ -101,6 +141,58 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const getReadableLocation = async (latitude, longitude) => {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch location details");
+    }
+    const data = await response.json();
+    const address = data?.address || {};
+    const primary =
+      address.city ||
+      address.town ||
+      address.village ||
+      address.suburb ||
+      address.county;
+    const secondary = address.state || address.country;
+    if (primary && secondary) return `${primary}, ${secondary}`;
+    if (primary) return primary;
+    return data?.display_name?.split(",").slice(0, 2).join(", ") || "Current location";
+  };
+
+  const detectUserLocation = () => {
+    if (!navigator.geolocation) {
+      setDeliveryLocation("Location unavailable");
+      return;
+    }
+
+    setIsDetectingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const locationText = await getReadableLocation(latitude, longitude);
+          setDeliveryLocation(locationText);
+        } catch (error) {
+          setDeliveryLocation("Location unavailable");
+        } finally {
+          setIsDetectingLocation(false);
+        }
+      },
+      () => {
+        setDeliveryLocation("Enable location");
+        setIsDetectingLocation(false);
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+    );
+  };
+
+  useEffect(() => {
+    detectUserLocation();
+  }, []);
+
   const handleSearchClick = () => {
     setIsSearchOpen(!isSearchOpen);
     if (!isSearchOpen) setSearchQuery("");
@@ -108,12 +200,6 @@ export default function Header() {
       setOpen(false);
       setActiveMenu(null);
     }
-  };
-
-  const handleSearchClose = () => {
-    setIsSearchOpen(false);
-    setSearchQuery("");
-    setIsDropdownOpen(false);
   };
 
   const handleSearchSubmit = async (e) => {
@@ -146,30 +232,39 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky  top-0 z-50 bg-primary-white border-b border-grey-100 transition-all duration-500 ${isScrolled ? "shadow-elegant" : ""
+        className={`sticky top-0 z-50 bg-primary-white border-b border-grey-100 transition-all duration-500 ${isScrolled ? "shadow-elegant" : ""
           }`}
       >
         <nav className="w-full">
           {/* Top Row */}
-          <div className="flex items-center justify-between h-16 md:h-20 px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between py-[2px] px-4 sm:px-6 lg:px-8">
             {/* Logo */}
             <div className="flex items-center justify-center flex-shrink-0">
               <a href="/">
                 <img
                   src={logo}
                   alt="RedHeart Logo"
-                  className="h-32 sm:h-50 md:h-48 lg:h-56 xl:h-64 object-contain"
+                  className="h-12 lg:h-14 w-auto object-contain scale-[1.7] origin-left"
                 />
               </a>
             </div>
 
-
-
+            <button
+              type="button"
+              onClick={detectUserLocation}
+              className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#eaf6ff] border border-[#d7e9f7] hover:bg-[#e2f2ff] transition-colors"
+            >
+              <MapPin className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
+              <span className="text-xs font-body font-medium text-black-charcoal max-w-[160px] truncate">
+                {isDetectingLocation ? "Detecting..." : deliveryLocation}
+              </span>
+              <Pencil className="w-3.5 h-3.5 text-grey-600" strokeWidth={2} />
+            </button>
 
             {/* Desktop Search */}
             <form
               onSubmit={handleSearchSubmit}
-              className="flex-1 max-w-2xl mx-8 hidden lg:flex relative"
+              className="hidden lg:flex relative flex-1 max-w-xl mx-6"
             >
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grey-400" strokeWidth={1.5} />
               <input
@@ -177,8 +272,8 @@ export default function Header() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for flowers, bouquets, gifts..."
-                className="w-full pl-12 pr-12 py-3.5 md:py-4 text-sm md:text-base font-body text-black-charcoal bg-grey-50 border-2 border-grey-200 rounded-full focus:outline-none focus:border-accent-rose-400 focus:bg-primary-white transition-all duration-300 placeholder:text-grey-400"
+                placeholder="Search for"
+                className="w-full pl-12 pr-10 py-2 text-sm font-body text-black-charcoal bg-grey-50 border border-grey-200 rounded-md focus:outline-none focus:border-accent-rose-400 focus:bg-primary-white transition-all duration-300 placeholder:text-grey-400"
               />
 
               {isDropdownOpen && (
@@ -218,23 +313,33 @@ export default function Header() {
 
 
             {/* Desktop Right Icons */}
-            <div className="hidden lg:flex items-center space-x-3">
+            <div className="hidden lg:flex items-center gap-5">
               <button
+                type="button"
+                className="flex flex-col items-center text-black-charcoal hover:text-accent-rose-600 transition-colors"
+              >
+                <Truck className="w-6 h-6" strokeWidth={1.75} />
+                <span className="text-[11px] leading-4 font-body">Track Order</span>
+              </button>
+              <button
+                type="button"
                 onClick={() => {
                   const authToken = localStorage.getItem("authToken");
                   navigate(authToken ? "/my-account" : "/login");
                 }}
-                className="p-2.5 rounded-full text-black-charcoal hover:text-accent-rose-600 hover:bg-grey-50 transition-all duration-300"
+                className="flex flex-col items-center text-black-charcoal hover:text-accent-rose-600 transition-colors"
               >
-                <User className="w-5 h-5" strokeWidth={1.5} />
+                <User className="w-6 h-6" strokeWidth={1.75} />
+                <span className="text-[11px] leading-4 font-body">Sign In</span>
               </button>
               <button
                 onClick={() => navigate("/cart")}
-                className="relative p-2.5 rounded-full text-black-charcoal hover:text-accent-rose-600 hover:bg-grey-50 transition-all duration-300"
+                className="relative flex flex-col items-center text-black-charcoal hover:text-accent-rose-600 transition-colors"
               >
-                <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
+                <ShoppingBag className="w-6 h-6" strokeWidth={1.75} />
+                <span className="text-[11px] leading-4 font-body">Cart</span>
                 {totalCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-br from-accent-rose-500 to-accent-pink-600 text-primary-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-1 right-0 bg-gradient-to-br from-accent-rose-500 to-accent-pink-600 text-primary-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
                     {totalCount > 99 ? "99+" : totalCount}
                   </span>
                 )}
@@ -242,7 +347,7 @@ export default function Header() {
             </div>
 
             {/* Mobile Icons */}
-            <div className="lg:hidden flex items-center space-x-1.5 pr-4 sm:pr-6">
+            <div className="lg:hidden flex items-center space-x-1.5">
               <button
                 onClick={handleSearchClick}
                 className={`p-2 text-black-charcoal focus:outline-none transition-all duration-300 hover:text-accent-rose-600 hover:bg-grey-50 rounded-full ${isSearchOpen ? "text-accent-rose-600 bg-accent-rose-50" : ""
@@ -310,60 +415,71 @@ export default function Header() {
           </div>
 
           {/* Second Row Desktop Menu */}
-          <div className="hidden lg:flex justify-center bg-primary-white border-t border-red-700 shadow-sm">
-            <ul className="flex items-center space-x-4 xl:space-x-6 px-8">
+          <div className="hidden lg:flex justify-center bg-primary-white border-t border-grey-200">
+            <ul className="relative flex items-center space-x-2 xl:space-x-3 px-4">
               {menuData.map((menu, index) => {
-                // Determine number of columns dynamically (max 4)
-                const columns = menu.items.length <= 4 ? menu.items.length : 4;
-
-                // Map columns to Tailwind classes
-                const gridColsClass = {
-                  1: 'grid-cols-1',
-                  2: 'grid-cols-2',
-                  3: 'grid-cols-3',
-                  4: 'grid-cols-4',
-                }[columns];
+                // Group items by category
+                const groupedItems = {};
+                menu.items.forEach(item => {
+                  const cat = item.category || 'subcategories';
+                  if (!groupedItems[cat]) groupedItems[cat] = [];
+                  groupedItems[cat].push(item);
+                });
+                const isDirectMenu = menu.title === "Internship Program" && menu.items?.[0]?.path;
 
                 return (
-                  <li key={index} className="group relative">
-                    <button className="px-3 py-3 text-sm xl:text-[15px] font-body font-medium text-black-charcoal hover:text-accent-rose-600 transition-all duration-300">
+                  <li key={index} className="group">
+                    <button
+                      onClick={() => {
+                        if (isDirectMenu) navigate(menu.items[0].path);
+                      }}
+                      className="px-2.5 py-2.5 text-[15px] font-body font-normal text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 whitespace-nowrap"
+                    >
                       {menu.title}
                     </button>
 
                     {/* Dropdown */}
-                    <div className="absolute hidden group-hover:block pt-3 left-1/2 -translate-x-1/2 z-50">
-                      <div
-                        className="bg-white backdrop-blur-md rounded-3xl p-6 border border-black/10 overflow-hidden relative"
-                        style={{
-                          width: `${columns * 8}rem`, // adjust width
-                        }}
-                      >
+                    {!isDirectMenu && (
+                      <div className="absolute hidden group-hover:block top-full pt-1 left-1/2 -translate-x-1/2 z-50">
+                      <div className="bg-white backdrop-blur-md rounded-3xl p-6 border border-black/10 overflow-hidden relative w-[min(1150px,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] max-h-[70vh]">
                         {/* Arrow */}
                         <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-l border-t border-black/10 rotate-45"></div>
 
-                        {/* Grid */}
-                        <ul className={`grid ${gridColsClass} gap-x-6 gap-y-4`}>
-                          {menu.items.map((item, i) => (
-                            <li
-                              key={i}
-                              className="px-2 py-2 hover:bg-grey-50 rounded-lg transition-all duration-200"
-                            >
-                              <a
-                                href={`/product/${item.name}`}
-                                className="block text-black hover:text-red-600"
-                              >
-                                <span className="font-medium">{item.name}</span>
-                                {item.date && (
-                                  <span className="block text-xs text-red-400 mt-1">
-                                    {item.date}
-                                  </span>
-                                )}
-                              </a>
-                            </li>
+                        {/* Grouped Sections */}
+                        <div className="flex flex-row gap-8 overflow-x-auto overflow-y-auto pb-2 max-h-[58vh] hide-scrollbar">
+                          {categoryOrder.filter(cat => groupedItems[cat]).map(cat => (
+                            <div key={cat} className="min-w-[170px] max-w-[220px] flex flex-col">
+                              <h3 className="text-sm font-semibold text-grey-800 mb-3 border-b border-grey-200 pb-1">{categoryDisplayNames[cat]}</h3>
+                              <ul className="space-y-2 overflow-y-auto pr-1 max-h-[48vh] hide-scrollbar">
+                                {groupedItems[cat].map((item, i) => (
+                                  <li
+                                    key={i}
+                                    className="px-2 py-2 hover:bg-grey-50 rounded-lg transition-all duration-200"
+                                  >
+                                    <a
+                                      href={getMenuItemHref(menu, item)}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        navigate(getMenuItemHref(menu, item));
+                                      }}
+                                      className="block text-black hover:text-red-600"
+                                    >
+                                      <span className="font-medium">{item.name}</span>
+                                      {item.date && (
+                                        <span className="block text-xs text-red-400 mt-1">
+                                          {item.date}
+                                        </span>
+                                      )}
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     </div>
+                    )}
                   </li>
                 );
               })}
@@ -386,132 +502,126 @@ export default function Header() {
               className={`absolute right-0 top-0 h-full w-full max-w-sm bg-primary-white shadow-premium transform transition-transform duration-400 overflow-y-auto ${open ? "translate-x-0" : "translate-x-full"
                 }`}
             >
-              {/* Sidebar header and content same as your original code */}
-              {/* ...keep your mobile sidebar code unchanged */}
-              {/* Mobile Sidebar */}
-              <div
-                className={`fixed inset-0 z-50 lg:hidden transition-all duration-400 ${open ? "visible opacity-100" : "invisible opacity-0"
-                  }`}
-              >
-                {/* Backdrop */}
-                <div
-                  className={`absolute inset-0 bg-black-soft/60 backdrop-blur-sm transition-opacity duration-400 ${open ? "opacity-100" : "opacity-0"
-                    }`}
+              <div className="sticky top-0 z-10 bg-gradient-to-b from-primary-white to-grey-50/30 border-b border-grey-200 px-6 py-5 flex items-center justify-between backdrop-blur-sm">
+                <div className="flex items-center space-x-3">
+                  <img src={logo} alt="RedHeart Logo" className="h-14 w-auto" />
+                  <div className="flex flex-col">
+                    <span className="font-elegant text-2xl text-accent-rose-600 leading-none">Red Heart</span>
+                    <span className="font-body text-[10px] text-grey-600 tracking-wider uppercase">Menu</span>
+                  </div>
+                </div>
+                <button
                   onClick={closeSidebar}
-                ></div>
-
-                {/* Sidebar */}
-                <aside
-                  className={`absolute right-0 top-0 h-full w-full max-w-sm bg-primary-white shadow-premium transform transition-transform duration-400 overflow-y-auto ${open ? "translate-x-0" : "translate-x-full"
-                    }`}
+                  className="p-2 rounded-full text-grey-700 hover:text-accent-rose-600 hover:bg-grey-100 transition-all duration-300"
                 >
-                  {/* Sidebar Header */}
-                  <div className="sticky top-0 z-10 bg-gradient-to-b from-primary-white to-grey-50/30 border-b border-grey-200 px-6 py-5 flex items-center justify-between backdrop-blur-sm">
-                    <div className="flex items-center space-x-3">
-                      <img src={logo} alt="RedHeart Logo" className="h-14 w-auto" />
-                      <div className="flex flex-col">
-                        <span className="font-elegant text-2xl text-accent-rose-600 leading-none">Red Heart</span>
-                        <span className="font-body text-[10px] text-grey-600 tracking-wider uppercase">Menu</span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={closeSidebar}
-                      className="p-2 rounded-full text-grey-700 hover:text-accent-rose-600 hover:bg-grey-100 transition-all duration-300"
-                    >
-                      <X className="w-6 h-6" strokeWidth={2} />
-                    </button>
-                  </div>
-
-                  {/* Sidebar Content */}
-                  <div className="px-6 py-6">
-                    {/* Quick Actions */}
-                    <div className="grid grid-cols-3 gap-3 pb-6 border-b border-grey-200 mb-6">
-                      <button
-                        onClick={() => {
-                          closeSidebar();
-                          setIsSearchOpen(true);
-                        }}
-                        className="flex flex-col items-center justify-center space-y-2 px-3 py-4 bg-gradient-to-br from-grey-50 to-grey-100/50 hover:from-accent-rose-50 hover:to-accent-pink-50 rounded-xl transition-all duration-300 text-grey-700 hover:text-accent-rose-600 group"
-                      >
-                        <div className="p-2 rounded-full bg-primary-white group-hover:bg-accent-rose-100 transition-colors duration-300">
-                          <Search className="w-5 h-5" strokeWidth={1.5} />
-                        </div>
-                        <span className="text-xs font-body font-medium">Search</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          navigate("/cart");
-                          closeSidebar();
-                        }}
-                        className="flex flex-col items-center justify-center space-y-2 px-3 py-4 bg-gradient-to-br from-grey-50 to-grey-100/50 hover:from-accent-rose-50 hover:to-accent-pink-50 rounded-xl transition-all duration-300 text-grey-700 hover:text-accent-rose-600 group relative"
-                      >
-                        <div className="p-2 rounded-full bg-primary-white group-hover:bg-accent-rose-100 transition-colors duration-300 relative">
-                          <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
-                          {cartCount > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-gradient-to-br from-accent-rose-500 to-accent-pink-600 text-primary-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
-                              {cartCount > 99 ? "99+" : cartCount}
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-xs font-body font-medium">Cart</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          const authToken = localStorage.getItem("authToken");
-                          navigate(authToken ? "/my-account" : "/login");
-                          setOpen(false);
-                        }}
-                        className="flex flex-col items-center justify-center space-y-2 px-3 py-4 bg-gradient-to-br from-grey-50 to-grey-100/50 hover:from-accent-rose-50 hover:to-accent-pink-50 rounded-xl transition-all duration-300 text-grey-700 hover:text-accent-rose-600 group"
-                      >
-                        <div className="p-2 rounded-full bg-primary-white group-hover:bg-accent-rose-100 transition-colors duration-300">
-                          <User className="w-5 h-5" strokeWidth={1.5} />
-                        </div>
-                        <span className="text-xs font-body font-medium">Account</span>
-                      </button>
-                    </div>
-
-                    {/* Sidebar Menu Items */}
-                    <nav className="space-y-2">
-                      {menuData.map((menu, index) => (
-                        <div key={index} className="border-b border-grey-100 last:border-0">
-                          <button
-                            className="w-full text-left px-4 py-4 flex justify-between items-center font-display font-semibold text-base text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 rounded-lg hover:bg-grey-50 group"
-                            onClick={() => setActiveMenu(activeMenu === index ? null : index)}
-                          >
-                            <span className="relative">
-                              {menu.title}
-                              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-rose-400 to-accent-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                            </span>
-                            <ChevronDown
-                              className={`w-5 h-5 transition-transform duration-300 text-grey-500 group-hover:text-accent-rose-600 ${activeMenu === index ? "rotate-180" : ""
-                                }`}
-                              strokeWidth={2}
-                            />
-                          </button>
-
-                          <div className={`overflow-hidden transition-all duration-300 ${activeMenu === index ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
-                            <ul className="pl-4 pb-4 space-y-1 mt-2">
-                              {menu.items.map((item, i) => (
-                                <li key={i}>
-                                  <a
-                                    href="#"
-                                    className="block px-4 py-3 text-sm font-body text-grey-700 hover:text-accent-rose-600 hover:bg-gradient-to-r hover:from-accent-rose-50/50 hover:to-accent-pink-50/50 rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-accent-rose-300"
-                                    onClick={closeSidebar}
-                                  >
-                                    {item.name} {item.date && <span className="text-xs text-grey-400 ml-1">({item.date})</span>}
-                                  </a>
-                                </li>
-                              ))}
-
-                            </ul>
-                          </div>
-                        </div>
-                      ))}
-                    </nav>
-                  </div>
-                </aside>
+                  <X className="w-6 h-6" strokeWidth={2} />
+                </button>
               </div>
 
+              <div className="px-6 py-6">
+                <div className="grid grid-cols-3 gap-3 pb-6 border-b border-grey-200 mb-6">
+                  <button
+                    onClick={() => {
+                      closeSidebar();
+                      setIsSearchOpen(true);
+                    }}
+                    className="flex flex-col items-center justify-center space-y-2 px-3 py-4 bg-gradient-to-br from-grey-50 to-grey-100/50 hover:from-accent-rose-50 hover:to-accent-pink-50 rounded-xl transition-all duration-300 text-grey-700 hover:text-accent-rose-600 group"
+                  >
+                    <div className="p-2 rounded-full bg-primary-white group-hover:bg-accent-rose-100 transition-colors duration-300">
+                      <Search className="w-5 h-5" strokeWidth={1.5} />
+                    </div>
+                    <span className="text-xs font-body font-medium">Search</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate("/cart");
+                      closeSidebar();
+                    }}
+                    className="flex flex-col items-center justify-center space-y-2 px-3 py-4 bg-gradient-to-br from-grey-50 to-grey-100/50 hover:from-accent-rose-50 hover:to-accent-pink-50 rounded-xl transition-all duration-300 text-grey-700 hover:text-accent-rose-600 group relative"
+                  >
+                    <div className="p-2 rounded-full bg-primary-white group-hover:bg-accent-rose-100 transition-colors duration-300 relative">
+                      <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
+                      {cartCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-gradient-to-br from-accent-rose-500 to-accent-pink-600 text-primary-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
+                          {cartCount > 99 ? "99+" : cartCount}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs font-body font-medium">Cart</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      const authToken = localStorage.getItem("authToken");
+                      navigate(authToken ? "/my-account" : "/login");
+                      setOpen(false);
+                    }}
+                    className="flex flex-col items-center justify-center space-y-2 px-3 py-4 bg-gradient-to-br from-grey-50 to-grey-100/50 hover:from-accent-rose-50 hover:to-accent-pink-50 rounded-xl transition-all duration-300 text-grey-700 hover:text-accent-rose-600 group"
+                  >
+                    <div className="p-2 rounded-full bg-primary-white group-hover:bg-accent-rose-100 transition-colors duration-300">
+                      <User className="w-5 h-5" strokeWidth={1.5} />
+                    </div>
+                    <span className="text-xs font-body font-medium">Account</span>
+                  </button>
+                </div>
+
+                <nav className="space-y-2">
+                  {menuData.map((menu, index) => {
+                    // Group items by category
+                    const groupedItems = {};
+                    menu.items.forEach(item => {
+                      const cat = item.category || 'subcategories';
+                      if (!groupedItems[cat]) groupedItems[cat] = [];
+                      groupedItems[cat].push(item);
+                    });
+
+                    return (
+                      <div key={index} className="border-b border-grey-100 last:border-0">
+                        <button
+                          className="w-full text-left px-4 py-4 flex justify-between items-center font-display font-semibold text-base text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 rounded-lg hover:bg-grey-50 group"
+                          onClick={() => setActiveMenu(activeMenu === index ? null : index)}
+                        >
+                          <span className="relative">
+                            {menu.title}
+                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-rose-400 to-accent-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                          </span>
+                          <ChevronDown
+                            className={`w-5 h-5 transition-transform duration-300 text-grey-500 group-hover:text-accent-rose-600 ${activeMenu === index ? "rotate-180" : ""
+                              }`}
+                            strokeWidth={2}
+                          />
+                        </button>
+
+                        <div className={`overflow-hidden transition-all duration-300 ${activeMenu === index ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
+                          <div className="pl-4 pb-4 mt-2 space-y-4">
+                            {categoryOrder.filter(cat => groupedItems[cat]).map(cat => (
+                              <div key={cat}>
+                                <h4 className="text-sm font-semibold text-grey-800 mb-2">{categoryDisplayNames[cat]}</h4>
+                                <ul className="space-y-1">
+                                  {groupedItems[cat].map((item, i) => (
+                                    <li key={i}>
+                                      <a
+                                        href={getMenuItemHref(menu, item)}
+                                        className="block px-4 py-2 text-sm font-body text-grey-700 hover:text-accent-rose-600 hover:bg-gradient-to-r hover:from-accent-rose-50/50 hover:to-accent-pink-50/50 rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-accent-rose-300"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          navigate(getMenuItemHref(menu, item));
+                                          closeSidebar();
+                                        }}
+                                      >
+                                        {item.name} {item.date && <span className="text-xs text-grey-400 ml-1">({item.date})</span>}
+                                      </a>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </nav>
+              </div>
             </aside>
           </div>
         </nav>

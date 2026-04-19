@@ -58,11 +58,15 @@ const TrackOrder = () => {
           </form>
 
           <div className="mt-12 pt-8 border-t border-grey-200">
+            <h3 className="font-display text-xl font-light text-black-charcoal mb-4">How to Track Your Order</h3>
             <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              Enter your order number in the field above to get real-time updates on your delivery. You'll be able to see your order status, estimated delivery time, and tracking details for your flowers, cakes, or gifts.
+            </p>
+            <p className="font-body text-base text-grey-700 font-light leading-relaxed mb-4">
+              We provide same-day and next-day delivery across major cities. Your order is carefully handled at every step to ensure your gift arrives fresh and beautiful.
             </p>
             <p className="font-body text-base text-grey-700 font-light leading-relaxed">
-              If you need assistance tracking your order, please <Link to="/contact" className="text-accent-rose-600 hover:text-accent-rose-700 underline">contact us</Link>.
+              If you need assistance tracking your order or have any questions, please <Link to="/contact" className="text-accent-rose-600 hover:text-accent-rose-700 underline">contact us</Link>.
             </p>
           </div>
         </div>
