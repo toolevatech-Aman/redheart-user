@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Briefcase,
@@ -39,6 +39,7 @@ const loadRazorpayScript = () => {
 
 const HiringForInternship = () => {
   const navigate = useNavigate();
+  const formRef = useRef(null);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -70,7 +71,9 @@ const HiringForInternship = () => {
     if (v === undefined || v === null) return "";
     return Array.isArray(v) ? v : String(v);
   };
-
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   const handleCheckboxChange = (questionText, option, checked) => {
     const current = getAnswer(questionText);
     const arr = typeof current === "string" && current ? current.split(",").map((s) => s.trim()) : [];
@@ -157,7 +160,7 @@ const HiringForInternship = () => {
     const isSectorQuestion =
       typeof q.question === "string" &&
       q.question.trim() ===
-        "Which sector would you like to do an internship in within an e-commerce company?";
+      "Which sector would you like to do an internship in within an e-commerce company?";
 
     if (isSectorQuestion) {
       type = "Radio";
@@ -319,198 +322,353 @@ const HiringForInternship = () => {
 
   return (
     <div className="min-h-screen bg-grey-50">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-grey-600 hover:text-accent-rose-600 mb-6 font-body text-sm transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" strokeWidth={2} />
-          Back
-        </button>
+      {/* MOBILE APPLY BUTTON */}
 
-        {/* Hero */}
-        <header className="text-center mb-10 sm:mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-rose-100 to-accent-pink-100 mb-5">
-            <Briefcase className="w-8 h-8 text-accent-rose-600" strokeWidth={1.5} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="lg:hidden mb-6">
+          <button
+            onClick={scrollToForm}
+            className="w-full bg-accent-rose-600 text-white py-3 rounded-xl font-semibold shadow-md"
+          >
+            Apply Now 🚀
+          </button>
+        </div>
+        <div className="mb-8">
+          <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+
+            <div className="flex items-center gap-2 bg-grey-50 px-4 py-2 rounded-full">
+              <Shield className="w-5 h-5 text-green-600" />
+              <span className="text-sm font-medium">Trusted by 12,000+ Students</span>
+            </div>
+
+            <div className="flex items-center gap-2 bg-grey-50 px-4 py-2 rounded-full">
+              <Award className="w-5 h-5 text-yellow-500" />
+              <span className="text-sm font-medium">4.8★ Average Rating</span>
+            </div>
+
+            <div className="flex items-center gap-2 bg-grey-50 px-4 py-2 rounded-full">
+              <BookOpen className="w-5 h-5 text-blue-600" />
+              <span className="text-sm font-medium">100+ Colleges & Institutes</span>
+            </div>
+
+            <div className="flex items-center gap-2 bg-grey-50 px-4 py-2 rounded-full">
+              <Sparkles className="w-5 h-5 text-pink-500" />
+              <span className="text-sm font-medium">250+ Live Projects Completed</span>
+            </div>
+
+            <div className="flex items-center gap-2 bg-grey-50 px-4 py-2 rounded-full">
+              <CheckCircle className="w-5 h-5 text-green-500" />
+              <span className="text-sm font-medium">100% Refund Success Rate</span>
+            </div>
+
           </div>
-          <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-light text-black-charcoal tracking-tight mb-3">
-            Internship Application Form
-          </h1>
-          <p className="font-body text-base text-grey-600 font-medium">
-            Evatools Private Limited <span className="text-accent-rose-600">(RedHeart)</span>
-          </p>
-        </header>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {/* About RedHeart */}
-        <section className="bg-primary-white rounded-2xl border border-grey-200 shadow-sm overflow-hidden mb-6">
-          <div className="p-6 sm:p-8">
-            <p className="font-body text-grey-700 leading-relaxed">
-              <strong className="text-black-charcoal">RedHeart</strong> is a trusted online gifting portal in India offering seamless and reliable online gift delivery services across the country. We specialize in delivering flowers, cakes, candles, plants, and other personalized gift items to make every occasion truly special.
-            </p>
-          </div>
-        </section>
+          {/* RIGHT CONTENT (mobile first, desktop right) */}
+          <div className="lg:col-span-2 space-y-6 order-1 lg:order-2">
 
-        {/* Internship details */}
-        <section className="bg-primary-white rounded-2xl border border-grey-200 shadow-sm overflow-hidden mb-6">
-          <div className="p-6 sm:p-8">
-            <h2 className="font-display text-lg sm:text-xl font-medium text-black-charcoal mb-4 flex items-center gap-2">
-              <Award className="w-5 h-5 text-accent-rose-600" strokeWidth={2} />
-              About the Internship
-            </h2>
-            <p className="font-body text-grey-700 leading-relaxed mb-4">
-              We require interns in all our segments. This Internship will give you a <strong>certificate with a minimum tenure of 2 Months</strong>. Your work involves <strong>PART-TIME</strong> engagement, but you will receive a <strong>FULL-TIME Regular Internship Certificate</strong>. This is an <strong>unpaid Internship program</strong>. Upon successful completion of the internship, and subject to suitability and availability of positions, you may be offered a paid part-time or full-time role at the same level.
-            </p>
-            <div className="mt-5 pt-5 border-t border-grey-100">
-              <h3 className="font-body text-sm font-semibold text-black-charcoal mb-3 flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-accent-rose-600" strokeWidth={2} />
-                What you will learn
-              </h3>
-              <ul className="space-y-2 font-body text-sm text-grey-700">
-                <li className="flex items-start gap-2">
-                  <ChevronRight className="w-4 h-4 text-accent-rose-500 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                  <span><strong>Digital Marketing:</strong> Search Engine Optimization (SEO), Content strategy, Social Media Marketing, ORM</span>
+            {/* HERO */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm">
+              <h1 className="text-3xl sm:text-4xl font-light mb-3">
+                <strong>RedHeart Learn & Earn Summer Internship Program 💼✨</strong>
+              </h1>
+
+              <p>
+                <strong>
+                  This Internship is directly from the company not from any Educational firm or any Edtech company.
+                </strong>
+              </p>
+
+              <p className="mt-1">
+                <strong className="animate-pulse text-red-600">
+                  Mentors/Trainers are from IITs/IIMs.
+                </strong>
+              </p>
+
+              <p className="mt-4">
+                RedHeart is a trusted online gifting portal in India offering seamless and reliable online gift delivery services across the country. We specialize in delivering flowers, cakes, candles, plants, and other personalized gift items to make every occasion truly special.
+              </p>
+            </div>
+
+            {/* ABOUT */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm space-y-3">
+              <h2 className="text-xl font-semibold">About the Internship</h2>
+
+              <p>
+                Looking for an opportunity where you don’t just learn — but also start earning while gaining real experience?
+                Welcome to the RedHeart Internship Program, designed for students and beginners who want to step into the real world of business, marketing, and the fast-growing gifting industry.
+              </p>
+
+              <p>👉 This is not a typical internship.</p>
+              <p>👉 This is your first step toward income + industry exposure.</p>
+
+              <p className="mt-3">💡 What You’ll Get:</p>
+
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Internship Tenure : Minimum 1 to 3 Months.</li>
+                <li>Timing Flexibility : Part-Time/Full-Time.</li>
+                <li>  ⁠Your company<b> Gmail ID and Employee ID Card.</b>
                 </li>
-                <li className="flex items-start gap-2">
-                  <ChevronRight className="w-4 h-4 text-accent-rose-500 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                  <span><strong>Analytics & Product Marketing:</strong> Google Analytics, SEMrush, Google Search Console</span>
+                <li> <b>⁠Flat 30% off </b>through employee ID(as you will be a company employee)
                 </li>
-                <li className="flex items-start gap-2">
-                  <ChevronRight className="w-4 h-4 text-accent-rose-500 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                  <span><strong>HR:</strong> Hiring, documentation, negotiation, payroll sheets management, and more tools involved in E-commerce</span>
-                </li>
+                <li><b>⁠Earn 10% Commission</b> on each order from the website on any products (flowers, cakes, plants and other gift items), if done through your Employee ID.</li>
+                <li>Work on real projects with an active gifting brand</li>
+                <li>Learn practical skills (marketing, sales, customer handling)</li>
+                <li>Get a chance to earn money through performance-based tasks</li>
+                <li>Internship Certificate from RedHeart</li>
+                <li>Top performers get paid opportunities & long-term roles</li>
               </ul>
+
+              <p className="mt-3">💸 Income Opportunity:</p>
+              <p>
+                Unlike unpaid internships, here you get a chance to earn while you learn.
+                With the right effort, interns can generate ₹3,000–₹15,000+ during the program.
+              </p>
+
+              <p className="mt-3">🎯 Who Should Join?</p>
+              <ul className="list-disc pl-5">
+                <li>Students looking for side income</li>
+                <li>Freshers with no prior experience</li>
+                <li>Anyone interested in business, marketing, or startups</li>
+              </ul>
+
+              <p className="mt-3">⏳ Limited Seats Only</p>
+              <p>
+                We keep batches small to ensure proper guidance.
+                👉 Join now at just{" "}
+                <span className="line-through text-gray-500">₹999</span>{" "}
+                <span className="text-green-600 font-semibold">₹699</span>{" "}
+                (Refundable tuition fee after completion of Internship)
+              </p>
+            </div>
+
+            {/* SPECIALIZATION */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm space-y-4">
+              <h2 className="text-xl font-semibold">
+                🚀 Choose Your Specialization (Select Any One)
+              </h2>
+
+              <p>
+                At RedHeart Learn & Earn Internship, you will focus on one domain based on your interest and career goals.
+                👉 This ensures deep learning + better earning opportunities + real experience
+              </p>
+
+              <div>
+                <h3 className="font-semibold">💻 Digital Marketing</h3>
+                <ul className="list-disc pl-5">
+                  <li>SEO</li>
+                  <li>Content Strategy</li>
+                  <li>Social Media Marketing</li>
+                  <li>ORM</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold">📊 Analytics & Product Marketing</h3>
+                <ul className="list-disc pl-5">
+                  <li>Google Analytics</li>
+                  <li>Search Console</li>
+                  <li>SEMrush</li>
+                  <li>Product Marketing</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold">👥 HR & Operations</h3>
+                <ul className="list-disc pl-5">
+                  <li>Hiring</li>
+                  <li>Onboarding</li>
+                  <li>Payroll</li>
+                  <li>E-commerce Ops</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold">🧑‍💻 Tech</h3>
+                <ul className="list-disc pl-5">
+                  <li>React Frontend</li>
+                  <li>Node Backend</li>
+                  <li>APIs</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold">🧑‍💻 Supply Chain </h3>
+                <ul className="list-disc pl-5">
+                  <li>Operation wandering category</li>
+                  <li>Vendor</li>
+
+                </ul>
+              </div>
+            </div>
+
+            {/* FEE */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm space-y-4">
+              <h2 className="text-xl font-semibold">
+                💡 Why is there a One-Time Registration & Onboarding Fee?
+              </h2>
+
+              <p>
+                At Evatools Private Limited (RedHeart), this is not just a fee — it’s a refundable security deposit of tuition fee that ensures serious participation and a professional internship experience.
+              </p>
+
+              <p>
+                <strong className="animate-pulse text-red-600">
+                  👉 100% Refundable:
+                </strong>
+                <br />
+                Once you successfully complete the internship and assigned tasks, the tuition fee is refunded.
+              </p>
+
+              <div>
+                <h3 className="font-semibold">🎯 What This Covers</h3>
+
+                <p className="mt-2">📄 Official Candidate Profiling</p>
+                <p className="text-sm text-gray-600">
+                  Your profile is formally registered in our system, making you a verified part of the Evatools / RedHeart ecosystem.
+                </p>
+
+                <p className="mt-3">⚖️ Legal & Professional Documentation</p>
+                <p className="text-sm text-gray-600">
+                  We provide:
+                  <br />Internship Agreement
+                  <br />NDA & Terms of Service
+                  <br />👉 Ensuring your work is secure, valid, and recognized.
+                </p>
+
+                <p className="mt-3">🗂️ Permanent Record & Verification</p>
+                <p className="text-sm text-gray-600">
+                  Your internship data is securely maintained, allowing you to:
+                  <br />Request Experience Certificates
+                  <br />Get Letters of Recommendation (LORs) anytime in the future
+                </p>
+
+                <p className="mt-3">🛠️ Access to Tools & Resources</p>
+                <p className="text-sm text-gray-600">
+                  Get access to:
+                  <br />Google Analytics
+                  <br />Google Search Console
+                  <br />SEMrush (learning exposure)
+                  <br />Internal training modules & RedHeart systems
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold">🤝 Your Commitment (Important)</h3>
+                <p className="text-sm text-gray-600">
+                  To maintain quality and fairness, we expect interns to:
+                  <br />Complete assigned tasks on time
+                  <br />Actively participate in training & projects
+                  <br />Follow professional conduct throughout the program
+                  <br />👉 This ensures a serious learning environment for everyone
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold">💸 Why a Refundable Deposit?</h3>
+                <p className="text-sm text-gray-600">
+                  We introduced this model to:
+                  <br />Filter serious candidates only
+                  <br />Ensure active participation
+                  <br />Provide a high-quality, distraction-free experience
+                  <br />👉 And most importantly — you get your tuition fee back after completion
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold">🚀 In Simple Words</h3>
+                <p className="text-sm text-gray-600">
+                  You’re not paying a fee.
+                  <br />
+                  You’re placing a refundable commitment towards your growth, experience, and earning opportunity.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <p>✅ 100% Refundable Tution fee.</p>
+                <p>Get your Tuition fee full amount back after successful completion of the internship.</p>
+                <p>✅ Verified Company Backing</p>
+                <p>Powered by Evatools Private Limited (RedHeart) — a growing gifting brand with real operations.</p>
+                <p>✅ Real Work, Not Just Training</p>
+                <p>Work on live projects — no theory-only sessions.</p>
+                <p>✅ Secure Payment Gateway</p>
+                <p>Your payment is processed through trusted & encrypted payment systems.</p>
+              </div>
+            </div>
+
+            {/* FAQ */}
+            {/* FAQ */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm">
+              <h2 className="text-xl font-semibold mb-4">
+                ❓ Frequently Asked Questions (FAQs)
+              </h2>
+
+              <div className="space-y-3">
+
+                {[
+                  ["Is this fee refundable?", "👉 Yes. Tuition fee is 100% refundable.\n Once you successfully complete the internship and assigned tasks, the full tuition fee amount will be refunded."],
+
+                  ["Why do you charge a registration fee?", "This is not a typical fee — it’s a commitment-based security deposit to ensure:\nSerious participation\nActive involvement\nQuality learning environment\n👉 And you get it back tuition fee after completion."],
+
+                  ["Can I really earn during the internship?", "Yes, you will get performance-based earning opportunities.\nYour income depends on your effort, task completion, and consistency.\n👉 Many interns can generate ₹3,000–₹15,000+, but it is not guaranteed."],
+
+                  ["Do I need prior experience?", "❌ No experience required.\n     This internship is designed for:\nStudents\nFreshers\nBeginners\n👉 We guide you step-by-step from basics."],
+
+                  ["Can I choose my domain?", "✅ Yes. You can select one specialization at the time of joining:\nDigital Marketing\nAnalytics & Product Marketing\nHR & Operations\nTech (Frontend / Backend)\n👉 You will work only in your chosen domain."],
+
+                  ["What kind of work will I do?", "You will work on real projects and tasks, such as:\nMarketing campaigns\nContent creation\nData tracking & analysis\nHiring & operations tasks\nWebsite-related work (for tech roles)\n👉 No theory-only learning."],
+
+                  ["Will I get a certificate?", "✅ Yes. You will receive an Internship Completion Certificate from Evatools Private Limited (RedHeart) after successfully completing the program."],
+
+                  ["How long is the internship?", "The duration may vary by batch, but typically it runs for a few weeks with structured tasks and guidance."],
+
+                  ["What happens if I don’t complete the internship?", "The refund is applicable only if:\nYou complete assigned tasks\nFollow the internship guidelines\n👉 Incomplete participation may lead to non-refundable status."],
+
+                  ["How will I receive tasks and guidance?", "Direct Call (Phone call/Google Meet)\nThrough WhatsApp / Telegram groups\nLive sessions (if applicable)\nDirect communication with mentors\n👉 You’ll be guided throughout the program."],
+
+                  ["Is this internship online or offline?", "✅ This is a fully online internship, so you can join from anywhere in India.\n     If you want to come offline, You are welcome to our official address."],
+
+                  ["Will I get job or freelance opportunities after this?", "Top performers may get:\nPaid freelance projects\nLong-term work opportunities\nPriority consideration for roles\n👉 Based on performance (not guaranteed)."],
+
+                  ["Is this legit or a scam?", "We understand your concern 🙂\nYou’ll work on real brand projects (RedHeart)\nProper documentation & agreements are provided\nRefund policy is clearly defined\n👉 Transparency + real work = trust"],
+
+                  ["How do I join?", "Simple steps:\nFill the Form.\nSelect your domain\nComplete payment \nGet onboarding details"],
+
+                  ["What if I have more questions?", "👉 You can:\nCall on the Given Number.\nDM us on Instagram\nContact us on WhatsApp\nOur team will assist you quickly 👍"]
+                ].map(([q, a], i) => (
+                  <details key={i} className="border rounded-lg p-4">
+                    <summary className="font-medium">{q}</summary>
+                    <p className="mt-2 text-sm text-gray-600 whitespace-pre-line">{a}</p>
+                  </details>
+                ))}
+
+              </div>
             </div>
           </div>
-        </section>
 
-        {/* Contact */}
-        <section className="bg-gradient-to-br from-accent-rose-50/50 to-accent-pink-50/50 rounded-2xl border border-accent-rose-200/60 p-6 sm:p-8 mb-6">
-          <h2 className="font-display text-lg font-medium text-black-charcoal mb-4">Contact us</h2>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a
-              href="mailto:career@redheart.in"
-              className="flex items-center gap-3 px-4 py-3 bg-primary-white rounded-xl border border-grey-200 hover:border-accent-rose-300 hover:shadow-md transition-all"
-            >
-              <div className="w-10 h-10 rounded-full bg-accent-rose-100 flex items-center justify-center">
-                <Mail className="w-5 h-5 text-accent-rose-600" strokeWidth={2} />
-              </div>
-              <div className="text-left">
-                <span className="font-body text-xs text-grey-500 block">Email</span>
-                <span className="font-body text-sm font-medium text-black-charcoal">career@redheart.in</span>
-              </div>
-            </a>
-            <a
-              href="https://wa.me/919275506722"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 px-4 py-3 bg-primary-white rounded-xl border border-grey-200 hover:border-accent-rose-300 hover:shadow-md transition-all"
-            >
-              <div className="w-10 h-10 rounded-full bg-accent-rose-100 flex items-center justify-center">
-                <Phone className="w-5 h-5 text-accent-rose-600" strokeWidth={2} />
-              </div>
-              <div className="text-left">
-                <span className="font-body text-xs text-grey-500 block">Phone / WhatsApp</span>
-                <span className="font-body text-sm font-medium text-black-charcoal">+91 9275506722</span>
-              </div>
-            </a>
-          </div>
-        </section>
+          {/* LEFT FORM (mobile bottom, desktop left) */}
+          <div className="lg:col-span-1 order-2 lg:order-1">
+            <div ref={formRef} className="bg-white p-6 rounded-2xl shadow-md sticky top-6">
+              <h2 className="text-xl font-semibold mb-4">Apply Now</h2>
 
-        {/* Why fee */}
-        <section className="bg-primary-white rounded-2xl border border-grey-200 shadow-sm overflow-hidden mb-8">
-          <div className="p-6 sm:p-8">
-            <h2 className="font-display text-lg sm:text-xl font-medium text-black-charcoal mb-2 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-accent-rose-600" strokeWidth={2} />
-              Why is there a one-time Registration & Onboarding Fee?
-            </h2>
-            <p className="font-body text-grey-700 leading-relaxed mb-6">
-              At Evatools Private Limited, we believe in treating our interns as future corporate leaders. This small, one-time investment of <strong className="text-accent-rose-700">₹999</strong> is dedicated entirely to your professional journey and ensures you receive a premium corporate experience from Day 1:
-            </p>
-            <ul className="space-y-4">
-              {[
-                {
-                  icon: FileCheck,
-                  title: "Official Candidature Profiling",
-                  text: "Your professional profile will be formally integrated into our corporate HR database, making you a verified part of the Evatools/RedHeart ecosystem.",
-                },
-                {
-                  icon: Shield,
-                  title: "Legal & Professional Documentation",
-                  text: "We handle all your legal paperwork, including duly signed internship contracts, non-disclosure agreements, and terms of service, ensuring your work experience is fully protected and legally valid.",
-                },
-                {
-                  icon: FileCheck,
-                  title: "Permanent Digital & Physical Records",
-                  text: "We maintain your dedicated corporate file within the company. This ensures that whenever you need a Letter of Recommendation (LOR) or Experience Certificate in the future from Evatools Private Limited, your records are instantly accessible and verified.",
-                },
-                {
-                  icon: Award,
-                  title: "Exclusive Intern Benefits",
-                  text: "This fee unlocks your access to company resources, internal training modules, tools access for Search Console, Google Analytics, SEMrush, and the official RedHeart gifting ecosystem tools.",
-                },
-              ].map((item, i) => (
-                <li key={i} className="flex gap-4 p-4 rounded-xl bg-grey-50/80 border border-grey-100">
-                  <div className="w-10 h-10 rounded-full bg-accent-rose-100 flex items-center justify-center flex-shrink-0">
-                    <item.icon className="w-5 h-5 text-accent-rose-600" strokeWidth={2} />
-                  </div>
-                  <div>
-                    <h3 className="font-body font-semibold text-black-charcoal mb-1">{item.title}</h3>
-                    <p className="font-body text-sm text-grey-700 leading-relaxed">{item.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* Application form */}
-        <section className="bg-primary-white border border-grey-200 rounded-2xl shadow-sm overflow-hidden">
-          <div className="p-6 sm:p-8 border-b border-grey-200 bg-gradient-to-br from-grey-50/50 to-primary-white">
-            <h2 className="font-display text-xl font-medium text-black-charcoal flex items-center gap-2">
-              <Briefcase className="w-6 h-6 text-accent-rose-600" strokeWidth={2} />
-              Application Form
-            </h2>
-            <p className="font-body text-sm text-grey-600 mt-1">
-              Answer the questions below and pay ₹999 to submit your application.
-            </p>
-          </div>
-          <div className="p-6 sm:p-8">
-            {questions.length === 0 ? (
-              <p className="font-body text-grey-600 text-center py-8">No questions available at the moment.</p>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {questions.map(renderQuestion)}
-                <div className="pt-6 border-t border-grey-200">
-                  <button
-                    type="submit"
-                    disabled={submitLoading}
-                    className="w-full py-3.5 bg-accent-rose-600 hover:bg-accent-rose-700 disabled:opacity-70 text-primary-white font-body text-sm font-medium rounded-xl transition-colors flex flex-col items-center justify-center gap-1 shadow-md hover:shadow-lg"
-                  >
-                    {submitLoading ? (
-                      <div className="flex items-center gap-2">
-                        <Loader2 className="w-5 h-5 animate-spin" strokeWidth={2} />
-                        Processing...
-                      </div>
-                    ) : (
-                      <>
-                        <div className="flex items-center gap-2">
-                          Pay and Submit
-                          <span className="line-through opacity-70">₹999</span>
-                          <span className="text-base font-semibold">₹499</span>
-                        </div>
-                        <span className="text-[10px] opacity-80">Limited Time Offer</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </section>
 
-        <p className="font-body text-xs text-grey-500 text-center mt-8">
-          By submitting, you agree to the internship terms and the one-time registration fee.
-        </p>
+                <button
+                  type="submit"
+                  disabled={submitLoading}
+                  className="w-full bg-accent-rose-600 hover:bg-accent-rose-700 text-white py-3 rounded-xl font-medium flex items-center justify-center gap-2"
+                >
+                  {submitLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Pay{" "}
+                  <span className="text-green-600 font-semibold">₹699</span>{" "}
+                  & Apply
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   );

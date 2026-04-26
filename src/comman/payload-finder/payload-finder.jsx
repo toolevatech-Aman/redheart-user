@@ -1,6 +1,7 @@
 import { menuData } from "../../constants/menuData";
 
 export const getPayloadKeyByItemName = ( itemName) => {
+  if (!itemName) return null;
   // Map navbar title to payload key
   const titleToPayloadKey = {
     "Flowers": "subcategory_name",
