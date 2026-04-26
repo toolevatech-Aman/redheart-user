@@ -67,10 +67,11 @@ console.log(currentPage, "currentPage");
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center space-x-3 mb-6 group">
+            <Link to="/" title="RedHeart home page" className="flex items-center space-x-3 mb-6 group">
               <img
                 src={logo}
                 alt="RedHeart Logo"
+                title="RedHeart Logo"
                 className="h-10 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
               />
               <div className="flex flex-col">
@@ -113,6 +114,7 @@ console.log(currentPage, "currentPage");
                 <li key={link.name}>
                   <Link
                     to={link.path}
+                    title={link.name}
                     className="font-body text-sm text-grey-400 hover:text-accent-rose-400 transition-colors duration-300 font-light"
                   >
                     {link.name}
@@ -132,6 +134,7 @@ console.log(currentPage, "currentPage");
                 <li key={link.name}>
                   <Link
                     to={link.path}
+                    title={link.name}
                     className="font-body text-sm text-grey-400 hover:text-accent-rose-400 transition-colors duration-300 font-light"
                   >
                     {link.name}
@@ -151,6 +154,7 @@ console.log(currentPage, "currentPage");
                 <li key={link.name}>
                   <Link
                     to={link.path}
+                    title={link.name}
                     className="font-body text-sm text-grey-400 hover:text-accent-rose-400 transition-colors duration-300 font-light"
                   >
                     {link.name}
@@ -174,6 +178,7 @@ console.log(currentPage, "currentPage");
                     <a
                       key={social.label}
                       href={social.href}
+                      title={social.label}
                       aria-label={social.label}
                       className="w-10 h-10 flex items-center justify-center border border-grey-700 hover:border-accent-rose-600 text-grey-400 hover:text-accent-rose-600 transition-all duration-300 group"
                     >

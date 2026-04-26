@@ -154,10 +154,11 @@ export default function Header() {
           <div className="flex items-center justify-between h-16 md:h-20 px-4 sm:px-6 lg:px-8">
             {/* Logo */}
             <div className="flex items-center justify-center flex-shrink-0">
-              <a href="/">
+              <a href="/" title="RedHeart home page">
                 <img
                   src={logo}
                   alt="RedHeart Logo"
+                  title="RedHeart Logo"
                   className="h-32 sm:h-50 md:h-48 lg:h-56 xl:h-64 object-contain"
                 />
               </a>
@@ -203,6 +204,7 @@ export default function Header() {
                         <img
                           src={product.media.primary_image_url} // your API image
                           alt={product.name}
+                          title={product.name}
                           className="w-10 h-10 object-cover rounded-full mr-3"
 
                         />
@@ -286,6 +288,7 @@ export default function Header() {
                             <img
                               src={product.media.primary_image_url}
                               alt={product.name}
+                              title={product.name}
                               className="w-10 h-10 object-cover rounded-full mr-3"
                             />
                             <span className="text-sm font-medium text-black">{product.name}</span>
@@ -326,7 +329,7 @@ export default function Header() {
 
                 return (
                   <li key={index} className="group relative">
-                    <button className="px-3 py-3 text-sm xl:text-[15px] font-body font-medium text-black-charcoal hover:text-accent-rose-600 transition-all duration-300">
+                    <button className="px-4 py-3.5 text-sm font-medium text-grey-700 hover:text-accent-rose-600 transition-colors border-b-2 -mb-px border-transparent hover:border-grey-300">
                       {menu.title}
                     </button>
 
@@ -350,6 +353,7 @@ export default function Header() {
                             >
                               <a
                                 href={`/product/${item.name}`}
+                                title={`Browse ${item.name} products`}
                                 className="block text-black hover:text-red-600"
                               >
                                 <span className="font-medium">{item.name}</span>
@@ -495,6 +499,7 @@ export default function Header() {
                                 <li key={i}>
                                   <a
                                     href="#"
+                                    title={`Browse ${item.name} products`}
                                     className="block px-4 py-3 text-sm font-body text-grey-700 hover:text-accent-rose-600 hover:bg-gradient-to-r hover:from-accent-rose-50/50 hover:to-accent-pink-50/50 rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-accent-rose-300"
                                     onClick={closeSidebar}
                                   >

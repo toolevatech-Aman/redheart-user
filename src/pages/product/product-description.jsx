@@ -10,6 +10,7 @@ import AddOnModal from "./addOnModal";
 import { FaShippingFast, FaLeaf, FaLock, FaGift, FaHeart } from "react-icons/fa";
 import { clearBuyNowItem, setBuyNowItem } from "../../store/buyNowSlice";
 import { DeliveryModal } from "../cart/deliverySlot";
+import SEOHead from "../../comman/seo/seo-head";
 const ProductUSPs = () => {
   const usps = [
     {
@@ -165,6 +166,69 @@ const ProductDescriptionPage = () => {
   // Determine prices
   const displayOriginal = selectedVariant?.original_price || product.original_price;
   const displaySelling = selectedVariant?.selling_price || product.selling_price;
+  const siteUrl = (process.env.REACT_APP_SITE_URL || "https://redheart.in").replace(/\/$/, "");
+  const categoryName = product?.categorization?.category_name || "Category";
+  const categoryPath = `/product/${encodeURIComponent(categoryName)}`;
+  const productPath = window.location.pathname;
+  const categoryUrl = `${siteUrl}${categoryPath}`;
+  const productUrl = `${siteUrl}${productPath}`;
+
+  const inferredRatingValue = Number(
+    product?.rating?.average ||
+      product?.aggregateRating?.ratingValue ||
+      product?.average_rating ||
+      5,
+  );
+  const inferredReviewCount = Number(
+    product?.rating?.count ||
+      product?.aggregateRating?.reviewCount ||
+      product?.review_count ||
+      1,
+  );
+
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product?.name || "Gift Item",
+    image: [displayImage].filter(Boolean),
+    offers: {
+      "@type": "Offer",
+      price: Number(displaySelling || 0).toFixed(2),
+      priceCurrency: "INR",
+      availability: "https://schema.org/InStock",
+      url: productUrl,
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: inferredRatingValue,
+      reviewCount: inferredReviewCount,
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: `${siteUrl}/`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: categoryName,
+        item: categoryUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: product?.name || "Product",
+        item: productUrl,
+      },
+    ],
+  };
   const handleAddToCart = async () => {
     if (!product) return;
 
@@ -237,95 +301,116 @@ const ProductDescriptionPage = () => {
     setAddOnOpen(true);
   };
   return (
-    <div className="bg-white text-black">
-      <div className=" mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 px-6 py-6">
+		<>
+			<SEOHead
+				productName={product?.name || "Product"}
+				categoryName={categoryName}
+				description={
+					product?.description
+						? `${product.description.slice(0, 150)}... Buy now at RedHeart with fast delivery.`
+						: "Shop premium gifts online at RedHeart with fast delivery."
+				}
+				ogImage={displayImage}
+				canonicalPath={productPath}
+				schemas={[productSchema, breadcrumbSchema]}
+			/>
+			<div className='bg-white text-black'>
+				<div className=' mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 px-6 py-6'>
+					{/* LEFT – IMAGE GALLERY */}
+					<div className='lg:sticky lg:top-24 h-fit space-y-4'>
+						<div className='rounded-[30px] overflow-hidden '>
+							<img
+								src={displayImage}
+								alt={product.name}
+								title={product.name}
+								className='w-full h-[450px] object-cover transition-transform duration-300 hover:scale-105'
+							/>
+						</div>
+						<div className='flex gap-3 overflow-x-auto py-2'>
+							{[...product.media.gallery_images].map((img, i) => (
+								<img
+									key={i}
+									src={img}
+									alt={product.name}
+									title={product.name}
+									className={`w-16 h-16 object-cover rounded-lg cursor-pointer border-2 ${
+										img === displayImage
+											? "border-red-600"
+											: "border-neutral-200"
+									}`}
+									onClick={() => setMainImage(img)}
+								/>
+							))}
+						</div>
+					</div>
 
-        {/* LEFT – IMAGE GALLERY */}
-        <div className="lg:sticky lg:top-24 h-fit space-y-4">
-          <div className="rounded-[30px] overflow-hidden ">
-            <img
-              src={displayImage}
-              alt={product.name}
-              className="w-full h-[450px] object-cover transition-transform duration-300 hover:scale-105"
-            />
-          </div>
-          <div className="flex gap-3 overflow-x-auto py-2">
-            {[...product.media.gallery_images].map((img, i) => (
-              <img
-                key={i}
-                src={img}
-                className={`w-16 h-16 object-cover rounded-lg cursor-pointer border-2 ${img === displayImage ? "border-red-600" : "border-neutral-200"
-                  }`}
-                onClick={() => setMainImage(img)}
-              />
-            ))}
-          </div>
-        </div>
+					{/* RIGHT – PRODUCT INFO */}
+					<div className='space-y-8'>
+						{/* Header */}
+						<div>
+							<p className='inline-block bg-red-100 text-red-600 uppercase tracking-wider text-xs px-2 py-1 rounded-full'>
+								{product.short_summary}
+							</p>
 
-        {/* RIGHT – PRODUCT INFO */}
-        <div className="space-y-8">
+							<h1 className='mt-2 text-3xl font-serif font-bold leading-tight'>
+								{product.name}
+							</h1>
+						</div>
 
-          {/* Header */}
-          <div>
-            <p className="inline-block bg-red-100 text-red-600 uppercase tracking-wider text-xs px-2 py-1 rounded-full">
-              {product.short_summary}
-            </p>
+						{/* Variants */}
+						<div>
+							<h3 className='mb-3 text-sm font-semibold'>Choose Arrangement</h3>
+							<div className='flex flex-wrap gap-2'>
+								{product.variations.map((variant) => {
+									const selected = selectedVariant?._id === variant._id;
+									return (
+										<button
+											key={variant._id}
+											onClick={
+												() => setSelectedVariant(selected ? null : variant) // toggle selection
+											}
+											className={`flex flex-col items-center px-3 py-2 rounded-lg border text-xs font-medium transition-all ${
+												selected
+													? "border-red-600 bg-red-50 text-red-600 shadow"
+													: "border-neutral-300 hover:border-black"
+											}`}>
+											{variant.image_url && (
+												<img
+													src={variant.image_url}
+													alt={variant.variant_name}
+													title={variant.variant_name}
+													className='w-16 h-16 object-cover rounded-lg mb-1'
+												/>
+											)}
+											<div className='flex items-center gap-1'>
+												<span>{variant.variant_name}</span>
+												{selected && <span className='text-red-600'>−</span>}
+											</div>
+										</button>
+									);
+								})}
+							</div>
+						</div>
 
-            <h1 className="mt-2 text-3xl font-serif font-bold leading-tight">{product.name}</h1>
-          </div>
+						{/* Price */}
+						<div className='flex items-center gap-4'>
+							<span className='text-2xl font-bold text-red-600'>
+								₹{displaySelling}
+							</span>
+							<span className='line-through text-neutral-400 text-sm'>
+								₹{displayOriginal}
+							</span>
+						</div>
 
+						{/* Variant Description Accordion */}
+						{selectedVariant && selectedVariant.description && (
+							<Accordion title='Arrangement Details'>
+								<p>{selectedVariant.description}</p>
+							</Accordion>
+						)}
 
-          {/* Variants */}
-          <div>
-            <h3 className="mb-3 text-sm font-semibold">Choose Arrangement</h3>
-            <div className="flex flex-wrap gap-2">
-              {product.variations.map((variant) => {
-                const selected = selectedVariant?._id === variant._id;
-                return (
-                  <button
-                    key={variant._id}
-                    onClick={() =>
-                      setSelectedVariant(selected ? null : variant) // toggle selection
-                    }
-                    className={`flex flex-col items-center px-3 py-2 rounded-lg border text-xs font-medium transition-all ${selected
-                      ? "border-red-600 bg-red-50 text-red-600 shadow"
-                      : "border-neutral-300 hover:border-black"
-                      }`}
-                  >
-                    {variant.image_url && (
-                      <img
-                        src={variant.image_url}
-                        alt={variant.variant_name}
-                        className="w-16 h-16 object-cover rounded-lg mb-1"
-                      />
-                    )}
-                    <div className="flex items-center gap-1">
-                      <span>{variant.variant_name}</span>
-                      {selected && <span className="text-red-600">−</span>}
-                    </div>
-                  </button>
-                );
-              })}
-
-            </div>
-          </div>
-
-
-          {/* Price */}
-          <div className="flex items-center gap-4">
-            <span className="text-2xl font-bold text-red-600">₹{displaySelling}</span>
-            <span className="line-through text-neutral-400 text-sm">₹{displayOriginal}</span>
-          </div>
-
-          {/* Variant Description Accordion */}
-          {selectedVariant && selectedVariant.description && (
-            <Accordion title="Arrangement Details">
-              <p>{selectedVariant.description}</p>
-            </Accordion>
-          )}
-
-          {/* Product Accordions */}
-          {/* <div className="pt-4 space-y-3 text-sm">
+						{/* Product Accordions */}
+						{/* <div className="pt-4 space-y-3 text-sm">
             <Accordion title="Product Contents">
               <ul className="list-disc ml-5 space-y-1 text-neutral-700">
                 {product.product_attributes.product_content.map((item, i) => (
@@ -364,137 +449,144 @@ const ProductDescriptionPage = () => {
               </div>
             </Accordion>
           </div> */}
-          <div className="pt-2 space-y-2 text-sm">
-            {/* Product Contents */}
-            <Accordion title="Product Contains" initialOpen={true}>
-              {/* Product Contents – Always Open */}
-              <div className="pt-6">
+						<div className='pt-2 space-y-2 text-sm'>
+							{/* Product Contents */}
+							<Accordion title='Product Contains' initialOpen={true}>
+								{/* Product Contents – Always Open */}
+								<div className='pt-6'>
+									<ul className='list-disc ml-6 space-y-2 text-neutral-800'>
+										{/* If a variant is selected, show its name first */}
+										{selectedVariant && (
+											<li className='p-2 rounded-lg bg-gradient-to-r from-purple-50 via-pink-50 to-yellow-50 shadow-sm hover:shadow-md transition-shadow duration-300 font-semibold'>
+												{selectedVariant.variant_name}
+											</li>
+										)}
 
-                <ul className="list-disc ml-6 space-y-2 text-neutral-800">
-                  {/* If a variant is selected, show its name first */}
-                  {selectedVariant && (
-                    <li
-                      className="p-2 rounded-lg bg-gradient-to-r from-purple-50 via-pink-50 to-yellow-50 shadow-sm hover:shadow-md transition-shadow duration-300 font-semibold"
-                    >
-                      {selectedVariant.variant_name}
-                    </li>
-                  )}
+										{product.product_attributes.product_content.map(
+											(item, i) => (
+												<li
+													key={i}
+													className='p-2 rounded-lg bg-gradient-to-r from-purple-50 via-pink-50 to-yellow-50 shadow-sm hover:shadow-md transition-shadow duration-300'>
+													{item}
+												</li>
+											),
+										)}
+									</ul>
+								</div>
+							</Accordion>
 
-                  {product.product_attributes.product_content.map((item, i) => (
-                    <li
-                      key={i}
-                      className="p-2 rounded-lg bg-gradient-to-r from-purple-50 via-pink-50 to-yellow-50 shadow-sm hover:shadow-md transition-shadow duration-300"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+							{/* description  */}
+							<Accordion title='Product Description'>
+								<ul className='list-disc ml-6 space-y-2 text-neutral-800'>
+									<span className='p-2 '>{product.description}</span>
+								</ul>
+							</Accordion>
 
-            </Accordion>
+							{/* Care Instructions */}
+							<Accordion title='Care Instructions'>
+								<ul className='list-disc ml-6 space-y-2 text-neutral-800'>
+									{product.care_and_logistics.care_instructions.map(
+										(item, i) => (
+											<li
+												key={i}
+												className='p-2 rounded-lg bg-gradient-to-r from-green-50 via-blue-50 to-purple-50 shadow-sm hover:shadow-md transition-shadow duration-300'>
+												{item}
+											</li>
+										),
+									)}
+								</ul>
+							</Accordion>
 
-            {/* description  */}
-            <Accordion title="Product Description">
-              <ul className="list-disc ml-6 space-y-2 text-neutral-800">
+							{/* Product Details */}
+							<Accordion title='Product Details'>
+								<div className='space-y-2 text-neutral-900'>
+									<p>
+										Color:{" "}
+										<span className='font-semibold text-purple-600'>
+											{product?.product_attributes.color}
+										</span>
+									</p>
+									<p>
+										Origin:{" "}
+										<span className='font-semibold text-green-600'>
+											{product?.product_attributes.origin}
+										</span>
+									</p>
+									<p>
+										Minimum Vase Life:{" "}
+										<span className='font-semibold text-orange-500'>
+											{product?.product_attributes.vase_life_days_min} days
+										</span>
+									</p>
+									<p>
+										Type:{" "}
+										<span className='font-semibold text-orange-500'>
+											{product?.categorization?.subcategory_name}{" "}
+										</span>
+									</p>
+								</div>
+							</Accordion>
 
-                <span
+							{/* Perfect For */}
+							<Accordion title='Perfect For'>
+								<div className='flex flex-wrap gap-3 mt-2'>
+									{product.categorization.occasion_tags.map((tag, i) => (
+										<span
+											key={i}
+											className='px-4 py-1 rounded-full bg-gradient-to-r from-pink-100 to-purple-100 text-purple-700 font-medium text-xs hover:scale-105 transform transition-all duration-300 cursor-pointer'>
+											{tag}
+										</span>
+									))}
+								</div>
+							</Accordion>
+						</div>
 
-                  className="p-2 "
-                >
-                  {product.description}
-                </span>
+						{/* Add-ons */}
+						<div>
+							<h3 className='mb-2 text-sm font-semibold'>Enhance Your Gift</h3>
+							<div className='flex gap-2 overflow-x-auto py-2'>
+								{product.care_and_logistics.add_ons.map((addon) => {
+									const selected = selectedAddOns.some(
+										(a) => a._id === addon._id,
+									);
+									return (
+										<div
+											key={addon._id}
+											onClick={() => toggleAddon(addon)} // toggles selection
+											className={`relative flex-shrink-0 w-24 rounded-xl border p-2 cursor-pointer transition-all hover:shadow ${
+												selected
+													? "border-red-600 bg-red-50 shadow"
+													: "border-neutral-200"
+											}`}>
+											{/* Minus sign */}
+											{selected && (
+												<span className='absolute top-1 right-1 text-red-600 font-bold text-lg cursor-pointer'>
+													−
+												</span>
+											)}
 
-              </ul>
-            </Accordion>
+											<img
+												src={addon.image_url}
+												alt={addon.name}
+												title={addon.name}
+												className='w-full h-20 object-contain mb-1 rounded-lg'
+											/>
+											<h4 className='font-medium text-xs truncate'>
+												{addon.name}
+											</h4>
+											<p className='mt-1 text-red-600 font-semibold text-xs'>
+												₹{addon.selling_price}
+											</p>
+										</div>
+									);
+								})}
+							</div>
+						</div>
 
-            {/* Care Instructions */}
-            <Accordion title="Care Instructions">
-              <ul className="list-disc ml-6 space-y-2 text-neutral-800">
-                {product.care_and_logistics.care_instructions.map((item, i) => (
-                  <li
-                    key={i}
-                    className="p-2 rounded-lg bg-gradient-to-r from-green-50 via-blue-50 to-purple-50 shadow-sm hover:shadow-md transition-shadow duration-300"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </Accordion>
+						<ProductUSPs />
 
-            {/* Product Details */}
-            <Accordion title="Product Details">
-              <div className="space-y-2 text-neutral-900">
-                <p>
-                  Color: <span className="font-semibold text-purple-600">{product?.product_attributes.color}</span>
-                </p>
-                <p>
-                  Origin: <span className="font-semibold text-green-600">{product?.product_attributes.origin}</span>
-                </p>
-                <p>
-                  Minimum Vase Life: <span className="font-semibold text-orange-500">{product?.product_attributes.vase_life_days_min} days</span>
-                </p>
-                <p>
-                  Type: <span className="font-semibold text-orange-500">{product?.categorization?.subcategory_name} </span>
-                </p>
-
-              </div>
-            </Accordion>
-
-            {/* Perfect For */}
-            <Accordion title="Perfect For">
-              <div className="flex flex-wrap gap-3 mt-2">
-                {product.categorization.occasion_tags.map((tag, i) => (
-                  <span
-                    key={i}
-                    className="px-4 py-1 rounded-full bg-gradient-to-r from-pink-100 to-purple-100 text-purple-700 font-medium text-xs hover:scale-105 transform transition-all duration-300 cursor-pointer"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </Accordion>
-
-
-          </div>
-
-
-          {/* Add-ons */}
-          <div>
-            <h3 className="mb-2 text-sm font-semibold">Enhance Your Gift</h3>
-            <div className="flex gap-2 overflow-x-auto py-2">
-              {product.care_and_logistics.add_ons.map((addon) => {
-                const selected = selectedAddOns.some((a) => a._id === addon._id);
-                return (
-                  <div
-                    key={addon._id}
-                    onClick={() => toggleAddon(addon)} // toggles selection
-                    className={`relative flex-shrink-0 w-24 rounded-xl border p-2 cursor-pointer transition-all hover:shadow ${selected ? "border-red-600 bg-red-50 shadow" : "border-neutral-200"
-                      }`}
-                  >
-                    {/* Minus sign */}
-                    {selected && (
-                      <span className="absolute top-1 right-1 text-red-600 font-bold text-lg cursor-pointer">
-                        −
-                      </span>
-                    )}
-
-                    <img
-                      src={addon.image_url}
-                      alt={addon.name}
-                      className="w-full h-20 object-contain mb-1 rounded-lg"
-                    />
-                    <h4 className="font-medium text-xs truncate">{addon.name}</h4>
-                    <p className="mt-1 text-red-600 font-semibold text-xs">₹{addon.selling_price}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <ProductUSPs />
-
-          {/* CTA */}
-          {/* <div className="pt-6 flex gap-4">
+						{/* CTA */}
+						{/* <div className="pt-6 flex gap-4">
             <button
               className="flex-1 py-3 rounded-full border border-black text-black font-medium hover:bg-black hover:text-white transition text-sm"
               onClick={() => {
@@ -523,64 +615,69 @@ const ProductDescriptionPage = () => {
             </button>
 
           </div> */}
-          {/* CTA Buttons */}
-          <div className="lg:static fixed bottom-0 left-0 w-full bg-white p-4 flex gap-4 shadow-lg lg:shadow-none z-50 lg:justify-start lg:gap-4">
-            <button
-              className="flex-1 py-3 rounded-full border border-black text-black font-medium hover:bg-black hover:text-white transition text-sm"
-              onClick={() => {
-                if (lastCartProductId === (selectedVariant?._id || product.product_id)) {
-                  navigate("/cart");
-                } else {
-                  handleAddToCart();
-                }
-              }}
-              disabled={isAddonLoader}
-            >
-              {lastCartProductId === (selectedVariant?._id || product.product_id)
-                ? "Go to Cart"
-                : isAddonLoader
-                  ? "Adding magic ✨"
-                  : "Add to Cart"}
-            </button>
+						{/* CTA Buttons */}
+						<div className='lg:static fixed bottom-0 left-0 w-full bg-white p-4 flex gap-4 shadow-lg lg:shadow-none z-50 lg:justify-start lg:gap-4'>
+							<button
+								className='flex-1 py-3 rounded-full border border-black text-black font-medium hover:bg-black hover:text-white transition text-sm'
+								onClick={() => {
+									if (
+										lastCartProductId ===
+										(selectedVariant?._id || product.product_id)
+									) {
+										navigate("/cart");
+									} else {
+										handleAddToCart();
+									}
+								}}
+								disabled={isAddonLoader}>
+								{lastCartProductId ===
+								(selectedVariant?._id || product.product_id)
+									? "Go to Cart"
+									: isAddonLoader
+										? "Adding magic ✨"
+										: "Add to Cart"}
+							</button>
 
-            <button
-              className="flex-1 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition text-sm"
-              onClick={handleBuyNowClick}
-              disabled={isAddonLoader}
-            >
-              {isAddonLoader ? "Zooming to checkout 🚀" : "Buy Now"}
-            </button>
-          </div>
+							<button
+								className='flex-1 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition text-sm'
+								onClick={handleBuyNowClick}
+								disabled={isAddonLoader}>
+								{isAddonLoader ? "Zooming to checkout 🚀" : "Buy Now"}
+							</button>
+						</div>
+					</div>
+				</div>
+				{addOnOpen && (
+					<AddOnModal
+						isOpen={addOnOpen}
+						onClose={() => setAddOnOpen(false)}
+						addOnData={addOnData}
+						onProceed={(newAddOns) => {
+							if (buyBackProcess) {
+								dispatch(
+									setBuyNowItem({
+										...buyNowItem,
+										add_ons: [...selectedAddOns, ...newAddOns],
+									}),
+								);
+								setIsDeliveryModalOpen(true);
+							} else {
+								appendAddOnsToCart(newAddOns);
+							}
+							setAddOnOpen(false);
+						}}
+					/>
+				)}
 
-        </div>
-      </div>
-      {addOnOpen && (
-        <AddOnModal
-          isOpen={addOnOpen}
-          onClose={() => setAddOnOpen(false)}
-          addOnData={addOnData}
-          onProceed={(newAddOns) => {
-            if (buyBackProcess) {
-              dispatch(
-                setBuyNowItem({
-                  ...buyNowItem,
-                  add_ons: [...selectedAddOns, ...newAddOns],
-                })
-              );
-              setIsDeliveryModalOpen(true)
-            } else {
-              appendAddOnsToCart(newAddOns);
-            }
-            setAddOnOpen(false);
-          }}
-        />
-      )}
+				<DeliveryModal
+					isOpen={isDeliveryModalOpen}
+					onClose={() => setIsDeliveryModalOpen(false)}
+				/>
 
-      <DeliveryModal isOpen={isDeliveryModalOpen} onClose={() => setIsDeliveryModalOpen(false)} />
-
-      <RecentlyViewed />
-    </div>
-  );
+				<RecentlyViewed />
+			</div>
+		</>
+	);
 };
 
 export default ProductDescriptionPage;

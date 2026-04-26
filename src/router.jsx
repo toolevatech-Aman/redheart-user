@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import AppLayout from "./comman/app-layout/app-layout";
 import SellWithUs from "./pages/sell-with-us/sell-with-us";
+import SEOHead from "./comman/seo/seo-head";
 // import logoImage from "./assets/yobhaLogo.png"
 // Lazy load pages
 const Home = lazy(() => import("./pages/home/home"));
@@ -17,7 +18,6 @@ const Shipping = lazy(() => import("./pages/shipping/shipping"));
 const Returns = lazy(() => import("./pages/returns/returns"));
 const TrackOrder = lazy(() => import("./pages/track-order/track-order"));
 const GiftCards = lazy(() => import("./pages/gift-cards/gift-cards"));
-const SizeGuide = lazy(() => import("./pages/sell-with-us/sell-with-us"));
 const Cookies = lazy(() => import("./pages/cookies/cookies"));
 const RefundPolicy = lazy(() => import("./pages/refund-policy/refund-policy"));
 const Cart = lazy(() => import("./pages/cart/cart"));
@@ -25,32 +25,31 @@ const Checkout = lazy(() => import("./pages/checkout/checkout"));
 const MyAccount = lazy(() => import("./pages/my-account/my-account"));
 const Orders = lazy(() => import("./pages/orders/orders"));
 const Hamper = lazy(() => import("./pages/hampers/hamper"));
-const logoImage ="./assets/redHeartLogoo.png"
 const Router = () => {
   const routes = [
     // { path: "/", element: <Navigate to="/home" replace /> },
-    { path: "/", element: <Home /> },
-    {path: "/login", element: <Login />},
-    { path: "/home", element: <Home /> },
-    {path: "/product/:category", element: <Product />},
-    {path:"/product/:category/:productSlug", element: <ProductDescription />},
-    {path: "/about", element: <About />},
-    {path: "/contact", element: <Contact />},
-    {path: "/privacy-policy", element: <PrivacyPolicy />},
-    {path: "/terms", element: <Terms />},
-    {path: "/faq", element: <FAQ />},
-    {path: "/shipping", element: <Shipping />},
-    {path: "/returns", element: <Returns />},
-    {path: "/track-order", element: <TrackOrder />},
-    {path: "/gift-cards", element: <GiftCards />},
-    {path: "/sell-with-us", element: <SellWithUs />},
-    {path: "/cookies", element: <Cookies />},
-    {path: "/refund-policy", element: <RefundPolicy />},
-    {path: "/cart", element: <Cart />},
-    {path: "/checkout", element: <Checkout />},
-    {path: "/my-account", element: <MyAccount />},
-    {path: "/orders", element: <Orders />},
-    {path: "/hamper", element: <Hamper />},
+    { path: "/", element: <Home />, productName: "Flowers, Cakes, Plants & Gifts", categoryName: "Occasions" },
+    { path: "/login", element: <Login />, productName: "Login", categoryName: "Account" },
+    { path: "/home", element: <Home />, productName: "Flowers, Cakes, Plants & Gifts", categoryName: "Occasions" },
+    { path: "/product/:category", element: <Product />, productName: "Products", categoryName: "Category" },
+    { path: "/product/:category/:productSlug", element: <ProductDescription />, productName: "Product Details", categoryName: "Category" },
+    { path: "/about", element: <About />, productName: "About Us", categoryName: "Company" },
+    { path: "/contact", element: <Contact />, productName: "Contact Us", categoryName: "Support" },
+    { path: "/privacy-policy", element: <PrivacyPolicy />, productName: "Privacy Policy", categoryName: "Legal" },
+    { path: "/terms", element: <Terms />, productName: "Terms & Conditions", categoryName: "Legal" },
+    { path: "/faq", element: <FAQ />, productName: "Frequently Asked Questions", categoryName: "Support" },
+    { path: "/shipping", element: <Shipping />, productName: "Shipping Policy", categoryName: "Legal" },
+    { path: "/returns", element: <Returns />, productName: "Returns Policy", categoryName: "Legal" },
+    { path: "/track-order", element: <TrackOrder />, productName: "Track Order", categoryName: "Orders" },
+    { path: "/gift-cards", element: <GiftCards />, productName: "Gift Cards", categoryName: "Gifting" },
+    { path: "/sell-with-us", element: <SellWithUs />, productName: "Sell With Us", categoryName: "Partners" },
+    { path: "/cookies", element: <Cookies />, productName: "Cookie Policy", categoryName: "Legal" },
+    { path: "/refund-policy", element: <RefundPolicy />, productName: "Refund Policy", categoryName: "Legal" },
+    { path: "/cart", element: <Cart />, productName: "Cart", categoryName: "Checkout" },
+    { path: "/checkout", element: <Checkout />, productName: "Checkout", categoryName: "Checkout" },
+    { path: "/my-account", element: <MyAccount />, productName: "My Account", categoryName: "Account" },
+    { path: "/orders", element: <Orders />, productName: "Orders", categoryName: "Account" },
+    { path: "/hamper", element: <Hamper />, productName: "Build Your Hamper", categoryName: "Gifting" },
   ];
 
   return (
@@ -69,11 +68,16 @@ const Router = () => {
 
 }>
       <Routes>
-        {routes.map(({ path, element }, index) => (
+        {routes.map(({ path, element, productName, categoryName }, index) => (
           <Route
             key={index}
             path={path}
-            element={path === "/login" ? element : <AppLayout>{element}</AppLayout>}
+            element={
+              <>
+                <SEOHead productName={productName} categoryName={categoryName} canonicalPath={path} />
+                {path === "/login" ? element : <AppLayout>{element}</AppLayout>}
+              </>
+            }
           />
         ))}
       </Routes>

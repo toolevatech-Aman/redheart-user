@@ -51,6 +51,7 @@ const ProductCard = ({
                     src={images[currentImageIndex] || images[0]}
                     alt={product.name}
                     loading="lazy"
+                    title={product.name}
                     onLoad={() => setImageLoading(false)}
                     className={`h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 ${imageLoading ? "blur-xl scale-110" : "blur-0 scale-100"
                         }`}

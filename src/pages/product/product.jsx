@@ -16,6 +16,7 @@ import {
 import ProductCard from "./ProductCard";
 import { getPayloadKeyByItemName } from "../../comman/payload-finder/payload-finder";
 import { getDescription } from "../../comman/H1Function/h1Functions";
+import SEOHead from "../../comman/seo/seo-head";
 const buildInitialFilters = (filterData) => {
   const baseFilters = {
     category_name: '',
@@ -40,6 +41,8 @@ const buildInitialFilters = (filterData) => {
 const Product = () => {
   const { category } = useParams();
   const navigate = useNavigate();
+
+  console.log("Category from URL:", category); // Debugging log
 
   /* ===================== STATES ===================== */
   const [products, setProducts] = useState([]);
@@ -154,131 +157,188 @@ const Product = () => {
     setCurrentImages((prev) => ({ ...prev, [productId]: index }));
   };
 
+  const safeCategory = category || "";
+  const siteUrl = (process.env.REACT_APP_SITE_URL || "https://redheart.in").replace(/\/$/, "");
+  const categoryPath = window.location.pathname;
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: `${siteUrl}/`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: safeCategory || "Products",
+        item: `${siteUrl}${categoryPath}`,
+      },
+    ],
+  };
+
+
   /* ===================== UI ===================== */
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <div className="border-b p-4 flex justify-between">
-        <h1 className="text-2xl capitalize">{getDescription(category)} </h1>
-        {/* <button
+		<>
+			<SEOHead
+				productName={safeCategory || "Products"}
+				categoryName='Category'
+				description={`Shop premium ${safeCategory.toLowerCase()} online at RedHeart. Explore a wide range of handcrafted ${safeCategory.toLowerCase()} with fast delivery for every occasion.`}
+				canonicalPath={categoryPath}
+				schemas={[breadcrumbSchema]}
+			/>
+			<div className='min-h-screen bg-white'>
+				{/* Header */}
+				<div className='border-b p-4 flex justify-between'>
+					<h1 className='text-2xl capitalize'>{getDescription(category)} </h1>
+					{/* <button
           onClick={() => setShowFilters(true)}
           className="border px-4 py-2 flex gap-2"
         >
           <SlidersHorizontal size={16} />
           Filters
         </button> */}
-        <nav className="text-sm text-gray-500">
-          <ol className="flex items-center gap-1 flex-wrap">
-            <li>
-              <a href="/" className="hover:text-gray-700 transition">Home</a>
-            </li>
-            {/* <li>/</li> */}
-            {/* <li>
+					<nav className='text-sm text-gray-500'>
+						<ol className='flex items-center gap-1 flex-wrap'>
+							<li>
+								<a
+									href='/'
+									className='hover:text-gray-700 transition'
+									title='Home Page'>
+									Home
+								</a>
+							</li>
+							{/* <li>/</li> */}
+							{/* <li>
               <a href="/categories" className="hover:text-gray-700 transition">Categories</a>
             </li> */}
-            <li>/</li>
-            <li className="text-gray-900 font-medium">{category}</li>
-          </ol>
-        </nav>
-      </div>
+							<li>/</li>
+							<li className='text-gray-900 font-medium'>{category}</li>
+						</ol>
+					</nav>
+				</div>
 
-      {/* Filters */}
-      {showFilters && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex justify-end">
-          <div className="w-80 bg-white p-6 overflow-y-auto relative">
-            <button
-              onClick={() => setShowFilters(false)}
-              className="absolute top-4 right-4"
-            >
-              <X />
-            </button>
+				{/* Filters */}
+				{showFilters && (
+					<div className='fixed inset-0 bg-black/40 z-50 flex justify-end'>
+						<div className='w-80 bg-white p-6 overflow-y-auto relative'>
+							<button
+								onClick={() => setShowFilters(false)}
+								className='absolute top-4 right-4'>
+								<X />
+							</button>
 
-            {[
-              { title: "Subcategories", key: "subcategory_name", options: SubCategoryFilters },
-              { title: "Festival", key: "festival_tags", options: FestivalFilters },
-              { title: "Occasion", key: "occasion_tags", options: OccasionFilters },
-              { title: "Special Occasion", key: "special_occasion_tags", options: SpecialOccasionFilters },
-              { title: "Type", key: "type", options: TypeFilters },
-              { title: "Relationship", key: "relationship", options: RelationshipFilters },
-              { title: "Color", key: "color", options: ColorFilters },
-            ].map((f) => (
-              <div key={f.key} className="mb-4">
-                <div
-                  className="flex justify-between cursor-pointer"
-                  onClick={() =>
-                    setExpandedFilters((p) => ({ ...p, [f.key]: !p[f.key] }))
-                  }
-                >
-                  {f.title}
-                  {expandedFilters[f.key] ? <ChevronUp /> : <ChevronDown />}
-                </div>
-                {expandedFilters[f.key] &&
-                  f.options.map((opt) => (
-                    <label key={opt} className="flex gap-2 mt-1">
-                      <input
-                        type="checkbox"
-                        checked={selectedFilters[f.key].includes(opt)}
-                        onChange={() => toggleFilter(f.key, opt)}
-                      />
-                      {opt}
-                    </label>
-                  ))}
-              </div>
-            ))}
+							{[
+								{
+									title: "Subcategories",
+									key: "subcategory_name",
+									options: SubCategoryFilters,
+								},
+								{
+									title: "Festival",
+									key: "festival_tags",
+									options: FestivalFilters,
+								},
+								{
+									title: "Occasion",
+									key: "occasion_tags",
+									options: OccasionFilters,
+								},
+								{
+									title: "Special Occasion",
+									key: "special_occasion_tags",
+									options: SpecialOccasionFilters,
+								},
+								{ title: "Type", key: "type", options: TypeFilters },
+								{
+									title: "Relationship",
+									key: "relationship",
+									options: RelationshipFilters,
+								},
+								{ title: "Color", key: "color", options: ColorFilters },
+							].map((f) => (
+								<div key={f.key} className='mb-4'>
+									<div
+										className='flex justify-between cursor-pointer'
+										onClick={() =>
+											setExpandedFilters((p) => ({ ...p, [f.key]: !p[f.key] }))
+										}>
+										{f.title}
+										{expandedFilters[f.key] ? <ChevronUp /> : <ChevronDown />}
+									</div>
+									{expandedFilters[f.key] &&
+										f.options.map((opt) => (
+											<label key={opt} className='flex gap-2 mt-1'>
+												<input
+													type='checkbox'
+													checked={selectedFilters[f.key].includes(opt)}
+													onChange={() => toggleFilter(f.key, opt)}
+												/>
+												{opt}
+											</label>
+										))}
+								</div>
+							))}
 
-            <button
-              onClick={() => setShowFilters(false)}
-              className="w-full bg-rose-600 text-white py-2 mt-4"
-            >
-              Apply Filters
-            </button>
-          </div>
-        </div>
-      )}
+							<button
+								onClick={() => setShowFilters(false)}
+								className='w-full bg-rose-600 text-white py-2 mt-4'>
+								Apply Filters
+							</button>
+						</div>
+					</div>
+				)}
 
-      {/* Products */}
-      {products.length === 0 && !loading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <img
-            src={logo}
-            alt="No products"
-            className="w-32 h-32 mb-4"
-          />
-          <h2 className="text-xl font-semibold text-gray-700">
-            Oops! No products found.
-          </h2>
-          <p className="text-gray-500 mt-2">
-            We're working hard to fill this category. Check back soon or try another filter!
-          </p>
-        </div>
-      ) : (
-        <InfiniteScroll
-          dataLength={products.length}
-          next={() => setPage((prev) => prev + 1)}
-          hasMore={hasMore}
-          scrollThreshold="50%"
-          loader={
-            <div className="flex justify-center py-10">
-              <div className="w-8 h-8 border-4 border-rose-600 border-t-transparent rounded-full animate-spin" />
-            </div>
-          }
-        >
-         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 p-4">
-
-            {products.map((p) => (
-              <ProductCard
-                key={p._id}
-                product={p}
-                currentImageIndex={currentImages[p._id] || 0}
-                selectImage={selectImage}
-                handleProductClick={(slug, id) => handleProductClick(slug, id, p)}
-                calculateDiscount={calculateDiscount}
-              />
-            ))}
-          </div>
-        </InfiniteScroll>)}
-    </div>
-  );
+				{/* Products */}
+				{products.length === 0 && !loading ? (
+					<div className='flex flex-col items-center justify-center py-20 text-center'>
+						<img
+							src={logo}
+							alt='No products'
+							className='w-32 h-32 mb-4'
+							title='No products found'
+						/>
+						<h2 className='text-xl font-semibold text-gray-700'>
+							Oops! No products found.
+						</h2>
+						<p className='text-gray-500 mt-2'>
+							We're working hard to fill this category. Check back soon or try
+							another filter!
+						</p>
+					</div>
+				) : (
+					<InfiniteScroll
+						dataLength={products.length}
+						next={() => setPage((prev) => prev + 1)}
+						hasMore={hasMore}
+						scrollThreshold='50%'
+						loader={
+							<div className='flex justify-center py-10'>
+								<div className='w-8 h-8 border-4 border-rose-600 border-t-transparent rounded-full animate-spin' />
+							</div>
+						}>
+						<div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 p-4'>
+							{products.map((p) => (
+								<ProductCard
+									key={p._id}
+									product={p}
+									currentImageIndex={currentImages[p._id] || 0}
+									selectImage={selectImage}
+									handleProductClick={(slug, id) =>
+										handleProductClick(slug, id, p)
+									}
+									calculateDiscount={calculateDiscount}
+								/>
+							))}
+						</div>
+					</InfiniteScroll>
+				)}
+			</div>
+		</>
+	);
 };
 
 export default Product;
