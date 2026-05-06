@@ -16,7 +16,9 @@ import {
 import ProductCard from "./ProductCard";
 import { getPayloadKeyByItemName } from "../../comman/payload-finder/payload-finder";
 import { getDescription } from "../../comman/H1Function/h1Functions";
-const buildInitialFilters = (filterData) => {
+const TOP_LEVEL_CATEGORIES = ["Flowers", "Cakes", "Plants", "Combos"];
+
+const buildInitialFilters = (filterData, routeCategory) => {
   const baseFilters = {
     category_name: '',
     subcategory_name: [],
@@ -27,6 +29,11 @@ const buildInitialFilters = (filterData) => {
     relationship: [],
     color: [],
   };
+
+  // If route param is a top-level category (e.g. /product/Cakes), filter by category_name
+  if (!filterData && routeCategory && TOP_LEVEL_CATEGORIES.includes(routeCategory)) {
+    return { ...baseFilters, category_name: routeCategory };
+  }
 
   if (!filterData) return baseFilters;
 
@@ -104,7 +111,7 @@ const Product = () => {
   const filterFromCategory = getPayloadKeyByItemName(currentCategory);
 
   const [selectedFilters, setSelectedFilters] = useState(() =>
-    location.search ? searchFilters : buildInitialFilters(filterFromCategory)
+    location.search ? searchFilters : buildInitialFilters(filterFromCategory, currentCategory)
   );
   /* ===================== API ===================== */
   const fetchProducts = async (pageNo) => {
@@ -151,7 +158,7 @@ const Product = () => {
     if (location.search) {
       setSelectedFilters(buildFiltersFromSearch(location.search));
     } else {
-      setSelectedFilters(buildInitialFilters(filterFromCategory));
+      setSelectedFilters(buildInitialFilters(filterFromCategory, currentCategory));
     }
   }, [category, location.search]);
 
