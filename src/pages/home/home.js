@@ -163,12 +163,12 @@ const Home = () => {
               </div>
             ))}
           </div>
-          {/* Desktop: horizontal scroll row */}
-          <div className="hidden md:flex flex-nowrap gap-4 px-6 overflow-x-auto hide-scrollbar py-2">
+          {/* Desktop: full-width row, all 8 items fill equally */}
+          <div className="hidden md:flex gap-3 px-6 lg:px-8 py-2">
             {mainCategories.map((item, idx) => (
-              <div key={idx} className="flex-shrink-0 w-32 cursor-pointer" onClick={() => navigate(`/product/${item.title}`)}>
+              <div key={idx} className="flex-1 min-w-0 cursor-pointer" onClick={() => navigate(`/product/${item.title}`)}>
                 <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-gray-50">
-                  <img src={item.img} alt={item.title} className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img src={item.img} alt={item.title} className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <p className="mt-1.5 text-center text-sm font-medium text-gray-800 truncate">{item.title}</p>
               </div>
