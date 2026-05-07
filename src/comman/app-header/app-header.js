@@ -425,13 +425,14 @@ export default function Header() {
                   if (!groupedItems[cat]) groupedItems[cat] = [];
                   groupedItems[cat].push(item);
                 });
-                const isDirectMenu = menu.title === "Internship Program" && menu.items?.[0]?.path;
+                const isDirectMenu = menu.url || (menu.items?.[0]?.path);
 
                 return (
                   <li key={index} className="group">
                     <button
                       onClick={() => {
-                        if (isDirectMenu) navigate(menu.items[0].path);
+                        if (menu.url) window.open(menu.url, '_blank', 'noopener,noreferrer');
+                        else if (menu.items?.[0]?.path) navigate(menu.items[0].path);
                       }}
                       className="px-2.5 py-2.5 text-[15px] font-body font-normal text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 whitespace-nowrap"
                     >
@@ -505,10 +506,6 @@ export default function Header() {
               <div className="sticky top-0 z-10 bg-gradient-to-b from-primary-white to-grey-50/30 border-b border-grey-200 px-6 py-5 flex items-center justify-between backdrop-blur-sm">
                 <div className="flex items-center space-x-3">
                   <img src={logo} alt="RedHeart Logo" className="h-8 w-auto" />
-                  <div className="flex flex-col">
-                    <span className="font-elegant text-2xl text-accent-rose-600 leading-none">Red Heart</span>
-                    <span className="font-body text-[10px] text-grey-600 tracking-wider uppercase">Menu</span>
-                  </div>
                 </div>
                 <button
                   onClick={closeSidebar}
@@ -578,17 +575,26 @@ export default function Header() {
                       <div key={index} className="border-b border-grey-100 last:border-0">
                         <button
                           className="w-full text-left px-4 py-4 flex justify-between items-center font-display font-semibold text-base text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 rounded-lg hover:bg-grey-50 group"
-                          onClick={() => setActiveMenu(activeMenu === index ? null : index)}
+                          onClick={() => {
+                            if (menu.url) {
+                              window.open(menu.url, '_blank', 'noopener,noreferrer');
+                              closeSidebar();
+                            } else {
+                              setActiveMenu(activeMenu === index ? null : index);
+                            }
+                          }}
                         >
                           <span className="relative">
                             {menu.title}
                             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-rose-400 to-accent-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                           </span>
-                          <ChevronDown
-                            className={`w-5 h-5 transition-transform duration-300 text-grey-500 group-hover:text-accent-rose-600 ${activeMenu === index ? "rotate-180" : ""
-                              }`}
-                            strokeWidth={2}
-                          />
+                          {!menu.url && (
+                            <ChevronDown
+                              className={`w-5 h-5 transition-transform duration-300 text-grey-500 group-hover:text-accent-rose-600 ${activeMenu === index ? "rotate-180" : ""
+                                }`}
+                              strokeWidth={2}
+                            />
+                          )}
                         </button>
 
                         <div className={`overflow-hidden transition-all duration-300 ${activeMenu === index ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>

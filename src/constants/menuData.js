@@ -649,8 +649,7 @@ items: [
 },
 {
 title: "Internship Program",
-items: [
-{ name: "Apply Now", date: null, path: "/hiring-for-internship" },
-],
+url: "https://www.redheart.in/hiring-for-internship",
+items: [],
 },
 ];
