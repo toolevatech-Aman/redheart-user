@@ -2,17 +2,16 @@ import { menuData } from "../../constants/menuData";
 
 export const getPayloadKeyByItemName = ( itemName) => {
   if (!itemName) return null;
-  // Map navbar title to payload key
-  const titleToPayloadKey = {
-    "Flowers": "subcategory_name",
-    "Cakes": "subcategory_name",
-    "Plants": "subcategory_name",
-    "Combos": "subcategory_name",
-    "Loved Ones": "relationship",
-    "Festival": "festival_tags",
-    "Special Occasion": "occasion_tags",
-    "Occasion": "occasion_tags",
-    "Category":"category_name"
+
+  // Map item.category field to API payload key
+  const categoryToPayloadKey = {
+    "SubCategoryFilters": "subcategory_name",
+    "festival": "festival_tags",
+    "special": "special_occasion_tags",
+    "occasion": "occasion_tags",
+    "type": "type",
+    "relationship": "relationship",
+    "color": "color",
   };
 
   for (const section of menuData) {
@@ -20,9 +19,9 @@ export const getPayloadKeyByItemName = ( itemName) => {
       (item) => item.name.toLowerCase() === itemName.toLowerCase()
     );
 
-    if (foundItem) {
+    if (foundItem && foundItem.category && categoryToPayloadKey[foundItem.category]) {
       return {
-        payloadKey: titleToPayloadKey[section.title],
+        payloadKey: categoryToPayloadKey[foundItem.category],
         value: itemName,
       };
     }
