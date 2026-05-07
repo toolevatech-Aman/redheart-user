@@ -128,8 +128,6 @@ const Home = () => {
     { title: "Birthday", img: birthdaypic },
     { title: "Anniversary", img: Anniversary },
     { title: "Wedding", img: Wedding },
-    { title: "Baby Shower", img: bbyshower },
-    { title: "Get Well Soon", img: getWellSoonImg },
     { title: "Cakes", img: cake },
     { title: "Flowers", img: loveAffectionImg },
     { title: "Plants", img: plant },
@@ -154,28 +152,27 @@ const Home = () => {
 
         {/* Categories — order-1 on mobile (top), order-2 on desktop (below banner) */}
         <section className="order-1 md:order-2 pt-2 pb-1 md:pt-2 md:pb-6 bg-white">
-          <div className="w-full overflow-x-auto hide-scrollbar">
-            {/* Mobile: 2-row grid | Desktop: single flex row */}
-            <div className="grid grid-rows-2 md:grid-rows-1 grid-flow-col gap-x-2 gap-y-2 md:gap-4 px-3 md:px-6 py-1">
-              {mainCategories.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="w-[70px] md:w-32 cursor-pointer"
-                  onClick={() => navigate(`/product/${item.title}`)}
-                >
-                  <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-gray-50">
-                    <img
-                      src={item.img}
-                      alt={item.title}
-                      className="w-full h-[70px] md:h-32 object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <p className="mt-1 text-center text-[10px] md:text-sm font-medium text-gray-800 truncate">
-                    {item.title}
-                  </p>
+          {/* Mobile: 4-column 2-row grid filling full width */}
+          <div className="grid grid-cols-4 gap-x-2 gap-y-4 px-3 py-1 md:hidden">
+            {mainCategories.map((item, idx) => (
+              <div key={idx} className="cursor-pointer" onClick={() => navigate(`/product/${item.title}`)}>
+                <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm bg-gray-50">
+                  <img src={item.img} alt={item.title} className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
-              ))}
-            </div>
+                <p className="mt-1 text-center text-[10px] font-medium text-gray-800 truncate">{item.title}</p>
+              </div>
+            ))}
+          </div>
+          {/* Desktop: horizontal scroll row */}
+          <div className="hidden md:flex flex-nowrap gap-4 px-6 overflow-x-auto hide-scrollbar py-2">
+            {mainCategories.map((item, idx) => (
+              <div key={idx} className="flex-shrink-0 w-32 cursor-pointer" onClick={() => navigate(`/product/${item.title}`)}>
+                <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-gray-50">
+                  <img src={item.img} alt={item.title} className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-105" />
+                </div>
+                <p className="mt-1.5 text-center text-sm font-medium text-gray-800 truncate">{item.title}</p>
+              </div>
+            ))}
           </div>
           <style jsx>{`
             .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
