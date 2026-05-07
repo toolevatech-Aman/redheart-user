@@ -35,6 +35,26 @@ const buildInitialFilters = (filterData, routeCategory) => {
     return { ...baseFilters, category_name: routeCategory };
   }
 
+  // If route param is an occasion (e.g. /product/Birthday)
+  if (!filterData && routeCategory && OccasionFilters.includes(routeCategory)) {
+    return { ...baseFilters, occasion_tags: [routeCategory] };
+  }
+
+  // If route param is a special occasion (e.g. /product/Valentine's Day)
+  if (!filterData && routeCategory && SpecialOccasionFilters.includes(routeCategory)) {
+    return { ...baseFilters, special_occasion_tags: [routeCategory] };
+  }
+
+  // If route param is a festival (e.g. /product/Rakhi)
+  if (!filterData && routeCategory && FestivalFilters.includes(routeCategory)) {
+    return { ...baseFilters, festival_tags: [routeCategory] };
+  }
+
+  // If route param is a subcategory (e.g. /product/Roses)
+  if (!filterData && routeCategory && SubCategoryFilters.includes(routeCategory)) {
+    return { ...baseFilters, subcategory_name: [routeCategory] };
+  }
+
   if (!filterData) return baseFilters;
 
   const { payloadKey, value } = filterData;
