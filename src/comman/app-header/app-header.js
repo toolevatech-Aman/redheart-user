@@ -429,15 +429,25 @@ export default function Header() {
 
                 return (
                   <li key={index} className="group">
+                    {menu.url ? (
+                      <a
+                        href={menu.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block px-2.5 py-2.5 text-[15px] font-body font-normal text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 whitespace-nowrap"
+                      >
+                        {menu.title}
+                      </a>
+                    ) : (
                     <button
                       onClick={() => {
-                        if (menu.url) window.open(menu.url, '_blank', 'noopener,noreferrer');
-                        else if (menu.items?.[0]?.path) navigate(menu.items[0].path);
+                        if (menu.items?.[0]?.path) navigate(menu.items[0].path);
                       }}
                       className="px-2.5 py-2.5 text-[15px] font-body font-normal text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 whitespace-nowrap"
                     >
                       {menu.title}
                     </button>
+                    )}
 
                     {/* Dropdown */}
                     {!isDirectMenu && (
@@ -573,29 +583,35 @@ export default function Header() {
 
                     return (
                       <div key={index} className="border-b border-grey-100 last:border-0">
+                        {menu.url ? (
+                          <a
+                            href={menu.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={closeSidebar}
+                            className="w-full text-left px-4 py-4 flex justify-between items-center font-display font-semibold text-base text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 rounded-lg hover:bg-grey-50 group"
+                          >
+                            <span className="relative">
+                              {menu.title}
+                              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-rose-400 to-accent-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                            </span>
+                          </a>
+                        ) : (
                         <button
                           className="w-full text-left px-4 py-4 flex justify-between items-center font-display font-semibold text-base text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 rounded-lg hover:bg-grey-50 group"
-                          onClick={() => {
-                            if (menu.url) {
-                              window.open(menu.url, '_blank', 'noopener,noreferrer');
-                              closeSidebar();
-                            } else {
-                              setActiveMenu(activeMenu === index ? null : index);
-                            }
-                          }}
+                          onClick={() => setActiveMenu(activeMenu === index ? null : index)}
                         >
                           <span className="relative">
                             {menu.title}
                             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-rose-400 to-accent-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                           </span>
-                          {!menu.url && (
-                            <ChevronDown
-                              className={`w-5 h-5 transition-transform duration-300 text-grey-500 group-hover:text-accent-rose-600 ${activeMenu === index ? "rotate-180" : ""
-                                }`}
-                              strokeWidth={2}
-                            />
-                          )}
+                          <ChevronDown
+                            className={`w-5 h-5 transition-transform duration-300 text-grey-500 group-hover:text-accent-rose-600 ${activeMenu === index ? "rotate-180" : ""
+                              }`}
+                            strokeWidth={2}
+                          />
                         </button>
+                        )}
 
                         <div className={`overflow-hidden transition-all duration-300 ${activeMenu === index ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
                           <div className="pl-4 pb-4 mt-2 space-y-4">
