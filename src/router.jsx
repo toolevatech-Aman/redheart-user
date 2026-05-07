@@ -25,6 +25,7 @@ const Checkout = lazy(() => import("./pages/checkout/checkout"));
 const MyAccount = lazy(() => import("./pages/my-account/my-account"));
 const Orders = lazy(() => import("./pages/orders/orders"));
 const Hamper = lazy(() => import("./pages/hampers/hamper"));
+const HiringForInternship = lazy(() => import("./pages/hiring-for-internship/hiring-for-internship"));
 const logoImage ="./assets/redHeartLogoo.png"
 const Router = () => {
   const routes = [
@@ -51,6 +52,7 @@ const Router = () => {
     {path: "/my-account", element: <MyAccount />},
     {path: "/orders", element: <Orders />},
     {path: "/hamper", element: <Hamper />},
+    {path: "/hiring-for-internship", element: <HiringForInternship />},
   ];
 
   return (
