@@ -125,13 +125,13 @@ const Home = () => {
   ];
 
   const mainCategories = [
+    { title: "Flowers", img: loveAffectionImg },
+    { title: "Cakes", img: cake },
+    { title: "Plants", img: plant },
+    { title: "Combos", img: combo },
     { title: "Birthday", img: birthdaypic },
     { title: "Anniversary", img: Anniversary },
     { title: "Wedding", img: Wedding },
-    { title: "Cakes", img: cake },
-    { title: "Flowers", img: loveAffectionImg },
-    { title: "Plants", img: plant },
-    { title: "Combos", img: combo },
     { title: "Hampers", img: hampers },
   ]
   const heroes = [
