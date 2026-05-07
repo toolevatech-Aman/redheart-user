@@ -184,18 +184,18 @@ const Home = () => {
         </section>
 
         {/* Banner — order-2 on mobile (below categories), order-1 on desktop (top) */}
-        <section className="order-2 md:order-1 pt-1 pb-0 md:pt-4 md:pb-2 bg-white">
-          <div className="overflow-x-auto flex gap-3 px-3 sm:px-6 lg:px-8 scroll-smooth snap-x snap-mandatory hide-scrollbar">
+        <section className="order-2 md:order-1 pt-2 pb-4 md:pt-4 md:pb-2 bg-white">
+          <div className="overflow-x-auto flex gap-0 sm:gap-3 px-0 sm:px-6 lg:px-8 scroll-smooth snap-x snap-mandatory hide-scrollbar">
             {heroes.map((item, idx) => (
               <div
                 key={idx}
-                className="min-w-[calc(100vw-24px)] sm:min-w-[320px] lg:min-w-[500px] snap-center shrink-0 rounded-2xl overflow-hidden shadow-lg"
+                className="min-w-screen sm:min-w-[320px] lg:min-w-[500px] snap-center shrink-0 sm:rounded-2xl overflow-hidden sm:shadow-lg"
                 onClick={() => navigate(item.link)}
               >
                 <img
                   src={item.img}
                   alt="Poster"
-                  className="w-full h-[47vh] sm:h-64 lg:h-[22rem] object-cover"
+                  className="w-full h-[54vw] sm:h-64 lg:h-[22rem] object-cover"
                 />
               </div>
             ))}
@@ -212,11 +212,11 @@ const Home = () => {
 
       {/* Build Your Own Hamper Section */}
       <section
-        className="relative cursor-pointer group"
+        className="relative cursor-pointer group mt-4 md:mt-6"
         onClick={() => navigate("/hamper")}
       >
         {/* Background Image */}
-        <div className="w-full h-72 sm:h-[22rem] md:h-[32rem] lg:h-[34rem] overflow-hidden rounded-2xl">
+        <div className="w-full h-56 sm:h-[20rem] md:h-[26rem] lg:h-[28rem] overflow-hidden rounded-2xl">
            <img
             src={buildHamper}
             alt="Build Your Own Hamper"
