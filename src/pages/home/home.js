@@ -125,14 +125,16 @@ const Home = () => {
   ];
 
   const mainCategories = [
+    { title: "Birthday", img: birthdaypic },
+    { title: "Anniversary", img: Anniversary },
+    { title: "Wedding", img: Wedding },
+    { title: "Baby Shower", img: bbyshower },
+    { title: "Get Well Soon", img: getWellSoonImg },
     { title: "Cakes", img: cake },
     { title: "Flowers", img: loveAffectionImg },
     { title: "Plants", img: plant },
     { title: "Combos", img: combo },
-    { title: "Chocolate Gifts", img: chocolates },
-    { title: "Gifts", img: gifts },
-    { title: "Hampers", img: hampers }
-
+    { title: "Hampers", img: hampers },
   ]
   const heroes = [
   { img: hero1, link: "/product/Birthday" },
@@ -146,96 +148,65 @@ const Home = () => {
 ];
   return (
     <div className="min-h-screen bg-primary-white">
-      {/* Small Posters Carousel */}
-      <section className="py-10 md:py-12 bg-white">
-        <div className="overflow-x-auto flex gap-5 px-4 sm:px-6 lg:px-8 scroll-smooth snap-x snap-mandatory hide-scrollbar">
-          {heroes.map((item, idx) => (
-            <div
-              key={idx}
-              className="
-          min-w-[240px]          /* mobile */
-          sm:min-w-[320px]       /* tablet */
-          lg:min-w-[500px]       /* laptop = 2.5 visible */
-          snap-center 
-          shrink-0 
-          rounded-2xl 
-          overflow-hidden 
-          shadow-lg
-        "
-              onClick={() => navigate(item.link)}
-            >
-              <img
-                src={item.img}
-                alt="Poster"
-                className="w-full h-72 sm:h-80 lg:h-[28rem] object-cover"
-              />
-            </div>
-          ))}
-        </div>
 
-        {/* Hide scrollbar styles */}
-        <style jsx>{`
-    .hide-scrollbar {
-      -ms-overflow-style: none; /* IE & Edge */
-      scrollbar-width: none; /* Firefox */
-    }
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
-    }
-  `}</style>
-      </section>
+      {/* ── MOBILE: categories first, banner second | DESKTOP: banner first, categories second ── */}
+      <div className="flex flex-col">
 
-
-
-      <section className="py-10 md:py-12 bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Optional: Heading */}
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-serif text-[#8B0000]">Our Categories</h2>
-            <p className="text-gray-600 text-base md:text-lg">Explore what suits your taste</p>
-          </div>
-
-          {/* Carousel */}
+        {/* Categories — order-1 on mobile (top), order-2 on desktop (below banner) */}
+        <section className="order-1 md:order-2 pt-2 pb-1 md:pt-2 md:pb-6 bg-white">
           <div className="w-full overflow-x-auto hide-scrollbar">
-            <div className="flex gap-4 md:gap-5 py-4 snap-x snap-mandatory scroll-smooth">
+            {/* Mobile: 2-row grid | Desktop: single flex row */}
+            <div className="grid grid-rows-2 md:grid-rows-1 grid-flow-col gap-x-2 gap-y-2 md:gap-4 px-3 md:px-6 py-1">
               {mainCategories.map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex-shrink-0 w-56 sm:w-60 md:w-64 snap-center cursor-pointer"
+                  className="w-[70px] md:w-32 cursor-pointer"
                   onClick={() => navigate(`/product/${item.title}`)}
                 >
-                  {/* Image */}
-                  <div className="group relative rounded-2xl overflow-hidden shadow-elegant hover:shadow-premium transition-all duration-300">
+                  <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-gray-50">
                     <img
                       src={item.img}
                       alt={item.title}
-                      className="w-full h-44 md:h-52 object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-[70px] md:h-32 object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
                   </div>
-
-                  {/* Title */}
-                  <h3 className="mt-2 text-center font-display text-sm md:text-base font-light tracking-wide text-gray-900 truncate">
+                  <p className="mt-1 text-center text-[10px] md:text-sm font-medium text-gray-800 truncate">
                     {item.title}
-                  </h3>
+                  </p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
+          <style jsx>{`
+            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            .hide-scrollbar::-webkit-scrollbar { display: none; }
+          `}</style>
+        </section>
 
-        {/* Hide scrollbar styles */}
-        <style jsx>{`
-    .hide-scrollbar {
-      -ms-overflow-style: none; /* IE & Edge */
-      scrollbar-width: none; /* Firefox */
-    }
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
-    }
-  `}</style>
-      </section>
+        {/* Banner — order-2 on mobile (below categories), order-1 on desktop (top) */}
+        <section className="order-2 md:order-1 pt-1 pb-0 md:pt-4 md:pb-2 bg-white">
+          <div className="overflow-x-auto flex gap-3 px-3 sm:px-6 lg:px-8 scroll-smooth snap-x snap-mandatory hide-scrollbar">
+            {heroes.map((item, idx) => (
+              <div
+                key={idx}
+                className="min-w-[calc(100vw-24px)] sm:min-w-[320px] lg:min-w-[500px] snap-center shrink-0 rounded-2xl overflow-hidden shadow-lg"
+                onClick={() => navigate(item.link)}
+              >
+                <img
+                  src={item.img}
+                  alt="Poster"
+                  className="w-full h-[47vh] sm:h-64 lg:h-[22rem] object-cover"
+                />
+              </div>
+            ))}
+          </div>
+          <style jsx>{`
+            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            .hide-scrollbar::-webkit-scrollbar { display: none; }
+          `}</style>
+        </section>
+
+      </div>
 
 
 
