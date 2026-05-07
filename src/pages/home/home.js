@@ -216,7 +216,7 @@ const Home = () => {
         onClick={() => navigate("/hamper")}
       >
         {/* Background Image */}
-        <div className="w-full h-56 sm:h-[20rem] md:h-[26rem] lg:h-[28rem] overflow-hidden rounded-2xl">
+        <div className="w-full h-56 sm:h-[18rem] md:h-[20rem] lg:h-[22rem] overflow-hidden rounded-2xl">
            <img
             src={buildHamper}
             alt="Build Your Own Hamper"
