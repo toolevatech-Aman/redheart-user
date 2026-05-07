@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, User, ShoppingBag, Menu, X, ChevronDown, Pencil, Truck, MapPin } from "lucide-react";
-import logo from "../../assets/RedHeart-Logo-02.png";
+import logo from "../../assets/RedHeart-Logo-Cropped.png";
 import { getProduct } from "../../service/products";
 import { menuData } from "../../constants/menuData";
 import { useSelector } from "react-redux";
@@ -244,7 +244,7 @@ export default function Header() {
                 <img
                   src={logo}
                   alt="RedHeart Logo"
-                  className="h-12 lg:h-14 w-auto object-contain scale-[1.7] origin-left"
+                  className="h-8 sm:h-9 lg:h-10 w-auto object-contain"
                 />
               </a>
             </div>
@@ -504,7 +504,7 @@ export default function Header() {
             >
               <div className="sticky top-0 z-10 bg-gradient-to-b from-primary-white to-grey-50/30 border-b border-grey-200 px-6 py-5 flex items-center justify-between backdrop-blur-sm">
                 <div className="flex items-center space-x-3">
-                  <img src={logo} alt="RedHeart Logo" className="h-14 w-auto" />
+                  <img src={logo} alt="RedHeart Logo" className="h-8 w-auto" />
                   <div className="flex flex-col">
                     <span className="font-elegant text-2xl text-accent-rose-600 leading-none">Red Heart</span>
                     <span className="font-body text-[10px] text-grey-600 tracking-wider uppercase">Menu</span>
