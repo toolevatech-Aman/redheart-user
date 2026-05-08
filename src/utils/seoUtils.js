@@ -5,9 +5,9 @@
 
 // Primary SEO slug map: internal category name → SEO URL slug
 export const CATEGORY_URL_MAP = {
-  'Flowers':     'florist-near-me',
-  'Cakes':       'order-cake-online',
-  'Plants':      'plants-online',
+  'Flowers':     'flowers',
+  'Cakes':       'cakes',
+  'Plants':      'plants',
   'Combos':      'combos-online',
   'Hampers':     'gift-hampers',
   'Birthday':    'birthday-gifts-delivery',

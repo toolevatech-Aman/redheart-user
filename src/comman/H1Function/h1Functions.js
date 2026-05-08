@@ -111,9 +111,9 @@ const categoryDescriptions = {
 
 // SEO slug → display title (for new URL architecture)
 const seoSlugDescriptions = {
-    "florist-near-me":          "Flowers Near You – Online Delivery",
-    "order-cake-online":        "Order Cake Online",
-    "plants-online":            "Plants Online",
+    "flowers":                  "Flower Delivery",
+    "cakes":                    "Cake Delivery",
+    "plants":                   "Plants Online",
     "combos-online":            "Combos Online",
     "gift-hampers":             "Gift Hampers Online",
     "birthday-gifts-delivery":  "Birthday Gifts",
