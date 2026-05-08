@@ -62,7 +62,7 @@ export const SUBCATEGORY_SLUG_FILTERS = {
   'baby-shower':         { occasion_tags: ['Baby Shower'] },
   'appreciation':        { occasion_tags: ['Appreciation'] },
   'cheer-up':            { occasion_tags: ['Cheer Up'] },
-  'i-am-sorry':          { occasion_tags: ['I Am Sorry'] },
+  'i-am-sorry':          { occasion_tags: ['I am sorry'] },
   'funeral':             { occasion_tags: ['Funeral'] },
   // Relationships (direct)
   'for-her':             { relationship: ['Her'] },
@@ -95,8 +95,8 @@ export const SUBCATEGORY_SLUG_FILTERS = {
   // Festivals
   'valentines-day':      { festival_tags: ["Valentine's Day"] },
   'rose-day':            { festival_tags: ['Rose Day'] },
-  'mothers-day':         { festival_tags: ["Mother's Day"] },
-  'womens-day':          { festival_tags: ["Women's Day"] },
+  'mothers-day':         { festival_tags: ['Mothers Day'] },
+  'womens-day':          { festival_tags: ['Womens Day'] },
   'christmas':           { festival_tags: ['Christmas'] },
   'new-year':            { festival_tags: ['New Year'] },
   'holi':                { festival_tags: ['Holi'] },
@@ -110,7 +110,7 @@ export const SUBCATEGORY_SLUG_FILTERS = {
   'hug-day':             { festival_tags: ['Hug Day'] },
   'kiss-day':            { festival_tags: ['Kiss Day'] },
   'republic-day':        { festival_tags: ['Republic Day'] },
-  'doctors-day':         { festival_tags: ["Doctor's Day"] },
+  'doctors-day':         { festival_tags: ['Doctors day'] },
   'brothers-day':        { festival_tags: ["Brother's Day"] },
   // Cakes flavours
   'black-forest':        { subcategory_name: ['Black Forest Cakes'] },
@@ -124,7 +124,7 @@ export const SUBCATEGORY_SLUG_FILTERS = {
   'jade':                { subcategory_name: ['Jade Plant'] },
   'peace-lily':          { subcategory_name: ['Peace Lily Plant'] },
   'syngonium':           { subcategory_name: ['Syngonium'] },
-  'bonsai':              { subcategory_name: ['Bonsai'] },
+  'bonsai':              { subcategory_name: ['Bonsai '] }, // DB has trailing space
   // Compound / popular combinations
   'red-roses':               { color: ['Red'], subcategory_name: ['Roses'] },
   'pink-roses':              { color: ['Pink'], subcategory_name: ['Roses'] },

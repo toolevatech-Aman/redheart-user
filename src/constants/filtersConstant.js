@@ -12,8 +12,9 @@ export const SubCategoryFilters = [
 export const FestivalFilters = [
   "New Year", "Republic Day", "Rose Day", "Propose Day", "Chocolate Day",
   "Teddy Day", "Promise Day", "Hug Day", "Kiss Day", "Valentine's Day",
-  "Women's Day", "Doctor's Day", "Mother's Day", "Brother's Day",
+  "Womens Day", "Doctors day", "Mothers Day", "Brother's Day",
   "Father's Day", "Christmas", "Lohri", "Holi", "Eid Al Fitr",
+  "Valentine", "Wedding",
 ];
 
 export const SpecialOccasionFilters = [];
@@ -22,7 +23,7 @@ export const OccasionFilters = [
   "Birthday", "Anniversary", "Wedding", "House Warming", "New Born Baby",
   "Baby Shower", "Appreciation", "Cheer Up", "Congratulations",
   "Get Well Soon", "Love n Romance", "Thank You", "Valentine",
-  "I Am Sorry", "Funeral",
+  "I am sorry", "Funeral",
 ];
 
 export const TypeFilters = ["Bouquet", "Hot Pick", "Best Seller", "New Arrival"];
