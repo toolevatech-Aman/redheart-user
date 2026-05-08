@@ -71,7 +71,7 @@ export const getCategoryUrl = (category) => {
  * e.g. getSubcategoryUrl('Flowers', 'Roses') → '/florist-near-me/roses'
  */
 export const getSubcategoryUrl = (category, subcategory) => {
-  const categorySlug = CATEGORY_URL_MAP[category] || toSlug(category);
+  const categorySlug = PRODUCT_CATEGORY_SLUG_MAP[category] || toSlug(category);
   // Strip the category word from the subcategory if present
   const categoryWord = toSlug(category);
   let subSlug = toSlug(subcategory);
