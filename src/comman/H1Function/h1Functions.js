@@ -109,13 +109,28 @@ const categoryDescriptions = {
     "Rakhi": "Rakhi Gifts"
 };
 
+// SEO slug → display title (for new URL architecture)
+const seoSlugDescriptions = {
+    "florist-near-me":          "Flowers Near You – Online Delivery",
+    "order-cake-online":        "Order Cake Online",
+    "plants-online":            "Plants Online",
+    "combos-online":            "Combos Online",
+    "gift-hampers":             "Gift Hampers Online",
+    "birthday-gifts-delivery":  "Birthday Gifts",
+    "anniversary-gifts-delivery": "Anniversary Gifts",
+    "wedding-gifts-online":     "Wedding Gifts Online",
+};
+
 // Generic JS function
 export function getDescription(categoryName) {
-    if (categoryDescriptions[categoryName]) {
-        return categoryDescriptions[categoryName];
-    } else {
-        return categoryName + " Delivery"; // Default fallback
-    }
+    if (!categoryName) return "Gifts Online";
+    if (categoryDescriptions[categoryName]) return categoryDescriptions[categoryName];
+    if (seoSlugDescriptions[categoryName]) return seoSlugDescriptions[categoryName];
+    // Clean up slug fallback: "florist-near-me" → "Florist Near Me"
+    return categoryName
+        .split('-')
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
 }
 
 

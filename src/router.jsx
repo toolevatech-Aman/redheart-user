@@ -72,20 +72,10 @@ const Router = () => {
         {/* /p/:categorySlug/:productSlug  e.g. /p/order-cake-online/black-forest-cake-100001ca */}
         <Route path="/p/:categorySlug/:productSlug" element={<AppLayout><ProductDescription /></AppLayout>} />
 
-        {/* ── Named SEO category routes (must come before catch-all) ── */}
-        <Route path="/florist-near-me" element={<AppLayout><Product /></AppLayout>} />
-        <Route path="/order-cake-online" element={<AppLayout><Product /></AppLayout>} />
-        <Route path="/plants-online" element={<AppLayout><Product /></AppLayout>} />
-        <Route path="/combos-online" element={<AppLayout><Product /></AppLayout>} />
-        <Route path="/gift-hampers" element={<AppLayout><Product /></AppLayout>} />
-        <Route path="/birthday-gifts-delivery" element={<AppLayout><Product /></AppLayout>} />
-        <Route path="/anniversary-gifts-delivery" element={<AppLayout><Product /></AppLayout>} />
-        <Route path="/wedding-gifts-online" element={<AppLayout><Product /></AppLayout>} />
-
-        {/* ── Generic category catch-alls (must be LAST) ── */}
-        {/* /:categorySlug/:subcategorySlug  e.g. /order-cake-online/butterscotch */}
+        {/* ── Category & occasion routes — catch-alls MUST be last ── */}
+        {/* Subcategory: /order-cake-online/butterscotch, /florist-near-me/roses */}
         <Route path="/:categorySlug/:subcategorySlug" element={<AppLayout><Product /></AppLayout>} />
-        {/* /:categorySlug  e.g. /birthday-gifts-delivery or /husband */}
+        {/* Category/occasion: /florist-near-me, /birthday-gifts-delivery, /husband … */}
         <Route path="/:categorySlug" element={<AppLayout><Product /></AppLayout>} />
       </Routes>
     </Suspense>
