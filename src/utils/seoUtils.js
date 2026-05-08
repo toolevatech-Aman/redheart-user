@@ -34,6 +34,8 @@ export const URL_TO_CATEGORY_MAP = {
   'plants':      'Plants',
   'birthday':    'Birthday',
   'anniversary': 'Anniversary',
+  'wedding':     'Wedding',
+  'hampers':     'Hampers',
 };
 
 /**

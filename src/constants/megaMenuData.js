@@ -320,4 +320,116 @@ export const MEGA_MENU = [
       },
     ],
   },
+
+  {
+    title: 'Wedding',
+    url: '/wedding',
+    groups: [
+      {
+        heading: 'Shop by Category',
+        items: [
+          { label: 'Wedding Flowers',   url: '/wedding/flowers' },
+          { label: 'Wedding Plants',    url: '/wedding/plants' },
+          { label: 'Wedding Cakes',     url: '/wedding/cakes' },
+        ],
+      },
+      {
+        heading: 'Wedding Flowers',
+        items: [
+          { label: 'Roses',             url: '/flowers/wedding' },
+          { label: 'Lilies',            url: '/wedding/lilies' },
+          { label: 'Carnations',        url: '/wedding/carnations' },
+          { label: 'Roses & Carnation', url: '/wedding/roses-and-carnation' },
+        ],
+      },
+      {
+        heading: 'Wedding Plants',
+        items: [
+          { label: 'Peace Lily Plant',  url: '/wedding/peace-lily' },
+          { label: 'Money Plant',       url: '/wedding/money' },
+          { label: 'Jade Plant',        url: '/wedding/jade' },
+          { label: 'Bonsai',            url: '/wedding/bonsai' },
+          { label: 'Snake Plant',       url: '/wedding/snake' },
+        ],
+      },
+      {
+        heading: 'Shop by Relationship',
+        items: [
+          { label: 'Gifts for Her',         url: '/wedding/for-her' },
+          { label: 'Gifts for Him',         url: '/wedding/for-him' },
+          { label: 'Gifts for Wife',        url: '/wedding/for-wife' },
+          { label: 'Gifts for Husband',     url: '/wedding/for-husband' },
+          { label: 'Gifts for Mother',      url: '/wedding/for-mother' },
+          { label: 'Gifts for Father',      url: '/wedding/for-father' },
+          { label: 'Gifts for Friends',     url: '/wedding/for-friends' },
+          { label: 'Gifts for Girlfriend',  url: '/wedding/for-girlfriend' },
+          { label: 'Gifts for Boyfriend',   url: '/wedding/for-boyfriend' },
+        ],
+      },
+      {
+        heading: 'Popular Picks',
+        items: [
+          { label: 'Wedding Roses',         url: '/wedding/roses' },
+          { label: 'Wedding Bouquets',      url: '/wedding/bouquets' },
+          { label: 'Wedding Surprise',      url: '/wedding/surprise-gifts' },
+        ],
+      },
+    ],
+  },
+
+  {
+    title: 'Hampers',
+    url: '/hampers',
+    groups: [
+      {
+        heading: 'Shop by Occasion',
+        items: [
+          { label: 'Birthday Hampers',      url: '/hampers/birthday' },
+          { label: 'Anniversary Hampers',   url: '/hampers/anniversary' },
+          { label: 'Wedding Hampers',       url: '/hampers/wedding' },
+          { label: 'House Warming Hampers', url: '/hampers/house-warming' },
+          { label: 'Baby Shower Hampers',   url: '/hampers/baby-shower' },
+          { label: 'New Born Baby Hampers', url: '/hampers/new-born-baby' },
+          { label: 'Thank You Hampers',     url: '/hampers/thank-you' },
+          { label: 'Congratulations',       url: '/hampers/congratulations' },
+        ],
+      },
+      {
+        heading: 'Shop by Relationship',
+        items: [
+          { label: 'Hampers for Her',       url: '/hampers/for-her' },
+          { label: 'Hampers for Him',       url: '/hampers/for-him' },
+          { label: 'Hampers for Wife',      url: '/hampers/for-wife' },
+          { label: 'Hampers for Husband',   url: '/hampers/for-husband' },
+          { label: 'Hampers for Mother',    url: '/hampers/for-mother' },
+          { label: 'Hampers for Father',    url: '/hampers/for-father' },
+          { label: 'Hampers for Friends',   url: '/hampers/for-friends' },
+          { label: 'Hampers for Kids',      url: '/hampers/for-kids' },
+          { label: 'Hampers for Sister',    url: '/hampers/for-sister' },
+          { label: 'Hampers for Brother',   url: '/hampers/for-brother' },
+        ],
+      },
+      {
+        heading: 'Shop by Festival',
+        items: [
+          { label: "Valentine's Day",       url: '/hampers/valentines-day' },
+          { label: "Mother's Day",          url: '/hampers/mothers-day' },
+          { label: "Father's Day",          url: '/hampers/fathers-day' },
+          { label: 'Christmas',             url: '/hampers/christmas' },
+          { label: 'New Year',              url: '/hampers/new-year' },
+          { label: 'Eid',                   url: '/hampers/eid-al-fitr' },
+          { label: 'Holi',                  url: '/hampers/holi' },
+          { label: 'Diwali',                url: '/hampers/diwali' },
+        ],
+      },
+      {
+        heading: 'Popular Picks',
+        items: [
+          { label: 'Luxury Gift Hampers',   url: '/hampers/luxury' },
+          { label: 'Premium Hampers',       url: '/hampers/premium' },
+          { label: 'Personalised Hampers',  url: '/hampers/personalised' },
+        ],
+      },
+    ],
+  },
 ];

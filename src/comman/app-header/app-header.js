@@ -446,6 +446,19 @@ export default function Header() {
                   </li>
                 );
               })}
+
+              {/* Internship Program — standalone link with flashing NEW tag */}
+              <li className="relative">
+                <button
+                  onClick={() => navigate("/hiring-for-internship")}
+                  className="flex items-center gap-1.5 px-3 py-2.5 text-[15px] font-body font-normal text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 whitespace-nowrap"
+                >
+                  Internship Program
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-red-600 text-white uppercase tracking-wide animate-pulse">
+                    New
+                  </span>
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -584,6 +597,18 @@ export default function Header() {
                       </div>
                     );
                   })}
+                  {/* Internship Program — mobile */}
+                  <div className="pt-2 mt-2 border-t border-grey-100">
+                    <button
+                      onClick={() => { navigate("/hiring-for-internship"); closeSidebar(); }}
+                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
+                    >
+                      <span>Internship Program</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold bg-red-600 text-white uppercase tracking-wide animate-pulse">
+                        New
+                      </span>
+                    </button>
+                  </div>
                 </nav>
               </div>
             </aside>
