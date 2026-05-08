@@ -136,10 +136,9 @@ const Product = () => {
   /* ===================== API ===================== */
   const fetchProducts = async (pageNo) => {
     if (loading) return;
-
     setLoading(true);
-    const payload = {
-      category_name: selectedFilters.category_name || "",
+
+    const basePayload = {
       subcategory_name: selectedFilters.subcategory_name.join(","),
       festival_tags: selectedFilters.festival_tags.join(","),
       occasion_tags: [
@@ -149,16 +148,42 @@ const Product = () => {
       type: selectedFilters.type.join(","),
       relationship: selectedFilters.relationship.join(","),
       color: selectedFilters.color.join(","),
-      page: pageNo,
-      limit: 12,
     };
 
+    const isMixed = !selectedFilters.category_name;
+
     try {
-      const res = await getProduct(payload);
-      setProducts((prev) =>
-        pageNo === 1 ? res.products : [...prev, ...res.products]
-      );
-      setHasMore(pageNo < res.totalPages);
+      let newProducts = [];
+      let moreAvailable = false;
+
+      if (isMixed) {
+        // Fetch 4 from each category in parallel so every load has a mix
+        const [rFlowers, rCakes, rPlants] = await Promise.all([
+          getProduct({ ...basePayload, category_name: "Flowers", page: pageNo, limit: 4 }),
+          getProduct({ ...basePayload, category_name: "Cakes",   page: pageNo, limit: 4 }),
+          getProduct({ ...basePayload, category_name: "Plants",  page: pageNo, limit: 4 }),
+        ]);
+
+        // Interleave: F, C, P, F, C, P ...
+        const buckets = [rFlowers.products, rCakes.products, rPlants.products];
+        const maxLen = Math.max(...buckets.map(b => b.length));
+        for (let i = 0; i < maxLen; i++) {
+          buckets.forEach(b => { if (b[i]) newProducts.push(b[i]); });
+        }
+
+        moreAvailable =
+          pageNo < rFlowers.totalPages ||
+          pageNo < rCakes.totalPages  ||
+          pageNo < rPlants.totalPages;
+      } else {
+        const payload = { ...basePayload, category_name: selectedFilters.category_name, page: pageNo, limit: 12 };
+        const res = await getProduct(payload);
+        newProducts = res.products;
+        moreAvailable = pageNo < res.totalPages;
+      }
+
+      setProducts(prev => pageNo === 1 ? newProducts : [...prev, ...newProducts]);
+      setHasMore(moreAvailable);
     } catch (err) {
       console.error("API ERROR:", err);
     } finally {
@@ -225,35 +250,6 @@ const Product = () => {
     setCurrentImages((prev) => ({ ...prev, [productId]: index }));
   };
 
-  /* ===================== INTELLIGENT INTERLEAVE ===================== */
-  // On occasion/festival/mixed pages (no single top-level category), interleave
-  // products so each row shows a mix: Flowers → Cakes → Plants → Others repeating
-  const interleaveProducts = (list) => {
-    const buckets = {
-      Flowers: list.filter(p => p.categorization?.category_name === 'Flowers'),
-      Cakes:   list.filter(p => p.categorization?.category_name === 'Cakes'),
-      Plants:  list.filter(p => p.categorization?.category_name === 'Plants'),
-      Others:  list.filter(p => !['Flowers', 'Cakes', 'Plants'].includes(p.categorization?.category_name)),
-    };
-    const order = ['Flowers', 'Cakes', 'Plants', 'Others'];
-    const idx = { Flowers: 0, Cakes: 0, Plants: 0, Others: 0 };
-    const result = [];
-    while (result.length < list.length) {
-      let added = false;
-      for (const key of order) {
-        if (idx[key] < buckets[key].length) {
-          result.push(buckets[key][idx[key]++]);
-          added = true;
-        }
-      }
-      if (!added) break;
-    }
-    return result;
-  };
-
-  // Apply interleaving only on mixed pages (occasion, festival, special occasion, relationship etc.)
-  const isMixedPage = !selectedFilters.category_name;
-  const displayProducts = isMixedPage ? interleaveProducts(products) : products;
 
   /* ===================== UI ===================== */
   return (
@@ -366,7 +362,7 @@ const Product = () => {
         >
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 p-4">
 
-            {displayProducts.map((p) => (
+            {products.map((p) => (
               <ProductCard
                 key={p._id}
                 product={p}
