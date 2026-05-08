@@ -29,9 +29,11 @@ export const URL_TO_CATEGORY_MAP = {
     {}
   ),
   // Also map short product slugs back to category names
-  'flowers': 'Flowers',
-  'cakes':   'Cakes',
-  'plants':  'Plants',
+  'flowers':     'Flowers',
+  'cakes':       'Cakes',
+  'plants':      'Plants',
+  'birthday':    'Birthday',
+  'anniversary': 'Anniversary',
 };
 
 /**

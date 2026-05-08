@@ -1,28 +1,18 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Search, User, ShoppingBag, Menu, X, ChevronDown, Pencil, Truck, MapPin } from "lucide-react";
 import logo from "../../assets/RedHeart-Logo-Cropped.png";
 import { getProduct } from "../../service/products";
-import { menuData } from "../../constants/menuData";
+import { MEGA_MENU } from "../../constants/megaMenuData";
 import { useSelector } from "react-redux";
-import { getCategoryUrl, getSubcategoryUrl, getProductUrl, toSlug } from "../../utils/seoUtils";
-
-const categoryDisplayNames = {
-  subcategories: "Subcategories",
-  festival: "Festival",
-  special: "Special Occasion",
-  occasion: "Occasion",
-  type: "Type",
-  relationship: "Relationship",
-  color: "Color"
-};
-
-const categoryOrder = ['subcategories', 'festival', 'special', 'occasion', 'type', 'relationship', 'color'];
+import { getProductUrl } from "../../utils/seoUtils";
 
 export default function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
+  const [activeMobileGroup, setActiveMobileGroup] = useState({});
   const [isScrolled, setIsScrolled] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -37,47 +27,7 @@ export default function Header() {
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
   const totalCount = useSelector((state) => state.cart.totalCount);
 
-  const getMenuItemHref = (menu, item) => {
-    const menuCategory = menu.title; // e.g. "Flowers", "Cakes", "Occasion"
-
-    // For SubCategoryFilters items under a product category (Flowers, Cakes, Plants, Combos)
-    if (item.category === 'SubCategoryFilters') {
-      // If the parent menu is a top-level product category, use subcategory URL
-      const topLevel = ['Flowers', 'Cakes', 'Plants', 'Combos'];
-      if (topLevel.includes(menuCategory)) {
-        return getSubcategoryUrl(menuCategory, item.name);
-      }
-      // For Occasion, Festival, Special Occasion, Loved Ones menus
-      // The item.name IS the occasion/filter value — use getCategoryUrl
-      return getCategoryUrl(item.name);
-    }
-
-    // For occasion items in any menu
-    if (item.category === 'occasion') {
-      return getCategoryUrl(item.name);
-    }
-
-    // For festival items
-    if (item.category === 'festival') {
-      return `/${toSlug(item.name)}`;
-    }
-
-    // For special occasion items
-    if (item.category === 'special') {
-      return `/${toSlug(item.name)}`;
-    }
-
-    // For type, relationship, color — use category URL + query param
-    if (['type', 'relationship', 'color'].includes(item.category)) {
-      const catSlug = toSlug(menuCategory);
-      return `/${catSlug}?${item.category}=${encodeURIComponent(item.name)}`;
-    }
-
-    // Fallback
-    return getCategoryUrl(item.name);
-  };
-
-  // Scroll effect for header shadow'
+  // Scroll effect for header shadow
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
@@ -106,6 +56,7 @@ export default function Header() {
     window.addEventListener("storage", (e) => e.key === "cart" && updateCartCount());
     return () => window.removeEventListener("cartCountUpdated", updateCartCount);
   }, []);
+
   useEffect(() => {
     const handleClickOutsideMobileSearch = (e) => {
       if (
@@ -151,7 +102,7 @@ export default function Header() {
         setProducts([]);
         setIsDropdownOpen(false);
       }
-    }, 300); // wait 500ms after typing
+    }, 300);
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
@@ -236,11 +187,11 @@ export default function Header() {
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
-    setIsDropdownOpen(true); // show loader immediately
+    setIsDropdownOpen(true);
     setLoading(true);
 
     try {
-      const payload = { searchField: searchQuery, limit: 5, };
+      const payload = { searchField: searchQuery, limit: 5 };
       const res = await getProduct(payload);
       setProducts(res.products || []);
     } catch (err) {
@@ -251,19 +202,27 @@ export default function Header() {
     }
   };
 
-
-
-
   const closeSidebar = () => {
     setOpen(false);
     setActiveMenu(null);
+    setActiveMobileGroup({});
+  };
+
+  // Check if a nav item is active based on current path
+  const isNavActive = (menuUrl) => {
+    const topSlug = menuUrl.replace(/^\//, '');
+    return location.pathname === menuUrl || location.pathname.startsWith(`${menuUrl}/`);
+  };
+
+  const toggleMobileGroup = (menuIndex, groupIndex) => {
+    const key = `${menuIndex}-${groupIndex}`;
+    setActiveMobileGroup(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   return (
     <>
       <header
-        className={`sticky top-0 z-50 bg-primary-white border-b border-grey-100 transition-all duration-500 ${isScrolled ? "shadow-elegant" : ""
-          }`}
+        className={`sticky top-0 z-50 bg-primary-white border-b border-grey-100 transition-all duration-500 ${isScrolled ? "shadow-elegant" : ""}`}
       >
         <nav className="w-full">
           {/* Top Row */}
@@ -317,20 +276,18 @@ export default function Header() {
                       <button
                         type="button"
                         key={product._id}
-                        onClick={(e) => {
+                        onClick={() => {
                           const cat = product.categorization?.category_name || product.category || '';
                           const sku = product.sku || product.product_id || '';
                           navigate(getProductUrl(cat, product.slug, sku), { state: { id: product._id } });
                           setIsDropdownOpen(false);
                         }}
-
                         className="flex items-center w-full text-left px-4 py-2 hover:bg-grey-100 transition-all"
                       >
                         <img
-                          src={product.media.primary_image_url} // your API image
+                          src={product.media.primary_image_url}
                           alt={product.name}
                           className="w-10 h-10 object-cover rounded-full mr-3"
-
                         />
                         <span className="text-sm font-medium text-black">{product.name}</span>
                       </button>
@@ -341,7 +298,6 @@ export default function Header() {
                 </div>
               )}
             </form>
-
 
             {/* Desktop Right Icons */}
             <div className="hidden lg:flex items-center gap-5">
@@ -381,8 +337,7 @@ export default function Header() {
             <div className="lg:hidden flex items-center space-x-1.5">
               <button
                 onClick={handleSearchClick}
-                className={`p-2 text-black-charcoal focus:outline-none transition-all duration-300 hover:text-accent-rose-600 hover:bg-grey-50 rounded-full ${isSearchOpen ? "text-accent-rose-600 bg-accent-rose-50" : ""
-                  }`}
+                className={`p-2 text-black-charcoal focus:outline-none transition-all duration-300 hover:text-accent-rose-600 hover:bg-grey-50 rounded-full ${isSearchOpen ? "text-accent-rose-600 bg-accent-rose-50" : ""}`}
               >
                 <Search className="w-6 h-6" strokeWidth={2} />
               </button>
@@ -400,7 +355,6 @@ export default function Header() {
                     />
                   </form>
 
-                  {/* Dropdown */}
                   {isDropdownOpen && (
                     <div ref={dropdownRef} className="mt-2 w-full bg-white border border-grey-200 rounded-xl shadow-lg max-h-80 overflow-y-auto">
                       {loading ? (
@@ -436,7 +390,6 @@ export default function Header() {
                 </div>
               )}
 
-
               <button
                 className="p-2 text-black-charcoal focus:outline-none transition-all duration-300 hover:text-accent-rose-600 hover:bg-grey-50 rounded-full"
                 onClick={() => setOpen(!open)}
@@ -446,74 +399,42 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Second Row Desktop Menu */}
+          {/* Second Row — Desktop Mega Menu */}
           <div className="hidden lg:flex justify-center bg-primary-white border-t border-grey-200">
-            <ul className="relative flex items-center space-x-2 xl:space-x-3 px-4">
-              {menuData.map((menu, index) => {
-                // Group items by category
-                const groupedItems = {};
-                menu.items.forEach(item => {
-                  const cat = item.category || 'subcategories';
-                  if (!groupedItems[cat]) groupedItems[cat] = [];
-                  groupedItems[cat].push(item);
-                });
-                const isDirectMenu = menu.url || (menu.items?.[0]?.path);
-
+            <ul className="relative flex items-center space-x-1 xl:space-x-2 px-4">
+              {MEGA_MENU.map((menu, index) => {
+                const active = isNavActive(menu.url);
                 return (
-                  <li key={index} className="group">
-                    {menu.url ? (
-                      <a
-                        href={menu.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block px-2.5 py-2.5 text-[15px] font-body font-normal text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 whitespace-nowrap"
-                      >
-                        {menu.title}
-                      </a>
-                    ) : (
+                  <li key={index} className="group relative">
                     <button
-                      onClick={() => {
-                        if (menu.items?.[0]?.path) navigate(menu.items[0].path);
-                      }}
-                      className="px-2.5 py-2.5 text-[15px] font-body font-normal text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 whitespace-nowrap"
+                      onClick={() => navigate(menu.url)}
+                      className={`px-3 py-2.5 text-[15px] font-body font-normal transition-all duration-300 whitespace-nowrap ${active ? "text-red-600" : "text-black-charcoal hover:text-accent-rose-600"}`}
                     >
                       {menu.title}
                     </button>
-                    )}
 
-                    {/* Dropdown */}
-                    {!isDirectMenu && (
-                      <div className="absolute hidden group-hover:block top-full pt-1 left-1/2 -translate-x-1/2 z-50">
-                      <div className="bg-white backdrop-blur-md rounded-3xl p-6 border border-black/10 overflow-hidden relative w-[min(1150px,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] max-h-[70vh]">
+                    {/* Mega Dropdown */}
+                    <div className="absolute hidden group-hover:block top-full pt-1 left-1/2 -translate-x-1/2 z-50">
+                      <div className="bg-white shadow-xl border border-gray-100 rounded-2xl p-6 overflow-hidden relative w-[min(1100px,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] max-h-[70vh]">
                         {/* Arrow */}
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-l border-t border-black/10 rotate-45"></div>
+                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-gray-100 rotate-45"></div>
 
-                        {/* Grouped Sections */}
+                        {/* Groups grid */}
                         <div className="flex flex-row gap-8 overflow-x-auto overflow-y-auto pb-2 max-h-[58vh] hide-scrollbar">
-                          {categoryOrder.filter(cat => groupedItems[cat]).map(cat => (
-                            <div key={cat} className="min-w-[170px] max-w-[220px] flex flex-col">
-                              <h3 className="text-sm font-semibold text-grey-800 mb-3 border-b border-grey-200 pb-1">{categoryDisplayNames[cat]}</h3>
-                              <ul className="space-y-2 overflow-y-auto pr-1 max-h-[48vh] hide-scrollbar">
-                                {groupedItems[cat].map((item, i) => (
-                                  <li
-                                    key={i}
-                                    className="px-2 py-2 hover:bg-grey-50 rounded-lg transition-all duration-200"
-                                  >
-                                    <a
-                                      href={getMenuItemHref(menu, item)}
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        navigate(getMenuItemHref(menu, item));
-                                      }}
-                                      className="block text-black hover:text-red-600"
+                          {menu.groups.map((group, gi) => (
+                            <div key={gi} className="min-w-[150px] max-w-[200px] flex flex-col flex-shrink-0">
+                              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 pb-1 border-b border-gray-100 whitespace-nowrap">
+                                {group.heading}
+                              </h3>
+                              <ul className="space-y-1">
+                                {group.items.map((item, ii) => (
+                                  <li key={ii}>
+                                    <button
+                                      onClick={() => navigate(item.url)}
+                                      className="block w-full text-left text-sm text-gray-700 hover:text-red-600 py-1 transition-colors duration-150 whitespace-nowrap"
                                     >
-                                      <span className="font-medium">{item.name}</span>
-                                      {item.date && (
-                                        <span className="block text-xs text-red-400 mt-1">
-                                          {item.date}
-                                        </span>
-                                      )}
-                                    </a>
+                                      {item.label}
+                                    </button>
                                   </li>
                                 ))}
                               </ul>
@@ -522,28 +443,22 @@ export default function Header() {
                         </div>
                       </div>
                     </div>
-                    )}
                   </li>
                 );
               })}
             </ul>
           </div>
 
-
-
           {/* Mobile Sidebar */}
           <div
-            className={`fixed inset-0 z-50 lg:hidden transition-all duration-400 ${open ? "visible opacity-100" : "invisible opacity-0"
-              }`}
+            className={`fixed inset-0 z-50 lg:hidden transition-all duration-400 ${open ? "visible opacity-100" : "invisible opacity-0"}`}
           >
             <div
-              className={`absolute inset-0 bg-black-soft/60 backdrop-blur-sm transition-opacity duration-400 ${open ? "opacity-100" : "opacity-0"
-                }`}
+              className={`absolute inset-0 bg-black-soft/60 backdrop-blur-sm transition-opacity duration-400 ${open ? "opacity-100" : "opacity-0"}`}
               onClick={closeSidebar}
             ></div>
             <aside
-              className={`absolute right-0 top-0 h-full w-full max-w-sm bg-primary-white shadow-premium transform transition-transform duration-400 overflow-y-auto ${open ? "translate-x-0" : "translate-x-full"
-                }`}
+              className={`absolute right-0 top-0 h-full w-full max-w-sm bg-primary-white shadow-premium transform transition-transform duration-400 overflow-y-auto ${open ? "translate-x-0" : "translate-x-full"}`}
             >
               <div className="sticky top-0 z-10 bg-gradient-to-b from-primary-white to-grey-50/30 border-b border-grey-200 px-6 py-5 flex items-center justify-between backdrop-blur-sm">
                 <div className="flex items-center space-x-3">
@@ -603,72 +518,67 @@ export default function Header() {
                   </button>
                 </div>
 
-                <nav className="space-y-2">
-                  {menuData.map((menu, index) => {
-                    // Group items by category
-                    const groupedItems = {};
-                    menu.items.forEach(item => {
-                      const cat = item.category || 'subcategories';
-                      if (!groupedItems[cat]) groupedItems[cat] = [];
-                      groupedItems[cat].push(item);
-                    });
-
+                <nav className="space-y-1">
+                  {MEGA_MENU.map((menu, index) => {
+                    const isOpen = activeMenu === index;
+                    const active = isNavActive(menu.url);
                     return (
                       <div key={index} className="border-b border-grey-100 last:border-0">
-                        {menu.url ? (
-                          <a
-                            href={menu.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={closeSidebar}
-                            className="w-full text-left px-4 py-4 flex justify-between items-center font-display font-semibold text-base text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 rounded-lg hover:bg-grey-50 group"
-                          >
-                            <span className="relative">
-                              {menu.title}
-                              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-rose-400 to-accent-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                            </span>
-                          </a>
-                        ) : (
                         <button
-                          className="w-full text-left px-4 py-4 flex justify-between items-center font-display font-semibold text-base text-black-charcoal hover:text-accent-rose-600 transition-all duration-300 rounded-lg hover:bg-grey-50 group"
-                          onClick={() => setActiveMenu(activeMenu === index ? null : index)}
+                          className={`w-full text-left px-4 py-4 flex justify-between items-center font-display font-semibold text-base transition-all duration-300 rounded-lg hover:bg-grey-50 group ${active ? "text-red-600" : "text-black-charcoal hover:text-accent-rose-600"}`}
+                          onClick={() => setActiveMenu(isOpen ? null : index)}
                         >
-                          <span className="relative">
-                            {menu.title}
-                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-rose-400 to-accent-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                          </span>
+                          <span>{menu.title}</span>
                           <ChevronDown
-                            className={`w-5 h-5 transition-transform duration-300 text-grey-500 group-hover:text-accent-rose-600 ${activeMenu === index ? "rotate-180" : ""
-                              }`}
+                            className={`w-5 h-5 transition-transform duration-300 text-grey-500 group-hover:text-accent-rose-600 ${isOpen ? "rotate-180" : ""}`}
                             strokeWidth={2}
                           />
                         </button>
-                        )}
 
-                        <div className={`overflow-hidden transition-all duration-300 ${activeMenu === index ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
-                          <div className="pl-4 pb-4 mt-2 space-y-4">
-                            {categoryOrder.filter(cat => groupedItems[cat]).map(cat => (
-                              <div key={cat}>
-                                <h4 className="text-sm font-semibold text-grey-800 mb-2">{categoryDisplayNames[cat]}</h4>
-                                <ul className="space-y-1">
-                                  {groupedItems[cat].map((item, i) => (
-                                    <li key={i}>
-                                      <a
-                                        href={getMenuItemHref(menu, item)}
-                                        className="block px-4 py-2 text-sm font-body text-grey-700 hover:text-accent-rose-600 hover:bg-gradient-to-r hover:from-accent-rose-50/50 hover:to-accent-pink-50/50 rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-accent-rose-300"
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          navigate(getMenuItemHref(menu, item));
-                                          closeSidebar();
-                                        }}
-                                      >
-                                        {item.name} {item.date && <span className="text-xs text-grey-400 ml-1">({item.date})</span>}
-                                      </a>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
+                        <div className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}>
+                          <div className="pl-2 pb-4 mt-1 space-y-1">
+                            {/* Link to top-level page */}
+                            <button
+                              onClick={() => { navigate(menu.url); closeSidebar(); }}
+                              className="w-full text-left px-4 py-2 text-sm font-semibold text-accent-rose-600 hover:bg-grey-50 rounded-lg transition-all"
+                            >
+                              All {menu.title}
+                            </button>
+
+                            {menu.groups.map((group, gi) => {
+                              const groupKey = `${index}-${gi}`;
+                              const groupOpen = activeMobileGroup[groupKey];
+                              return (
+                                <div key={gi} className="mt-2">
+                                  {/* Group accordion toggle */}
+                                  <button
+                                    onClick={() => toggleMobileGroup(index, gi)}
+                                    className="w-full text-left px-4 py-2 flex justify-between items-center text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-gray-600 transition-colors"
+                                  >
+                                    <span>{group.heading}</span>
+                                    <ChevronDown
+                                      className={`w-4 h-4 transition-transform duration-200 ${groupOpen ? "rotate-180" : ""}`}
+                                      strokeWidth={2}
+                                    />
+                                  </button>
+
+                                  <div className={`overflow-hidden transition-all duration-200 ${groupOpen ? "max-h-screen" : "max-h-0"}`}>
+                                    <ul className="pl-2 space-y-0.5 mt-1">
+                                      {group.items.map((item, ii) => (
+                                        <li key={ii}>
+                                          <button
+                                            onClick={() => { navigate(item.url); closeSidebar(); }}
+                                            className="w-full text-left px-4 py-2 text-sm font-body text-grey-700 hover:text-red-600 hover:bg-gradient-to-r hover:from-accent-rose-50/50 hover:to-accent-pink-50/50 rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-accent-rose-300"
+                                          >
+                                            {item.label}
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       </div>
