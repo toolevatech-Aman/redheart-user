@@ -16,7 +16,34 @@ import {
 import ProductCard from "./ProductCard";
 import { getPayloadKeyByItemName } from "../../comman/payload-finder/payload-finder";
 import { getDescription } from "../../comman/H1Function/h1Functions";
+import {
+  getCategoryFromUrl,
+  getProductUrl,
+  URL_TO_CATEGORY_MAP,
+  toSlug,
+} from "../../utils/seoUtils";
+
 const TOP_LEVEL_CATEGORIES = ["Flowers", "Cakes", "Plants", "Combos"];
+
+/**
+ * Resolve the actual category name from either:
+ * - A new SEO slug (e.g. "order-cake-online" → "Cakes")
+ * - A subcategory slug from /:categorySlug/:subcategorySlug route
+ * - Or just pass through the value if it's already a known category name
+ */
+const resolveCategory = (categorySlug, subcategorySlug) => {
+  // First try the SEO map
+  const fromMap = getCategoryFromUrl(categorySlug);
+  if (fromMap) return fromMap;
+
+  // Check if it's already a known top-level category name (legacy support)
+  if (TOP_LEVEL_CATEGORIES.includes(categorySlug)) return categorySlug;
+
+  // If we have a subcategorySlug, the categorySlug is a generic slug
+  // Try to match it against known category slugs
+  // e.g. "husband" → relationship filter, not a top-level category
+  return categorySlug; // return as-is; buildInitialFilters will handle it
+};
 
 const buildInitialFilters = (filterData, routeCategory) => {
   const baseFilters = {
@@ -30,27 +57,27 @@ const buildInitialFilters = (filterData, routeCategory) => {
     color: [],
   };
 
-  // If route param is a top-level category (e.g. /product/Cakes), filter by category_name
+  // If route param is a top-level category (e.g. "Cakes"), filter by category_name
   if (!filterData && routeCategory && TOP_LEVEL_CATEGORIES.includes(routeCategory)) {
     return { ...baseFilters, category_name: routeCategory };
   }
 
-  // If route param is an occasion (e.g. /product/Birthday)
+  // If route param is an occasion (e.g. "Birthday")
   if (!filterData && routeCategory && OccasionFilters.includes(routeCategory)) {
     return { ...baseFilters, occasion_tags: [routeCategory] };
   }
 
-  // If route param is a special occasion (e.g. /product/Valentine's Day)
+  // If route param is a special occasion (e.g. "Valentine's Day")
   if (!filterData && routeCategory && SpecialOccasionFilters.includes(routeCategory)) {
     return { ...baseFilters, special_occasion_tags: [routeCategory] };
   }
 
-  // If route param is a festival (e.g. /product/Rakhi)
+  // If route param is a festival (e.g. "Rakhi")
   if (!filterData && routeCategory && FestivalFilters.includes(routeCategory)) {
     return { ...baseFilters, festival_tags: [routeCategory] };
   }
 
-  // If route param is a subcategory (e.g. /product/Roses)
+  // If route param is a subcategory (e.g. "Roses")
   if (!filterData && routeCategory && SubCategoryFilters.includes(routeCategory)) {
     return { ...baseFilters, subcategory_name: [routeCategory] };
   }
@@ -100,10 +127,24 @@ const buildFiltersFromSearch = (searchString) => {
 
   return filters;
 };
+
 const Product = () => {
   const location = useLocation();
-  const { category } = useParams();
+  const { categorySlug, subcategorySlug } = useParams();
   const navigate = useNavigate();
+
+  // ── Resolve actual category name from the SEO slug ──
+  // e.g. "order-cake-online" → "Cakes", "birthday-gifts-delivery" → "Birthday"
+  const actualCategory = resolveCategory(categorySlug, subcategorySlug);
+
+  // For query-param based category override (legacy search support)
+  const categoryFromQuery = new URLSearchParams(location.search).get("category");
+
+  // currentCategory: what we pass to the API / display logic
+  const currentCategory = categoryFromQuery || actualCategory || "";
+
+  const searchFilters = buildFiltersFromSearch(location.search);
+  const filterFromCategory = getPayloadKeyByItemName(currentCategory);
 
   /* ===================== STATES ===================== */
   const [products, setProducts] = useState([]);
@@ -112,7 +153,7 @@ const Product = () => {
   const [loading, setLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [expandedFilters, setExpandedFilters] = useState({});
-  const [currentImages, setCurrentImages] = useState({}); // track current image per product
+  const [currentImages, setCurrentImages] = useState({});
 
   const initialFilters = {
     category_name: '',
@@ -125,14 +166,26 @@ const Product = () => {
     color: [],
   };
 
-  const categoryFromQuery = new URLSearchParams(location.search).get("category");
-  const currentCategory = categoryFromQuery || category || "";
-  const searchFilters = buildFiltersFromSearch(location.search);
-  const filterFromCategory = getPayloadKeyByItemName(currentCategory);
+  const [selectedFilters, setSelectedFilters] = useState(() => {
+    if (location.search) return searchFilters;
+    // If we have a subcategorySlug, try to apply it as a subcategory filter
+    if (subcategorySlug) {
+      // Convert slug back to possible subcategory name by matching against known filters
+      const subSlugLower = subcategorySlug.toLowerCase();
+      const matchedSub = SubCategoryFilters.find(
+        (s) => toSlug(s) === subSlugLower || s.toLowerCase() === subSlugLower
+      );
+      if (matchedSub) {
+        return {
+          ...initialFilters,
+          category_name: TOP_LEVEL_CATEGORIES.includes(actualCategory) ? actualCategory : '',
+          subcategory_name: [matchedSub],
+        };
+      }
+    }
+    return buildInitialFilters(filterFromCategory, currentCategory);
+  });
 
-  const [selectedFilters, setSelectedFilters] = useState(() =>
-    location.search ? searchFilters : buildInitialFilters(filterFromCategory, currentCategory)
-  );
   /* ===================== API ===================== */
   const fetchProducts = async (pageNo) => {
     if (loading) return;
@@ -198,14 +251,29 @@ const Product = () => {
     setHasMore(true);
     fetchProducts(1);
   }, [currentCategory, selectedFilters]);
+
   useEffect(() => {
-    const filterFromCategory = getPayloadKeyByItemName(currentCategory);
+    const freshFilterFromCategory = getPayloadKeyByItemName(currentCategory);
     if (location.search) {
       setSelectedFilters(buildFiltersFromSearch(location.search));
+    } else if (subcategorySlug) {
+      const subSlugLower = subcategorySlug.toLowerCase();
+      const matchedSub = SubCategoryFilters.find(
+        (s) => toSlug(s) === subSlugLower || s.toLowerCase() === subSlugLower
+      );
+      if (matchedSub) {
+        setSelectedFilters({
+          ...initialFilters,
+          category_name: TOP_LEVEL_CATEGORIES.includes(actualCategory) ? actualCategory : '',
+          subcategory_name: [matchedSub],
+        });
+      } else {
+        setSelectedFilters(buildInitialFilters(freshFilterFromCategory, currentCategory));
+      }
     } else {
-      setSelectedFilters(buildInitialFilters(filterFromCategory, currentCategory));
+      setSelectedFilters(buildInitialFilters(freshFilterFromCategory, currentCategory));
     }
-  }, [category, location.search]);
+  }, [categorySlug, subcategorySlug, location.search]);
 
   /* ===================== PAGE CHANGE ===================== */
   useEffect(() => {
@@ -223,25 +291,19 @@ const Product = () => {
   };
 
   const handleProductClick = (slug, id, product) => {
-    // Save product in localStorage
+    // Save product in localStorage for Recently Viewed
     const stored = JSON.parse(localStorage.getItem("recentProducts")) || [];
-
-    // Remove if product already exists to avoid duplicates
     const filtered = stored.filter((p) => p._id !== product._id);
-
-    // Add current product to the start
     filtered.unshift(product);
-
-    // Keep only last 8
     if (filtered.length > 8) filtered.pop();
-
-    // Save back to localStorage
     localStorage.setItem("recentProducts", JSON.stringify(filtered));
 
-    // Navigate to product page
-    navigate(`/product/${currentCategory}/${slug}`, { state: { id } });
+    // Build new SEO product URL
+    const productCategory = product.categorization?.category_name || currentCategory;
+    const sku = product.sku || product.product_id || '';
+    const url = getProductUrl(productCategory, slug, sku);
+    navigate(url, { state: { id } });
   };
-
 
   const calculateDiscount = (original, selling) =>
     original > selling ? Math.round(((original - selling) / original) * 100) : 0;
@@ -250,29 +312,17 @@ const Product = () => {
     setCurrentImages((prev) => ({ ...prev, [productId]: index }));
   };
 
-
   /* ===================== UI ===================== */
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="border-b p-4 flex justify-between">
-        <h1 className="text-2xl capitalize">{getDescription(currentCategory)} </h1>
-        {/* <button
-          onClick={() => setShowFilters(true)}
-          className="border px-4 py-2 flex gap-2"
-        >
-          <SlidersHorizontal size={16} />
-          Filters
-        </button> */}
+        <h1 className="text-2xl capitalize">{getDescription(currentCategory)}</h1>
         <nav className="text-sm text-gray-500">
           <ol className="flex items-center gap-1 flex-wrap">
             <li>
               <a href="/" className="hover:text-gray-700 transition">Home</a>
             </li>
-            {/* <li>/</li> */}
-            {/* <li>
-              <a href="/categories" className="hover:text-gray-700 transition">Categories</a>
-            </li> */}
             <li>/</li>
             <li className="text-gray-900 font-medium">{currentCategory}</li>
           </ol>
@@ -360,8 +410,7 @@ const Product = () => {
             </div>
           }
         >
-         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 p-4">
-
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 p-4">
             {products.map((p) => (
               <ProductCard
                 key={p._id}
@@ -373,7 +422,8 @@ const Product = () => {
               />
             ))}
           </div>
-        </InfiniteScroll>)}
+        </InfiniteScroll>
+      )}
     </div>
   );
 };

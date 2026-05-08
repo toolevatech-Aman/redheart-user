@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getProductById } from "../../service/products";
 import RecentlyViewed from "./RecentlyViewed";
 import { useDispatch } from "react-redux";
@@ -86,6 +86,10 @@ const ProductDescriptionPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const params = useParams();
+  // id can come from router state (navigate with state) or from URL params
+  // For the new /p/:categorySlug/:productSlug route, we rely on location.state.id
+  // passed by handleProductClick. If not present, we won't be able to load product.
   const { id } = location.state || {};
   const [open, setOpen] = useState(false);
   const [addOnOpen, setAddOnOpen] = useState(false);

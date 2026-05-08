@@ -1,3 +1,23 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /my-account/
+Disallow: /orders/
+Disallow: /login/
+Disallow: /*?*sort=
+Disallow: /*?*page=
+Disallow: /*?*filter=
+Disallow: /product/
+Crawl-delay: 1
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /checkout/
+Disallow: /cart/
+
+Sitemap: https://www.redheart.in/sitemap_index.xml

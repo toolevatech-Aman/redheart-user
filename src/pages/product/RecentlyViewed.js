@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import { getProductUrl } from "../../utils/seoUtils";
 
 const RecentlyViewed = () => {
   const [recentProducts, setRecentProducts] = useState([]);
@@ -32,8 +33,9 @@ const RecentlyViewed = () => {
             currentImageIndex={0}
             selectImage={() => {}}
             handleProductClick={() => {
-              // navigate when clicked
-              window.location.href = `/product/${p.category_name}/${p.slug}`;
+              const category = p.categorization?.category_name || p.category_name || '';
+              const sku = p.sku || p.product_id || '';
+              window.location.href = getProductUrl(category, p.slug, sku);
             }}
             calculateDiscount={(original, selling) =>
               original > selling

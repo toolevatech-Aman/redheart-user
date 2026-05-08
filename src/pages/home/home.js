@@ -54,6 +54,7 @@ import hampers from "../../assets/category-image/hampers.webp"
 import buildHamper from "../../assets/background/buildhamper.webp"
 
 import { Navigate, useNavigate } from "react-router-dom";
+import { getCategoryUrl } from "../../utils/seoUtils";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -135,14 +136,14 @@ const Home = () => {
     { title: "Hampers", img: hampers },
   ]
   const heroes = [
-  { img: hero1, link: "/product/Birthday" },
-  { img: hero2, link: "/product/Valentine's%20Day" },
-  { img: hero3, link: "/product/Anniversary" },
-  { img: hero4, link: "/product/Plants" },
-  { img: hero5, link: "/product/Plants" },
-  { img: hero6, link: "/product/Chocolate%20Gifts" },
-  { img: hero7, link: "/product/Flowers" },
-  { img: hero8, link: "/product/Cakes" },
+  { img: hero1, link: getCategoryUrl('Birthday') },
+  { img: hero2, link: getCategoryUrl("Valentine's Day") },
+  { img: hero3, link: getCategoryUrl('Anniversary') },
+  { img: hero4, link: getCategoryUrl('Plants') },
+  { img: hero5, link: getCategoryUrl('Plants') },
+  { img: hero6, link: getCategoryUrl('Chocolate Gifts') },
+  { img: hero7, link: getCategoryUrl('Flowers') },
+  { img: hero8, link: getCategoryUrl('Cakes') },
 ];
   return (
     <div className="min-h-screen bg-primary-white">
@@ -155,7 +156,7 @@ const Home = () => {
           {/* Mobile: 4-column 2-row grid filling full width */}
           <div className="grid grid-cols-4 gap-x-2 gap-y-4 px-3 py-1 md:hidden">
             {mainCategories.map((item, idx) => (
-              <div key={idx} className="cursor-pointer" onClick={() => navigate(`/product/${item.title}`)}>
+              <div key={idx} className="cursor-pointer" onClick={() => navigate(getCategoryUrl(item.title))}>
                 <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm bg-gray-50">
                   <img src={item.img} alt={item.title} className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
@@ -166,7 +167,7 @@ const Home = () => {
           {/* Desktop: full-width row, all 8 items fill equally */}
           <div className="hidden md:flex gap-3 px-6 lg:px-8 py-2">
             {mainCategories.map((item, idx) => (
-              <div key={idx} className="flex-1 min-w-0 cursor-pointer" onClick={() => navigate(`/product/${item.title}`)}>
+              <div key={idx} className="flex-1 min-w-0 cursor-pointer" onClick={() => navigate(getCategoryUrl(item.title))}>
                 <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-gray-50">
                   <img src={item.img} alt={item.title} className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
@@ -263,7 +264,7 @@ const Home = () => {
             {categories.map((category) => (
               <div
                 key={category.id}
-                onClick={() => navigate(`/product/${category.title}`)}
+                onClick={() => navigate(getCategoryUrl(category.title))}
                 className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer"
               >
                 {/* Image */}
@@ -310,7 +311,7 @@ const Home = () => {
               <div
                 key={collection.id}
                 className="carousel-item flex-shrink-0 w-72 sm:w-80 md:w-96 bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden snap-center cursor-pointer group transition-all duration-500 hover:shadow-xl"
-                onClick={() => navigate(`/product/${collection.title}`)}
+                onClick={() => navigate(getCategoryUrl(collection.title))}
               >
                 {/* Image */}
                   <div className="relative w-full h-64 sm:h-56 md:h-64 overflow-hidden rounded-t-2xl">
@@ -372,7 +373,7 @@ const Home = () => {
                 <div
                   key={blossom.id}
                   className="flex-shrink-0 w-56 sm:w-60 md:w-72 lg:w-80 snap-center group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-500 cursor-pointer"
-                  onClick={() => navigate(`/product/${blossom.title}`)}
+                  onClick={() => navigate(getCategoryUrl(blossom.title))}
                 >
                   {/* Image */}
                     <div className="relative h-44 sm:h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-2xl">
@@ -486,7 +487,7 @@ const Home = () => {
                 <div
                   key={blossom.id}
                   className="flex-shrink-0 w-56 sm:w-60 md:w-72 lg:w-80 snap-center group relative overflow-hidden bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-500 cursor-pointer"
-                  onClick={() => navigate(`/product/${blossom.title}`)}
+                  onClick={() => navigate(getCategoryUrl(blossom.title))}
                 >
                   {/* Image */}
                     <div className="relative h-44 sm:h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-2xl">

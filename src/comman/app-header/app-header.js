@@ -5,6 +5,7 @@ import logo from "../../assets/RedHeart-Logo-Cropped.png";
 import { getProduct } from "../../service/products";
 import { menuData } from "../../constants/menuData";
 import { useSelector } from "react-redux";
+import { getCategoryUrl, getSubcategoryUrl, getProductUrl, toSlug } from "../../utils/seoUtils";
 
 const categoryDisplayNames = {
   subcategories: "Subcategories",
@@ -37,14 +38,43 @@ export default function Header() {
   const totalCount = useSelector((state) => state.cart.totalCount);
 
   const getMenuItemHref = (menu, item) => {
-    const category = encodeURIComponent(menu.title);
-    const value = encodeURIComponent(item.name);
-    if (item.category) {
-      return `/p?category=${category}&${item.category}=${value}`;
-    } else {
-      // Subcategory (default)
-      return `/p?category=${category}&subcategory=${value}`;
+    const menuCategory = menu.title; // e.g. "Flowers", "Cakes", "Occasion"
+
+    // For SubCategoryFilters items under a product category (Flowers, Cakes, Plants, Combos)
+    if (item.category === 'SubCategoryFilters') {
+      // If the parent menu is a top-level product category, use subcategory URL
+      const topLevel = ['Flowers', 'Cakes', 'Plants', 'Combos'];
+      if (topLevel.includes(menuCategory)) {
+        return getSubcategoryUrl(menuCategory, item.name);
+      }
+      // For Occasion, Festival, Special Occasion, Loved Ones menus
+      // The item.name IS the occasion/filter value — use getCategoryUrl
+      return getCategoryUrl(item.name);
     }
+
+    // For occasion items in any menu
+    if (item.category === 'occasion') {
+      return getCategoryUrl(item.name);
+    }
+
+    // For festival items
+    if (item.category === 'festival') {
+      return `/${toSlug(item.name)}`;
+    }
+
+    // For special occasion items
+    if (item.category === 'special') {
+      return `/${toSlug(item.name)}`;
+    }
+
+    // For type, relationship, color — use category URL + query param
+    if (['type', 'relationship', 'color'].includes(item.category)) {
+      const catSlug = toSlug(menuCategory);
+      return `/${catSlug}?${item.category}=${encodeURIComponent(item.name)}`;
+    }
+
+    // Fallback
+    return getCategoryUrl(item.name);
   };
 
   // Scroll effect for header shadow'
@@ -288,8 +318,9 @@ export default function Header() {
                         type="button"
                         key={product._id}
                         onClick={(e) => {
-                          console.log("Navigating to", `/product/search/${product.slug}`);
-                          navigate(`/product/${product.category}/${product.slug}`, { state: { id: product._id } });
+                          const cat = product.categorization?.category_name || product.category || '';
+                          const sku = product.sku || product.product_id || '';
+                          navigate(getProductUrl(cat, product.slug, sku), { state: { id: product._id } });
                           setIsDropdownOpen(false);
                         }}
 
@@ -381,8 +412,9 @@ export default function Header() {
                           <button
                             key={product._id}
                             onClick={() => {
-                              navigate(`/product/${product.categorization.category_name}/${product.slug}`, { state: { id: product.product_id} });
-                              
+                              const cat = product.categorization?.category_name || '';
+                              const sku = product.sku || product.product_id || '';
+                              navigate(getProductUrl(cat, product.slug, sku), { state: { id: product.product_id } });
                               setIsDropdownOpen(false);
                               setIsSearchOpen(false);
                             }}
