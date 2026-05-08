@@ -225,6 +225,36 @@ const Product = () => {
     setCurrentImages((prev) => ({ ...prev, [productId]: index }));
   };
 
+  /* ===================== INTELLIGENT INTERLEAVE ===================== */
+  // On occasion/festival/mixed pages (no single top-level category), interleave
+  // products so each row shows a mix: Flowers → Cakes → Plants → Others repeating
+  const interleaveProducts = (list) => {
+    const buckets = {
+      Flowers: list.filter(p => p.categorization?.category_name === 'Flowers'),
+      Cakes:   list.filter(p => p.categorization?.category_name === 'Cakes'),
+      Plants:  list.filter(p => p.categorization?.category_name === 'Plants'),
+      Others:  list.filter(p => !['Flowers', 'Cakes', 'Plants'].includes(p.categorization?.category_name)),
+    };
+    const order = ['Flowers', 'Cakes', 'Plants', 'Others'];
+    const idx = { Flowers: 0, Cakes: 0, Plants: 0, Others: 0 };
+    const result = [];
+    while (result.length < list.length) {
+      let added = false;
+      for (const key of order) {
+        if (idx[key] < buckets[key].length) {
+          result.push(buckets[key][idx[key]++]);
+          added = true;
+        }
+      }
+      if (!added) break;
+    }
+    return result;
+  };
+
+  // Apply interleaving only on mixed pages (occasion, festival, special occasion, relationship etc.)
+  const isMixedPage = !selectedFilters.category_name;
+  const displayProducts = isMixedPage ? interleaveProducts(products) : products;
+
   /* ===================== UI ===================== */
   return (
     <div className="min-h-screen bg-white">
@@ -336,7 +366,7 @@ const Product = () => {
         >
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 p-4">
 
-            {products.map((p) => (
+            {displayProducts.map((p) => (
               <ProductCard
                 key={p._id}
                 product={p}
