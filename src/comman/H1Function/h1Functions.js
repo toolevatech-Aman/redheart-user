@@ -111,14 +111,19 @@ const categoryDescriptions = {
 
 // SEO slug → display title (for new URL architecture)
 const seoSlugDescriptions = {
-    "flowers":                  "Flower Delivery",
-    "cakes":                    "Cake Delivery",
-    "plants":                   "Plants Online",
-    "combos-online":            "Combos Online",
-    "gift-hampers":             "Gift Hampers Online",
-    "birthday-gifts-delivery":  "Birthday Gifts",
+    // Category listing page slugs (long, descriptive)
+    "florist-near-me":            "Flower Delivery",
+    "order-cake-online":          "Cake Delivery",
+    "plants-online":              "Plants Online",
+    "combos-online":              "Combos Online",
+    "gift-hampers":               "Gift Hampers Online",
+    "birthday-gifts-delivery":    "Birthday Gifts",
     "anniversary-gifts-delivery": "Anniversary Gifts",
-    "wedding-gifts-online":     "Wedding Gifts Online",
+    "wedding-gifts-online":       "Wedding Gifts Online",
+    // Product detail page short slugs (used in /p/:categorySlug/...)
+    "flowers":                    "Flower Delivery",
+    "cakes":                      "Cake Delivery",
+    "plants":                     "Plants Online",
 };
 
 // Generic JS function

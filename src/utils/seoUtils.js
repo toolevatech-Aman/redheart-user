@@ -3,11 +3,11 @@
  * Handles conversion between human-readable category names and SEO-friendly URL slugs
  */
 
-// Primary SEO slug map: internal category name → SEO URL slug
+// Category listing page slugs: internal category name → SEO URL slug (long, descriptive)
 export const CATEGORY_URL_MAP = {
-  'Flowers':     'flowers',
-  'Cakes':       'cakes',
-  'Plants':      'plants',
+  'Flowers':     'florist-near-me',
+  'Cakes':       'order-cake-online',
+  'Plants':      'plants-online',
   'Combos':      'combos-online',
   'Hampers':     'gift-hampers',
   'Birthday':    'birthday-gifts-delivery',
@@ -15,11 +15,24 @@ export const CATEGORY_URL_MAP = {
   'Wedding':     'wedding-gifts-online',
 };
 
-// Reverse map: SEO URL slug → internal category name (for API calls)
-export const URL_TO_CATEGORY_MAP = Object.entries(CATEGORY_URL_MAP).reduce(
-  (acc, [cat, slug]) => ({ ...acc, [slug]: cat }),
-  {}
-);
+// Product detail page slugs: internal category name → short slug used in /p/:categorySlug/:productSlug
+export const PRODUCT_CATEGORY_SLUG_MAP = {
+  'Flowers': 'flowers',
+  'Cakes':   'cakes',
+  'Plants':  'plants',
+};
+
+// Reverse map: SEO URL slug → internal category name (covers both listing and product slugs)
+export const URL_TO_CATEGORY_MAP = {
+  ...Object.entries(CATEGORY_URL_MAP).reduce(
+    (acc, [cat, slug]) => ({ ...acc, [slug]: cat }),
+    {}
+  ),
+  // Also map short product slugs back to category names
+  'flowers': 'Flowers',
+  'cakes':   'Cakes',
+  'plants':  'Plants',
+};
 
 /**
  * Convert any string to a clean URL slug
@@ -81,7 +94,7 @@ export const getSubcategoryUrl = (category, subcategory) => {
  *      → '/p/order-cake-online/white-rosette-black-forest-cake-100001ca'
  */
 export const getProductUrl = (category, productSlug, sku) => {
-  const categorySlug = CATEGORY_URL_MAP[category] || toSlug(category);
+  const categorySlug = PRODUCT_CATEGORY_SLUG_MAP[category] || toSlug(category);
   const slug = toSlug(productSlug);
   const skuPart = sku ? `-${toSlug(String(sku))}` : '';
   return `/p/${categorySlug}/${slug}${skuPart}`;

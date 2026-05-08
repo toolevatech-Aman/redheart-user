@@ -3,17 +3,17 @@
 
   <!-- Top-level category pages -->
   <url>
-    <loc>https://www.redheart.in/flowers</loc>
+    <loc>https://www.redheart.in/florist-near-me</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/cakes</loc>
+    <loc>https://www.redheart.in/order-cake-online</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/plants</loc>
+    <loc>https://www.redheart.in/plants-online</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -126,71 +126,71 @@
 
   <!-- Flowers subcategory pages -->
   <url>
-    <loc>https://www.redheart.in/flowers/roses</loc>
+    <loc>https://www.redheart.in/florist-near-me/roses</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/flowers/lilies</loc>
+    <loc>https://www.redheart.in/florist-near-me/lilies</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/flowers/orchids</loc>
+    <loc>https://www.redheart.in/florist-near-me/orchids</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/flowers/mixed</loc>
+    <loc>https://www.redheart.in/florist-near-me/mixed</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/flowers/carnation</loc>
+    <loc>https://www.redheart.in/florist-near-me/carnation</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/flowers/gerbera</loc>
+    <loc>https://www.redheart.in/florist-near-me/gerbera</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <!-- Cakes subcategory pages -->
   <url>
-    <loc>https://www.redheart.in/cakes/chocolate</loc>
+    <loc>https://www.redheart.in/order-cake-online/chocolate</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/cakes/butterscotch</loc>
+    <loc>https://www.redheart.in/order-cake-online/butterscotch</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/cakes/black-forest</loc>
+    <loc>https://www.redheart.in/order-cake-online/black-forest</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/cakes/red-velvet</loc>
+    <loc>https://www.redheart.in/order-cake-online/red-velvet</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/cakes/photo</loc>
+    <loc>https://www.redheart.in/order-cake-online/photo</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Plants subcategory pages -->
   <url>
-    <loc>https://www.redheart.in/plants/succulents</loc>
+    <loc>https://www.redheart.in/plants-online/succulents</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/plants/bonsai</loc>
+    <loc>https://www.redheart.in/plants-online/bonsai</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
