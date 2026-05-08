@@ -27,17 +27,15 @@ export const MEGA_MENU = [
           { label: 'Roses & Lily',       url: '/flowers/roses-and-lily' },
         ],
       },
-      {
-        heading: 'Shop by Color',
-        items: [
-          { label: 'Red Flowers',        url: '/flowers/red' },
-          { label: 'White Flowers',      url: '/flowers/white' },
-          { label: 'Pink Flowers',       url: '/flowers/pink' },
-          { label: 'Yellow Flowers',     url: '/flowers/yellow' },
-          { label: 'Purple Flowers',     url: '/flowers/purple' },
-          { label: 'Mixed Flowers',      url: '/flowers/mixed' },
-        ],
-      },
+      // Shop by Color — hidden until product_attributes.color is populated in DB
+      // { heading: 'Shop by Color', items: [
+      //   { label: 'Red Flowers',    url: '/flowers/red' },
+      //   { label: 'White Flowers',  url: '/flowers/white' },
+      //   { label: 'Pink Flowers',   url: '/flowers/pink' },
+      //   { label: 'Yellow Flowers', url: '/flowers/yellow' },
+      //   { label: 'Purple Flowers', url: '/flowers/purple' },
+      //   { label: 'Mixed Flowers',  url: '/flowers/mixed' },
+      // ]},
       {
         heading: 'Shop by Occasion',
         items: [
