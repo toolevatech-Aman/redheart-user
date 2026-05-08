@@ -142,11 +142,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/flowers/new-born-baby</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://www.redheart.in/flowers/baby-shower</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -381,11 +376,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.redheart.in/cakes/new-born-baby</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://www.redheart.in/cakes/baby-shower</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -404,11 +394,6 @@
     <loc>https://www.redheart.in/cakes/i-am-sorry</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.redheart.in/cakes/funeral</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
   </url>
 
   <!-- CAKES — SHOP BY RELATIONSHIP -->
@@ -616,11 +601,6 @@
   </url>
   <url>
     <loc>https://www.redheart.in/plants/thank-you</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.redheart.in/plants/new-born-baby</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
