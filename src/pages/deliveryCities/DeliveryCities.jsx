@@ -158,7 +158,7 @@ export default function DeliveryCities() {
                       to={`${tab.base}/${city.url.split("/").pop()}`}
                       className={`text-sm py-1.5 px-2 rounded hover:underline transition-colors ${ac.link}`}
                     >
-                      {tab.heading} in {city.cityName}
+                      {city.cityName}
                     </Link>
                   ))}
                 </div>
