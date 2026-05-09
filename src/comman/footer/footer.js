@@ -105,9 +105,9 @@ console.log(currentPage, "currentPage");
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-display text-base font-light text-primary-white mb-4 tracking-tight">
+            <p className="font-display text-base font-light text-primary-white mb-4 tracking-tight">
               Quick Links
-            </h3>
+            </p>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -124,9 +124,9 @@ console.log(currentPage, "currentPage");
 
           {/* Customer Service */}
           <div>
-            <h3 className="font-display text-base font-light text-primary-white mb-4 tracking-tight">
+            <p className="font-display text-base font-light text-primary-white mb-4 tracking-tight">
               Customer Service
-            </h3>
+            </p>
             <ul className="space-y-3">
               {customerService.map((link) => (
                 <li key={link.name}>
@@ -143,9 +143,9 @@ console.log(currentPage, "currentPage");
 
           {/* Legal */}
           <div>
-            <h3 className="font-display text-base font-light text-primary-white mb-4 tracking-tight">
+            <p className="font-display text-base font-light text-primary-white mb-4 tracking-tight">
               Legal
-            </h3>
+            </p>
             <ul className="space-y-3">
               {legal.map((link) => (
                 <li key={link.name}>

@@ -423,9 +423,9 @@ export default function Header() {
                         <div className="flex flex-row gap-8 overflow-x-auto overflow-y-auto pb-2 max-h-[58vh] hide-scrollbar">
                           {menu.groups.map((group, gi) => (
                             <div key={gi} className="min-w-[150px] max-w-[200px] flex flex-col flex-shrink-0">
-                              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 pb-1 border-b border-gray-100 whitespace-nowrap">
+                              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 pb-1 border-b border-gray-100 whitespace-nowrap">
                                 {group.heading}
-                              </h3>
+                              </p>
                               <ul className="space-y-1">
                                 {group.items.map((item, ii) => (
                                   <li key={ii}>
