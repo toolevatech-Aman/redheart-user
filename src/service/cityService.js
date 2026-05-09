@@ -13,7 +13,7 @@ import { Get } from "./axiosService";
  */
 export const getCitiesByCategory = async (category) => {
   try {
-    const res = await Get(`/city/cities/${category}`);
+    const res = await Get(`/city/public/${category}`);
     return res.data || [];
   } catch (err) {
     return [];
