@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import AppLayout from "./comman/app-layout/app-layout";
 import SellWithUs from "./pages/sell-with-us/sell-with-us";
 import { CategoryRedirect, ProductRedirect } from "./utils/RedirectHandler";
+import CityLandingPage from "./pages/cityLanding/CityLandingPage";
 
 // Lazy load pages
 const Home = lazy(() => import("./pages/home/home"));
@@ -71,6 +72,13 @@ const Router = () => {
         {/* ── New SEO product detail route ── */}
         {/* /p/:categorySlug/:productSlug  e.g. /p/order-cake-online/black-forest-cake-100001ca */}
         <Route path="/p/:categorySlug/:productSlug" element={<AppLayout><ProductDescription /></AppLayout>} />
+
+        {/* ── City landing pages (MORE specific than catch-alls, must come first) ── */}
+        {/* /florist-near-me/bangalore, /order-cake-online/mumbai, /plants-online/delhi  */}
+        {/* CityLandingPage internally detects subcategory vs city slug            */}
+        <Route path="/florist-near-me/:citySlug"   element={<AppLayout><CityLandingPage category="Flowers" /></AppLayout>} />
+        <Route path="/order-cake-online/:citySlug" element={<AppLayout><CityLandingPage category="Cakes" /></AppLayout>} />
+        <Route path="/plants-online/:citySlug"     element={<AppLayout><CityLandingPage category="Plants" /></AppLayout>} />
 
         {/* ── Category & occasion routes — catch-alls MUST be last ── */}
         {/* Subcategory: /order-cake-online/butterscotch, /florist-near-me/roses */}
