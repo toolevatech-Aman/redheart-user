@@ -17,6 +17,15 @@ const CATEGORY_META = {
   Plants:  { base: "/plants-online", accent: "#16a34a" },
 };
 
+// ── Constants ──────────────────────────────────────────────────────────────
+const BASE_URL = "https://www.redheart.in";
+
+const CATEGORY_SCHEMA_CONFIG = {
+  Flowers: { bizType: "Florist",  serviceLabel: "Flower Delivery", categorySlug: "florist-near-me"   },
+  Cakes:   { bizType: "Bakery",   serviceLabel: "Cake Delivery",   categorySlug: "order-cake-online" },
+  Plants:  { bizType: "Store",    serviceLabel: "Plant Delivery",  categorySlug: "plants-online"     },
+};
+
 // ── Apply meta tags to document head ──────────────────────────────────────
 function applyMeta({ title, description, keywords, canonical }) {
   if (title)       document.title = title;
@@ -37,50 +46,215 @@ function applyMeta({ title, description, keywords, canonical }) {
   }
 }
 
-// ── Inject FAQ JSON-LD script ──────────────────────────────────────────────
-function injectFaqSchema(faqs) {
-  const id = "city-faq-schema";
+// ── Inject comprehensive @graph JSON-LD ───────────────────────────────────
+function injectAllSchemas({ cityData, category, products = [] }) {
+  const id = "city-all-schemas";
   const existing = document.getElementById(id);
   if (existing) existing.remove();
-  if (!faqs || faqs.length === 0) return;
+  if (!cityData) return;
 
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((f) => ({
-      "@type": "Question",
-      name: f.question,
-      acceptedAnswer: { "@type": "Answer", text: f.answer },
-    })),
-  };
+  const cfg      = CATEGORY_SCHEMA_CONFIG[category] || {};
+  const pageUrl  = `${BASE_URL}${cityData.url}`;
+  const city     = cityData.cityName;
+  const crumbs   = cityData.breadcrumb || [];
+
+  const graph = [
+
+    // 1. WebSite ─ root entity
+    {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}/#website`,
+      "url": BASE_URL,
+      "name": "RedHeart",
+      "description": "Premium flowers, cakes & plants delivered same-day to 430+ cities across India.",
+      "publisher": { "@id": `${BASE_URL}/#organization` },
+      "inLanguage": "en-IN",
+    },
+
+    // 2. Organization ─ brand entity
+    {
+      "@type": "Organization",
+      "@id": `${BASE_URL}/#organization`,
+      "name": "RedHeart",
+      "url": BASE_URL,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${BASE_URL}/logo.png`,
+        "width": 200,
+        "height": 60,
+      },
+      "telephone": "+919275506722",
+      "email": "admin@redheart.in",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Gurugram",
+        "addressRegion": "Haryana",
+        "postalCode": "122001",
+        "addressCountry": "IN",
+      },
+      "areaServed": { "@type": "Country", "name": "India" },
+      "description": "Same-day delivery of fresh flowers, cakes, and plants to 430+ cities across India.",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+919275506722",
+        "contactType": "customer service",
+        "areaServed": "IN",
+        "availableLanguage": ["English", "Hindi"],
+      },
+      "sameAs": [
+        "https://www.instagram.com/redheart.in/",
+        "https://www.linkedin.com/company/redheart",
+      ],
+    },
+
+    // 3. LocalBusiness ─ city-specific service entity
+    {
+      "@type": ["LocalBusiness", cfg.bizType],
+      "@id": `${pageUrl}/#localbusiness`,
+      "name": `RedHeart - ${cfg.serviceLabel} in ${city}`,
+      "url": pageUrl,
+      "description": cityData.metaDescription,
+      "image": `${BASE_URL}/logo.png`,
+      "telephone": "+919275506722",
+      "email": "admin@redheart.in",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": city,
+        "addressCountry": "IN",
+      },
+      "areaServed": { "@type": "City", "name": city },
+      "priceRange": "₹399 - ₹5000",
+      "currenciesAccepted": "INR",
+      "paymentAccepted": "Cash, Credit Card, Debit Card, UPI, Net Banking",
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "00:00",
+        "closes": "23:59",
+      },
+      "parentOrganization": { "@id": `${BASE_URL}/#organization` },
+    },
+
+    // 4. Service ─ same-day delivery service for this city
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}/#service`,
+      "name": `Same-Day ${cfg.serviceLabel} in ${city}`,
+      "description": `Order ${category.toLowerCase()} online for same-day & midnight delivery in ${city}. Fresh delivery within 2–4 hours.`,
+      "provider": { "@id": `${BASE_URL}/#organization` },
+      "serviceType": `${cfg.serviceLabel} Service`,
+      "areaServed": { "@type": "City", "name": city },
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "INR",
+        "price": "0",
+        "description": "Free shipping on selected orders",
+        "availability": "https://schema.org/InStock",
+      },
+      "hoursAvailable": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "00:00",
+        "closes": "23:59",
+      },
+    },
+
+    // 5. CollectionPage ─ the product listing page itself
+    {
+      "@type": "CollectionPage",
+      "@id": `${pageUrl}/#webpage`,
+      "url": pageUrl,
+      "name": cityData.metaTitle,
+      "description": cityData.metaDescription,
+      "isPartOf": { "@id": `${BASE_URL}/#website` },
+      "about": { "@id": `${pageUrl}/#localbusiness` },
+      "breadcrumb": { "@id": `${pageUrl}/#breadcrumb` },
+      "inLanguage": "en-IN",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": `${BASE_URL}/search?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+
+    // 6. BreadcrumbList ─ navigation path
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}/#breadcrumb`,
+      "itemListElement": crumbs.map((crumb, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": crumb.label,
+        "item": `${BASE_URL}${crumb.url}`,
+      })),
+    },
+  ];
+
+  // 7. FAQPage ─ only if FAQs exist
+  if (cityData.faqs && cityData.faqs.length > 0) {
+    graph.push({
+      "@type": "FAQPage",
+      "@id": `${pageUrl}/#faqpage`,
+      "mainEntity": cityData.faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+      })),
+    });
+  }
+
+  // 8. ItemList ─ product carousel / listing (first 20 products)
+  if (products.length > 0) {
+    graph.push({
+      "@type": "ItemList",
+      "@id": `${pageUrl}/#itemlist`,
+      "name": cityData.h1,
+      "numberOfItems": products.length,
+      "itemListElement": products.slice(0, 20).map((p, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": p.product_name || p.name || "",
+        "url": `${BASE_URL}/p/${cfg.categorySlug}/${p.slug || ""}-${p.product_id || p.sku || ""}`,
+        "image": (p.images && p.images[0]) ? p.images[0] : undefined,
+      })).filter(item => item.name),
+    });
+  }
+
+  // 9. DeliveryChargeSpecification ─ shipping offer for the service area
+  graph.push({
+    "@type": "OfferShippingDetails",
+    "@id": `${pageUrl}/#shipping`,
+    "shippingRate": {
+      "@type": "PriceSpecification",
+      "priceCurrency": "INR",
+      "price": "49",
+    },
+    "shippingDestination": {
+      "@type": "DefinedRegion",
+      "addressCountry": "IN",
+      "addressRegion": city,
+    },
+    "deliveryTime": {
+      "@type": "ShippingDeliveryTime",
+      "handlingTime": {
+        "@type": "QuantitativeValue",
+        "minValue": 0,
+        "maxValue": 2,
+        "unitCode": "HUR",
+      },
+      "transitTime": {
+        "@type": "QuantitativeValue",
+        "minValue": 0,
+        "maxValue": 4,
+        "unitCode": "HUR",
+      },
+    },
+  });
+
   const script = document.createElement("script");
   script.id = id;
   script.type = "application/ld+json";
-  script.textContent = JSON.stringify(schema);
-  document.head.appendChild(script);
-}
-
-// ── Inject BreadcrumbList JSON-LD script ──────────────────────────────────
-function injectBreadcrumbSchema(breadcrumb) {
-  const id = "city-breadcrumb-schema";
-  const existing = document.getElementById(id);
-  if (existing) existing.remove();
-  if (!breadcrumb || breadcrumb.length === 0) return;
-
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: breadcrumb.map((crumb, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: crumb.label,
-      item: `https://www.redheart.in${crumb.url}`,
-    })),
-  };
-  const script = document.createElement("script");
-  script.id = id;
-  script.type = "application/ld+json";
-  script.textContent = JSON.stringify(schema);
+  script.textContent = JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
   document.head.appendChild(script);
 }
 
@@ -122,19 +296,17 @@ const CityLandingPage = ({ category }) => {
             keywords:    data.metaKeyword,
             canonical:   data.canonicalUrl,
           });
-          injectBreadcrumbSchema(data.breadcrumb);
-          injectFaqSchema(data.faqs);
+          // Inject all schemas (no products yet — ItemList added after first product load)
+          injectAllSchemas({ cityData: data, category, products: [] });
         }
       })
       .catch(console.error)
       .finally(() => setCityLoading(false));
 
-    // Clean up schemas on unmount
+    // Clean up all schemas on unmount
     return () => {
-      ["city-faq-schema", "city-breadcrumb-schema"].forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) el.remove();
-      });
+      const el = document.getElementById("city-all-schemas");
+      if (el) el.remove();
     };
   }, [category, citySlug]);
 
@@ -159,8 +331,14 @@ const CityLandingPage = ({ category }) => {
           limit:            12,
         };
         const res = await getProduct(payload);
-        setProducts((prev) => pageNo === 1 ? res.products : [...prev, ...res.products]);
+        const newProducts = res.products || [];
+        setProducts((prev) => pageNo === 1 ? newProducts : [...prev, ...newProducts]);
         setHasMore(pageNo < res.totalPages);
+
+        // Re-inject schemas with ItemList once first page of products loads
+        if (pageNo === 1 && cityData && newProducts.length > 0) {
+          injectAllSchemas({ cityData, category, products: newProducts });
+        }
       } catch (err) {
         console.error("CityLandingPage fetchProducts:", err);
       } finally {
