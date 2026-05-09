@@ -400,12 +400,12 @@ export default function Header() {
           </div>
 
           {/* Second Row — Desktop Mega Menu */}
-          <div className="hidden lg:flex justify-center bg-primary-white border-t border-grey-200">
-            <ul className="relative flex items-center space-x-1 xl:space-x-2 px-4">
+          <div className="hidden lg:flex justify-center bg-primary-white border-t border-grey-200 relative">
+            <ul className="flex items-center space-x-1 xl:space-x-2 px-4">
               {MEGA_MENU.map((menu, index) => {
                 const active = isNavActive(menu.url);
                 return (
-                  <li key={index} className="group relative">
+                  <li key={index} className="group">
                     <button
                       onClick={() => navigate(menu.url)}
                       className={`px-3 py-2.5 text-[15px] font-body font-normal transition-all duration-300 whitespace-nowrap ${active ? "text-red-600" : "text-black-charcoal hover:text-accent-rose-600"}`}
@@ -413,16 +413,14 @@ export default function Header() {
                       {menu.title}
                     </button>
 
-                    {/* Mega Dropdown */}
-                    <div className="absolute hidden group-hover:block top-full pt-1 left-1/2 -translate-x-1/2 z-50">
-                      <div className="bg-white shadow-xl border border-gray-100 rounded-2xl p-6 overflow-hidden relative w-[min(1100px,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] max-h-[70vh]">
-                        {/* Arrow */}
-                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-gray-100 rotate-45"></div>
+                    {/* Mega Dropdown — positioned relative to the nav row, always fully visible */}
+                    <div className="absolute hidden group-hover:flex top-full left-0 right-0 pt-1 z-50 justify-center px-4">
+                      <div className="bg-white shadow-xl border border-gray-100 rounded-2xl p-6 overflow-hidden w-full max-w-[1200px] max-h-[70vh]">
 
                         {/* Groups grid */}
-                        <div className="flex flex-row gap-8 overflow-x-auto overflow-y-auto pb-2 max-h-[58vh] hide-scrollbar">
+                        <div className="flex flex-row gap-6 overflow-x-auto overflow-y-auto pb-2 max-h-[58vh] hide-scrollbar">
                           {menu.groups.map((group, gi) => (
-                            <div key={gi} className="min-w-[150px] max-w-[200px] flex flex-col flex-shrink-0">
+                            <div key={gi} className="min-w-[140px] max-w-[190px] flex flex-col flex-shrink-0">
                               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 pb-1 border-b border-gray-100 whitespace-nowrap">
                                 {group.heading}
                               </p>

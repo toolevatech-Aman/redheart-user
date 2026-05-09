@@ -105,7 +105,7 @@ export const MEGA_MENU = [
           { label: 'Flowers to Kolkata',    url: '/florist-near-me/kolkata' },
           { label: 'Flowers to Mumbai',     url: '/florist-near-me/mumbai' },
           { label: 'Flowers to Pune',       url: '/florist-near-me/pune' },
-          { label: 'All 430+ Cities',       url: '/delivery-cities' },
+          { label: 'All Cities',             url: '/delivery-cities' },
         ],
       },
     ],
