@@ -304,16 +304,16 @@ const CityLandingPage = ({ category }) => {
 
       {/* ── FAQ Section ─────────────────────────────────────────────────────── */}
       {cityData?.faqs && cityData.faqs.length > 0 && (
-        <div className="px-4 py-8 max-w-4xl mx-auto border-t border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Frequently Asked Questions</h2>
+        <div className="px-4 py-8 border-t border-gray-100 max-w-3xl ml-4 md:ml-16 lg:ml-24">
+          <div className="text-xl font-semibold text-gray-800 mb-4">Frequently Asked Questions</div>
           <div className="space-y-4">
             {cityData.faqs.map((faq, i) => (
               <details key={i} className="border border-gray-200 rounded-lg p-4 group">
-                <summary className="font-medium text-gray-800 cursor-pointer list-none flex justify-between items-center">
-                  {faq.question}
-                  <span className="text-gray-400 group-open:rotate-180 transition-transform">▾</span>
+                <summary className="cursor-pointer list-none flex justify-between items-center gap-3">
+                  <h2 className="font-medium text-gray-800 text-base m-0">{faq.question}</h2>
+                  <span className="text-gray-400 group-open:rotate-180 transition-transform flex-shrink-0">▾</span>
                 </summary>
-                <p className="mt-3 text-gray-600 text-sm leading-relaxed">{faq.answer}</p>
+                <h3 className="mt-3 text-gray-600 text-sm leading-relaxed font-normal">{faq.answer}</h3>
               </details>
             ))}
           </div>
