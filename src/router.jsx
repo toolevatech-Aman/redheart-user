@@ -4,6 +4,7 @@ import AppLayout from "./comman/app-layout/app-layout";
 import SellWithUs from "./pages/sell-with-us/sell-with-us";
 import { CategoryRedirect, ProductRedirect } from "./utils/RedirectHandler";
 import CityLandingPage from "./pages/cityLanding/CityLandingPage";
+import DeliveryCities from "./pages/deliveryCities/DeliveryCities";
 
 // Lazy load pages
 const Home = lazy(() => import("./pages/home/home"));
@@ -72,6 +73,9 @@ const Router = () => {
         {/* ── New SEO product detail route ── */}
         {/* /p/:categorySlug/:productSlug  e.g. /p/order-cake-online/black-forest-cake-100001ca */}
         <Route path="/p/:categorySlug/:productSlug" element={<AppLayout><ProductDescription /></AppLayout>} />
+
+        {/* ── Delivery cities directory page ── */}
+        <Route path="/delivery-cities" element={<AppLayout><DeliveryCities /></AppLayout>} />
 
         {/* ── City landing pages (MORE specific than catch-alls, must come first) ── */}
         {/* /florist-near-me/bangalore, /order-cake-online/mumbai, /plants-online/delhi  */}
