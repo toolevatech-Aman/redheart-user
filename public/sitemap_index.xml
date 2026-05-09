@@ -8,4 +8,8 @@
     <loc>https://www.redheart.in/product1_sitemap.xml</loc>
     <lastmod>2026-05-09</lastmod>
   </sitemap>
+  <sitemap>
+    <loc>https://www.redheart.in/sitemap_cities.xml</loc>
+    <lastmod>2026-05-09</lastmod>
+  </sitemap>
 </sitemapindex>

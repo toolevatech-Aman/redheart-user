@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/sitemap_cities.xml",
+      "destination": "https://backend.redheart.in/sitemap_cities.xml"
+    }
+  ]
+}
