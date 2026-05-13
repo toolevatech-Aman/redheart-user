@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getProductById } from "../../service/products";
+import { getProductUrl } from "../../utils/seoUtils";
 import RecentlyViewed from "./RecentlyViewed";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
@@ -124,6 +125,116 @@ const ProductDescriptionPage = () => {
     setLoading(false);
   };
 
+  // ── SEO meta tags ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!product) return;
+
+    const h1          = product.name || "";
+    const category    = product.categorization?.category_name || "";
+    const sku         = product.sku || product.product_id || "";
+    const slug        = product.slug || "";
+    const productPath = getProductUrl(category, slug, sku);
+    const canonicalUrl = `https://www.redheart.in${productPath}`;
+    const imageUrl    = product.media?.primary_image_url || "";
+
+    const metaTitle       = `Shop ${h1} Online at RedHeart`;
+    const metaDescription = `Order fresh ${h1} online with same-day & midnight delivery across India. Free Shipping. Order Now`;
+    const metaKeywords    = h1;
+
+    // ── Title ──────────────────────────────────────────────────────────────
+    document.title = metaTitle;
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+    const setMeta = (name, content) => {
+      let el = document.querySelector(`meta[name="${name}"]`);
+      if (!el) { el = document.createElement("meta"); el.name = name; document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    const setOg = (property, content) => {
+      let el = document.querySelector(`meta[property="${property}"]`);
+      if (!el) { el = document.createElement("meta"); el.setAttribute("property", property); document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    const setCanonical = (href) => {
+      let el = document.querySelector('link[rel="canonical"]');
+      if (!el) { el = document.createElement("link"); el.rel = "canonical"; document.head.appendChild(el); }
+      el.setAttribute("href", href);
+    };
+
+    // ── Standard meta ──────────────────────────────────────────────────────
+    setMeta("description", metaDescription);
+    setMeta("keywords",    metaKeywords);
+    setCanonical(canonicalUrl);
+
+    // ── Open Graph ─────────────────────────────────────────────────────────
+    setOg("og:type",        "product");
+    setOg("og:title",       metaTitle);
+    setOg("og:description", metaDescription);
+    setOg("og:url",         canonicalUrl);
+    setOg("og:image",       imageUrl);
+    setOg("og:image:width",  "800");
+    setOg("og:image:height", "800");
+    setOg("og:site_name",   "RedHeart");
+    setOg("og:locale",      "en_IN");
+
+    // ── Twitter Card ───────────────────────────────────────────────────────
+    setMeta("twitter:card",        "summary_large_image");
+    setMeta("twitter:title",       metaTitle);
+    setMeta("twitter:description", metaDescription);
+    setMeta("twitter:image",       imageUrl);
+
+    // ── JSON-LD Product schema ─────────────────────────────────────────────
+    const schemaId = "product-jsonld";
+    const existing = document.getElementById(schemaId);
+    if (existing) existing.remove();
+
+    const priceValidUntil = new Date();
+    priceValidUntil.setFullYear(priceValidUntil.getFullYear() + 1);
+
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": h1,
+      "image": [imageUrl, ...(product.media?.gallery_images || [])].filter(Boolean),
+      "description": product.description || metaDescription,
+      "sku": sku,
+      "brand": { "@type": "Brand", "name": "RedHeart" },
+      "url": canonicalUrl,
+      "offers": {
+        "@type": "Offer",
+        "url": canonicalUrl,
+        "priceCurrency": "INR",
+        "price": String(product.selling_price || ""),
+        "priceValidUntil": priceValidUntil.toISOString().split("T")[0],
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": { "@type": "Organization", "name": "RedHeart", "url": "https://www.redheart.in" },
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": { "@type": "PriceSpecification", "price": "49", "priceCurrency": "INR" },
+          "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "IN" },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 2, "unitCode": "HUR" },
+            "transitTime":  { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 4, "unitCode": "HUR" },
+          },
+        },
+      },
+    };
+
+    const script = document.createElement("script");
+    script.id   = schemaId;
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify(schema);
+    document.head.appendChild(script);
+
+    // Cleanup on unmount / product change
+    return () => {
+      const el = document.getElementById(schemaId);
+      if (el) el.remove();
+    };
+  }, [product]);
+
   const toggleAddon = (addon) => {
     setSelectedAddOns((prev) =>
       prev.some((a) => a._id === addon._id)
@@ -246,11 +357,11 @@ const ProductDescriptionPage = () => {
 
         {/* LEFT – IMAGE GALLERY */}
         <div className="lg:sticky lg:top-24 h-fit space-y-4">
-          <div className="rounded-[30px] overflow-hidden ">
+          <div className="rounded-[30px] overflow-hidden bg-gray-50">
             <img
               src={displayImage}
               alt={product.name}
-              className="w-full h-[450px] object-cover transition-transform duration-300 hover:scale-105"
+              className="w-full h-[450px] object-contain transition-transform duration-300 hover:scale-105"
             />
           </div>
           <div className="flex gap-3 overflow-x-auto py-2">

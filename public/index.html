@@ -7,18 +7,123 @@
     <meta name="theme-color" content="#000000" />
 
 
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
+    <meta name="description" content="Order fresh flowers, cakes & plants online with same-day & midnight delivery across India. RedHeart delivers to 830+ cities. Free shipping on select orders. Shop now from ₹399!" />
+    <meta name="keywords" content="flower delivery, online flower delivery, cake delivery, plant delivery, same day delivery, midnight delivery, send flowers online, buy flowers online, India" />
+    <link rel="canonical" href="https://www.redheart.in/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.redheart.in/" />
+    <meta property="og:title" content="RedHeart — Online Flower, Cake & Plant Delivery Across India" />
+    <meta property="og:description" content="Order fresh flowers, cakes & plants online with same-day & midnight delivery across India. RedHeart delivers to 830+ cities. Shop now from ₹399!" />
+    <meta property="og:image" content="https://www.redheart.in/logo512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:site_name" content="RedHeart" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RedHeart — Online Flower, Cake & Plant Delivery Across India" />
+    <meta name="twitter:description" content="Order fresh flowers, cakes & plants online with same-day & midnight delivery across India. RedHeart delivers to 830+ cities. Shop now from ₹399!" />
+    <meta name="twitter:image" content="https://www.redheart.in/logo512.png" />
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://www.redheart.in/#website",
+          "url": "https://www.redheart.in/",
+          "name": "RedHeart",
+          "description": "Premium flowers, cakes & plants delivered same-day to 830+ cities across India.",
+          "publisher": { "@id": "https://www.redheart.in/#organization" },
+          "inLanguage": "en-IN",
+          "potentialAction": {
+            "@type": "ReadAction",
+            "target": "https://www.redheart.in/"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://www.redheart.in/#organization",
+          "name": "RedHeart",
+          "url": "https://www.redheart.in/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.redheart.in/logo512.png",
+            "width": 512,
+            "height": 512
+          },
+          "telephone": "+919275506722",
+          "email": "admin@redheart.in",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Gurugram",
+            "addressRegion": "Haryana",
+            "postalCode": "122001",
+            "addressCountry": "IN"
+          },
+          "areaServed": { "@type": "Country", "name": "India" },
+          "description": "Same-day delivery of fresh flowers, cakes, and plants to 830+ cities across India.",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+919275506722",
+            "contactType": "customer service",
+            "areaServed": "IN",
+            "availableLanguage": ["English", "Hindi"]
+          },
+          "sameAs": [
+            "https://www.instagram.com/redheart.in/",
+            "https://www.linkedin.com/company/redheart"
+          ]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.redheart.in/#webpage",
+          "url": "https://www.redheart.in/",
+          "name": "RedHeart — Online Flower, Cake & Plant Delivery Across India",
+          "description": "Order fresh flowers, cakes & plants online with same-day & midnight delivery across India. RedHeart delivers to 830+ cities. Shop now from ₹399!",
+          "isPartOf": { "@id": "https://www.redheart.in/#website" },
+          "about": { "@id": "https://www.redheart.in/#organization" },
+          "inLanguage": "en-IN",
+          "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [{ "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.redheart.in/" }]
+          }
+        }
+      ]
+    }
+    </script>
+
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-      <link rel="canonical" href="https://www.redheart.in/" />
 
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Performance: preconnect to critical origins -->
+    <link rel="preconnect" href="https://backend.redheart.in" crossorigin />
+    <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://redheart.s3.ap-south-1.amazonaws.com" crossorigin />
+    <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+
+    <!-- Non-blocking Google Fonts (moved from CSS @import to avoid render-blocking) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700&family=Dancing+Script:wght@600;700&family=Great+Vibes&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700&family=Dancing+Script:wght@600;700&family=Great+Vibes&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700&family=Dancing+Script:wght@600;700&family=Great+Vibes&display=swap" /></noscript>
+    <!-- Fallback font metrics matched to Poppins/Inter to eliminate font-swap CLS -->
+    <style>
+      @font-face { font-family: 'Poppins'; src: local('Arial'); size-adjust: 100%; ascent-override: 105%; descent-override: 35%; line-gap-override: 0%; }
+      @font-face { font-family: 'Inter'; src: local('Arial'); size-adjust: 107%; ascent-override: 90%; descent-override: 22%; line-gap-override: 0%; }
+    </style>
+
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -28,7 +133,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Red Heart</title>
+    <title>RedHeart — Online Flower, Cake & Plant Delivery Across India</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -44,6 +149,6 @@
       To create a production bundle, use `npm run build` or `yarn build`.
       
     -->
-          <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+          <!-- Razorpay loaded dynamically in checkout.jsx via loadRazorpayScript() — do NOT add static script here -->
   </body>
 </html>

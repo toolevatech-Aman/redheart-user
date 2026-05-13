@@ -22,24 +22,15 @@ Disallow: /login
 Disallow: /checkout
 Disallow: /cart
 
-# --- Filter, sort & pagination query parameters ---
-Disallow: /*?filter=
-Disallow: /*?filters=
-Disallow: /*?search=
-Disallow: /*?q=
-Disallow: /*?sort=
-Disallow: /*?order=
-Disallow: /*?page=
-Disallow: /*?p=
-Disallow: /*?ref=
-Disallow: /*?utm_source=
-Disallow: /*?utm_medium=
-Disallow: /*?utm_campaign=
-Disallow: /*?fbclid=
-Disallow: /*?gclid=
+# --- Block all query parameter URLs ---
+Disallow: /*?*
 
 # --- Internal / API paths ---
 Disallow: /api/
+
+# --- Static assets ---
+Disallow: /static/js/
+Disallow: /static/css/
 
 # --- Allow all public content ---
 Allow: /

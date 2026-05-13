@@ -171,7 +171,11 @@ export default function Header() {
   };
 
   useEffect(() => {
-    detectUserLocation();
+    navigator.permissions?.query({ name: 'geolocation' }).then((result) => {
+      if (result.state === 'granted') {
+        detectUserLocation();
+      }
+    });
   }, []);
 
   const handleSearchClick = () => {
@@ -234,6 +238,7 @@ export default function Header() {
                   src={logo}
                   alt="RedHeart Logo"
                   className="h-8 sm:h-9 lg:h-10 w-auto object-contain"
+                  style={{ aspectRatio: '455 / 121' }}
                 />
               </a>
             </div>
@@ -337,6 +342,8 @@ export default function Header() {
             <div className="lg:hidden flex items-center space-x-1.5">
               <button
                 onClick={handleSearchClick}
+                aria-label="Search"
+                aria-expanded={isSearchOpen}
                 className={`p-2 text-black-charcoal focus:outline-none transition-all duration-300 hover:text-accent-rose-600 hover:bg-grey-50 rounded-full ${isSearchOpen ? "text-accent-rose-600 bg-accent-rose-50" : ""}`}
               >
                 <Search className="w-6 h-6" strokeWidth={2} />
@@ -393,6 +400,9 @@ export default function Header() {
               <button
                 className="p-2 text-black-charcoal focus:outline-none transition-all duration-300 hover:text-accent-rose-600 hover:bg-grey-50 rounded-full"
                 onClick={() => setOpen(!open)}
+                aria-label={open ? "Close menu" : "Open menu"}
+                aria-expanded={open}
+                aria-controls="mobile-menu"
               >
                 {open ? <X className="w-6 h-6" strokeWidth={2} /> : <Menu className="w-6 h-6" strokeWidth={2} />}
               </button>
@@ -469,14 +479,16 @@ export default function Header() {
               onClick={closeSidebar}
             ></div>
             <aside
+              id="mobile-menu"
               className={`absolute right-0 top-0 h-full w-full max-w-sm bg-primary-white shadow-premium transform transition-transform duration-400 overflow-y-auto ${open ? "translate-x-0" : "translate-x-full"}`}
             >
               <div className="sticky top-0 z-10 bg-gradient-to-b from-primary-white to-grey-50/30 border-b border-grey-200 px-6 py-5 flex items-center justify-between backdrop-blur-sm">
                 <div className="flex items-center space-x-3">
-                  <img src={logo} alt="RedHeart Logo" className="h-8 w-auto" />
+                  <img src={logo} alt="RedHeart Logo" className="h-8 w-auto object-contain" style={{ aspectRatio: '455 / 121' }} />
                 </div>
                 <button
                   onClick={closeSidebar}
+                  aria-label="Close menu"
                   className="p-2 rounded-full text-grey-700 hover:text-accent-rose-600 hover:bg-grey-100 transition-all duration-300"
                 >
                   <X className="w-6 h-6" strokeWidth={2} />

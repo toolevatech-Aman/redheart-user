@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind directives are in index.css — do not duplicate here */
 /* Hide scrollbar but allow scrolling */
 .hide-scrollbar {
   -ms-overflow-style: none; /* IE & Edge */

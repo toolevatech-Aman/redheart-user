@@ -6,7 +6,7 @@
 export const MEGA_MENU = [
   {
     title: 'Flowers',
-    url: '/flowers',
+    url: '/florist-near-me',
     groups: [
       {
         heading: 'Shop by Type',
@@ -113,7 +113,7 @@ export const MEGA_MENU = [
 
   {
     title: 'Cakes',
-    url: '/cakes',
+    url: '/order-cake-online',
     groups: [
       {
         heading: 'Shop by Type',
@@ -201,7 +201,7 @@ export const MEGA_MENU = [
           { label: 'Cakes to Kolkata',    url: '/order-cake-online/kolkata' },
           { label: 'Cakes to Mumbai',     url: '/order-cake-online/mumbai' },
           { label: 'Cakes to Pune',       url: '/order-cake-online/pune' },
-          { label: 'All 430+ Cities',     url: '/delivery-cities' },
+          { label: 'All 830+ Cities',     url: '/delivery-cities' },
         ],
       },
     ],
@@ -209,7 +209,7 @@ export const MEGA_MENU = [
 
   {
     title: 'Plants',
-    url: '/plants',
+    url: '/plants-online',
     groups: [
       {
         heading: 'Shop by Type',
@@ -285,7 +285,7 @@ export const MEGA_MENU = [
           { label: 'Plants to Kolkata',    url: '/plants-online/kolkata' },
           { label: 'Plants to Mumbai',     url: '/plants-online/mumbai' },
           { label: 'Plants to Pune',       url: '/plants-online/pune' },
-          { label: 'All 430+ Cities',      url: '/delivery-cities' },
+          { label: 'All 830+ Cities',      url: '/delivery-cities' },
         ],
       },
     ],
@@ -293,7 +293,7 @@ export const MEGA_MENU = [
 
   {
     title: 'Birthday',
-    url: '/birthday',
+    url: '/birthday-gifts-delivery',
     groups: [
       {
         heading: 'Shop by Category',
@@ -333,7 +333,7 @@ export const MEGA_MENU = [
 
   {
     title: 'Anniversary',
-    url: '/anniversary',
+    url: '/anniversary-gifts-delivery',
     groups: [
       {
         heading: 'Shop by Category',
@@ -369,7 +369,7 @@ export const MEGA_MENU = [
 
   {
     title: 'Wedding',
-    url: '/wedding',
+    url: '/wedding-gifts-online',
     groups: [
       {
         heading: 'Shop by Category',

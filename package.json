@@ -25,10 +25,15 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build && node scripts/post-build.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate:sitemap": "node scripts/generate-product-sitemap.js"
+    "generate:sitemap": "node scripts/generate-product-sitemap.js",
+    "generate:cities-sitemap": "node scripts/generate-cities-sitemap.js",
+    "generate:all-sitemaps": "node scripts/generate-product-sitemap.js && node scripts/generate-cities-sitemap.js",
+    "prebuild": "node scripts/generate-product-sitemap.js && node scripts/generate-cities-sitemap.js",
+    "prerender": "node scripts/prerender.js",
+    "build:prerender": "npm run build && node scripts/prerender.js"
   },
   "eslintConfig": {
     "extends": [
@@ -47,5 +52,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "puppeteer": "^24.43.0",
+    "serve": "^14.2.6"
   }
 }

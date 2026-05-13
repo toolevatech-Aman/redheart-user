@@ -4,56 +4,54 @@ import { FiGift, FiTruck } from "react-icons/fi";
 import { GiCakeSlice, GiFlowerPot } from "react-icons/gi"
 // Import images
 import birthdaypic from "../../assets/collections/Birthday-Cake-1.webp";
-import Anniversary from "../../assets/collections/anniversary-love-9914310ca-aaa_0.avif";
+import Anniversary from "../../assets/collections/anniversary-love-9914310ca-aaa_0.webp";
 import Wedding from "../../assets/collections/weddingg.webp";
 import housewarming from "../../assets/collections/housewarming.webp";
 import bbyshower from "../../assets/collections/babyshower.webp";
-import lovaromance from "../../assets/collections/getwellsoon.jpg";
+import lovaromance from "../../assets/collections/getwellsoon.webp";
 
-import loveAffectionImg from "../../assets/collections-image/love-affection.avif";
-import redRoseImg from "../../assets/blossoms-image/chrismas.jpg";
-import pinkRoseImg from "../../assets/blossoms-image/lorhi.jpg";
-import whiteRoseImg from "../../assets/blossoms-image/holi.jpg";
+import loveAffectionImg from "../../assets/collections-image/love-affection.webp";
+import redRoseImg from "../../assets/blossoms-image/chrismas.webp";
+import pinkRoseImg from "../../assets/blossoms-image/lorhi.webp";
+import whiteRoseImg from "../../assets/blossoms-image/holi.webp";
 import yellowRoseImg from "../../assets/blossoms-image/eid.webp";
 
 import roseBouquetImg from "../../assets/shop-by-flower-image/flowerandcake.webp";
 import lillyBouquetImg from "../../assets/shop-by-flower-image/flowerandbookew.webp";
-import orchidsBouquetImg from "../../assets/shop-by-flower-image/flowerandteddy.jpeg";
-import cakeandteddy from "../../assets/shop-by-flower-image/cakeandteddy.avif";
+import orchidsBouquetImg from "../../assets/shop-by-flower-image/flowerandteddy.webp";
+import cakeandteddy from "../../assets/shop-by-flower-image/cakeandteddy.webp";
 import flowerChocolateImg from "../../assets/floral-image/flower-chocolate.webp";
-import flowerTeddyImg from "../../assets/floral-image/flower-teddy.jpg";
+import flowerTeddyImg from "../../assets/floral-image/flower-teddy.webp";
 import allFlowerComboImg from "../../assets/floral-image/all-flower-combo.avif";
 
-import congratulationImg from "../../assets/occasion-image/congratulation.jpg";
+import congratulationImg from "../../assets/occasion-image/congratulation.webp";
 import thankYouImg from "../../assets/occasion-image/thank-you.jpeg";
 import getWellSoonImg from "../../assets/occasion-image/get-well-soon.webp";
 
 import cake from "../../assets/category-image/cake.webp"
-import combo from "../../assets/category-image/combo.jpeg"
-import plant from "../../assets/category-image/plant.avif"
+import combo from "../../assets/category-image/combo.webp"
+import plant from "../../assets/category-image/plant.webp"
 
-import hero1 from "../../assets/hero-image/17768080-0BED-4D5D-BDD0-4C620CB29901_4_5005_c.jpeg"
-import hero2 from "../../assets/hero-image/728AF6B8-A0EA-48B7-BBB4-47A594B437BE_4_5005_c.jpeg"
-import hero3 from "../../assets/hero-image/7CC8073B-CB39-42FA-9EA8-A06FEFC1CE95_4_5005_c.jpeg"
-import hero4 from "../../assets/hero-image/85CC3076-3EAB-4BB9-B01E-1C9B31D8E8FF_4_5005_c.jpeg"
-import hero5 from "../../assets/hero-image/B3D3A4E6-90FE-4437-8905-2794D80B9A66_4_5005_c.jpeg"
-import hero6 from "../../assets/hero-image/B765D234-E0AE-4F39-A0D4-85A1883911B9_4_5005_c.jpeg"
-import hero7 from "../../assets/hero-image/BCD5580A-1738-4609-8EB3-CA8B4B54D4F6_4_5005_c.jpeg"
-import hero8 from "../../assets/hero-image/E4FA1C23-A9E0-4717-9D01-7BFE64221799_4_5005_c.jpeg"
+import hero1 from "../../assets/hero-image/17768080-0BED-4D5D-BDD0-4C620CB29901_4_5005_c.webp"
+import hero2 from "../../assets/hero-image/728AF6B8-A0EA-48B7-BBB4-47A594B437BE_4_5005_c.webp"
+import hero3 from "../../assets/hero-image/7CC8073B-CB39-42FA-9EA8-A06FEFC1CE95_4_5005_c.webp"
+import hero4 from "../../assets/hero-image/85CC3076-3EAB-4BB9-B01E-1C9B31D8E8FF_4_5005_c.webp"
+import hero5 from "../../assets/hero-image/B3D3A4E6-90FE-4437-8905-2794D80B9A66_4_5005_c.webp"
+import hero6 from "../../assets/hero-image/B765D234-E0AE-4F39-A0D4-85A1883911B9_4_5005_c.webp"
+import hero7 from "../../assets/hero-image/BCD5580A-1738-4609-8EB3-CA8B4B54D4F6_4_5005_c.webp"
+import hero8 from "../../assets/hero-image/E4FA1C23-A9E0-4717-9D01-7BFE64221799_4_5005_c.webp"
 
 import categoryBg from "../../assets/background/herobackgroundcat.jpg"
 import anniversary1 from "../../assets/category-image/anniversary-1.webp"
-import birthday1 from "../../assets/category-image/birthday.avif"
-import giftforher from "../../assets/category-image/giftforher.jpg"
-import giftforhim from "../../assets/category-image/giftforhim.jpg"
+import birthday1 from "../../assets/category-image/birthday.webp"
+import giftforher from "../../assets/category-image/giftforher.webp"
+import giftforhim from "../../assets/category-image/giftforhim.webp"
 
-import chocolates from "../../assets/category-image/chocolates .jpg"
+import chocolates from "../../assets/category-image/chocolates.webp"
 import gifts from "../../assets/category-image/gifts.webp"
 import hampers from "../../assets/category-image/hampers.webp"
-
 import buildHamper from "../../assets/background/buildhamper.webp"
-
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { getCategoryUrl } from "../../utils/seoUtils";
 
 const Home = () => {
@@ -81,7 +79,7 @@ const Home = () => {
       title: "Lohri",
       image: pinkRoseImg,
       color: "Pink",
-      description: "Welcome the harvest season with Lohri’s festive spirit, wrapped in soft, cheerful pink."
+      description: "Welcome the harvest season with Lohri's festive spirit, wrapped in soft, cheerful pink."
     },
     {
       id: 3,
@@ -121,7 +119,7 @@ const Home = () => {
   const categories = [
     { id: 1, title: "Husband", img: anniversary1 ,description:"Because he deserves more than just a thank-you."},
     { id: 2, title: "Wife", img: birthday1 ,description:"Turn everyday love into unforgettable moments."},
-    { id: 3, title: "Her", img: giftforher,description:"Surprises she’ll smile about all day." },
+    { id: 3, title: "Her", img: giftforher,description:"Surprises she'll smile about all day." },
     { id: 4, title: "Him", img: giftforhim ,description:"Gifts that speak louder than words."},
   ];
 
@@ -158,7 +156,7 @@ const Home = () => {
             {mainCategories.map((item, idx) => (
               <div key={idx} className="cursor-pointer" onClick={() => navigate(getCategoryUrl(item.title))}>
                 <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm bg-gray-50">
-                  <img src={item.img} alt={item.title} className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img src={item.img} alt={item.title} width="200" height="200" loading="lazy" className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <p className="mt-1 text-center text-[10px] font-medium text-gray-800 truncate">{item.title}</p>
               </div>
@@ -169,7 +167,7 @@ const Home = () => {
             {mainCategories.map((item, idx) => (
               <div key={idx} className="flex-1 min-w-0 cursor-pointer" onClick={() => navigate(getCategoryUrl(item.title))}>
                 <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-gray-50">
-                  <img src={item.img} alt={item.title} className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img src={item.img} alt={item.title} width="200" height="200" loading="lazy" className="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <p className="mt-1.5 text-center text-sm font-medium text-gray-800 truncate">{item.title}</p>
               </div>
@@ -193,7 +191,11 @@ const Home = () => {
                 <img
                   src={item.img}
                   alt="Poster"
+                  width="800"
+                  height="450"
                   className="w-full h-[54vw] sm:h-64 lg:h-[22rem] object-cover"
+                  loading={idx === 0 ? "eager" : "lazy"}
+                  fetchpriority={idx === 0 ? "high" : "low"}
                 />
               </div>
             ))}
@@ -218,6 +220,8 @@ const Home = () => {
            <img
             src={buildHamper}
             alt="Build Your Own Hamper"
+            loading="eager"
+            fetchpriority="high"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           {/* Overlay */}
@@ -226,9 +230,9 @@ const Home = () => {
 
         {/* Text Content */}
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-4 sm:px-6 md:px-8">
-          <h2 className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg">
+          <p className="font-display text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg">
             Build Your Own Hamper
-          </h2>
+          </p>
           <p className="mt-3 text-base sm:text-lg md:text-xl text-white/95 font-light drop-shadow-md">
             Choose flowers, gifts, and treats for your perfect combo
           </p>
@@ -242,9 +246,9 @@ const Home = () => {
 
         {/* Mobile-only text overlay at bottom */}
         {/* <div className="absolute bottom-4 left-4 right-4 text-center sm:hidden">
-          <h2 className="font-display text-lg font-semibold text-white drop-shadow-md">
+          <p className="font-display text-lg font-semibold text-white drop-shadow-md">
             Build Your Own Hamper
-          </h2>
+          </p>
           <p className="text-xs text-white/90 font-light drop-shadow-sm">
             Customize your perfect gift
           </p>
@@ -255,9 +259,9 @@ const Home = () => {
       <section className="py-12 md:py-14 bg-gradient-to-b from-[#fff5f2] to-white">
         <div className="max-w-7xl mx-auto px-4">
           {/* Section Title */}
-          <h2 className="text-4xl text-center mb-12 text-[#8B0000] font-serif">
+          <p className="text-4xl text-center mb-12 text-[#8B0000] font-serif">
             Shop By Occasions & Relations
-          </h2>
+          </p>
 
           {/* Categories Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
@@ -272,15 +276,18 @@ const Home = () => {
                   <img
                     src={category.img}
                     alt={category.title}
+                    width="400"
+                    height="288"
+                    loading="lazy"
                     className="w-full h-72 object-cover transition-transform duration-500 hover:scale-110"
                   />
                 </div>
 
                 {/* Text */}
                 <div className="p-6 text-center">
-                  <h3 className="text-xl font-semibold text-[#8B0000] mb-2">
+                  <p className="text-xl font-semibold text-[#8B0000] mb-2">
                     {category.title}
-                  </h3>
+                  </p>
                   <p className="text-gray-500 text-sm">
                     {category?.description}
                   </p>
@@ -297,9 +304,9 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
+            <p className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
               Our Occasions Collections
-            </h2>
+            </p>
             <p className="font-body text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
               Curated with passion, designed with elegance
             </p>
@@ -318,15 +325,18 @@ const Home = () => {
                   <img
                     src={collection.image}
                     alt={collection.title}
+                    width="384"
+                    height="256"
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
 
                 {/* Text */}
                 <div className="p-3 md:p-4 text-center">
-                  <h3 className="font-display text-lg md:text-lg font-semibold text-[#8B0000] mb-1 group-hover:text-[#e74c3c] transition-colors duration-300">
+                  <p className="font-display text-lg md:text-lg font-semibold text-[#8B0000] mb-1 group-hover:text-[#e74c3c] transition-colors duration-300">
                     {collection.title}
-                  </h3>
+                  </p>
                   <p className="font-body text-sm md:text-base text-gray-700">
                     {collection.description}
                   </p>
@@ -356,9 +366,9 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-10 sm:mb-12 md:mb-16">
-            <h2 className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
+            <p className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
               Celebrate Festivals in Full Color
-            </h2>
+            </p>
             <p className="font-body text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
               Explore a spectrum of colors that capture every emotion and make your festival moments unforgettable.
             </p>
@@ -380,6 +390,9 @@ const Home = () => {
                     <img
                       src={blossom.image}
                       alt={blossom.title}
+                      width="320"
+                      height="256"
+                      loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
@@ -391,9 +404,9 @@ const Home = () => {
                         {blossom.title}
                       </span>
                     </div>
-                    <h3 className="font-display text-sm sm:text-base md:text-sm font-small text-gray-400">
+                    <p className="font-display text-sm sm:text-base md:text-sm font-small text-gray-600">
                       {blossom.description}
-                    </h3>
+                    </p>
                   </div>
                 </div>
               ))}
@@ -418,9 +431,9 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-serif text-[#8B0000] mb-3">
+            <p className="text-4xl font-serif text-[#8B0000] mb-3">
               Why Choose Us
-            </h2>
+            </p>
             <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
               We make every occasion special with our flowers, cakes, and gifts.
             </p>
@@ -433,7 +446,7 @@ const Home = () => {
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
                 <GiFlowerPot className="w-14 h-14" />
               </div>
-              <h3 className="text-lg font-medium text-gray-800 mb-2">Fresh & Premium Flowers</h3>
+              <p className="text-lg font-medium text-gray-800 mb-2">Fresh & Premium Flowers</p>
               <p className="text-gray-500 text-sm">Handpicked blooms delivered fresh to your doorstep.</p>
             </div>
 
@@ -442,7 +455,7 @@ const Home = () => {
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
                 <GiCakeSlice className="w-14 h-14" />
               </div>
-              <h3 className="text-lg font-medium text-gray-800 mb-2">Delicious Custom Cakes</h3>
+              <p className="text-lg font-medium text-gray-800 mb-2">Delicious Custom Cakes</p>
               <p className="text-gray-500 text-sm">Bespoke cakes baked with love for every occasion.</p>
             </div>
 
@@ -451,7 +464,7 @@ const Home = () => {
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
                 <FiGift className="w-14 h-14" />
               </div>
-              <h3 className="text-lg font-medium text-gray-800 mb-2">Thoughtful Gift Selection</h3>
+              <p className="text-lg font-medium text-gray-800 mb-2">Thoughtful Gift Selection</p>
               <p className="text-gray-500 text-sm">Curated gifts to make every celebration memorable.</p>
             </div>
 
@@ -460,7 +473,7 @@ const Home = () => {
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
                 <FiTruck className="w-14 h-14" />
               </div>
-              <h3 className="text-lg font-medium text-gray-800 mb-2">Fast & Reliable Delivery</h3>
+              <p className="text-lg font-medium text-gray-800 mb-2">Fast & Reliable Delivery</p>
               <p className="text-gray-500 text-sm">We make sure your surprises reach on time, every time.</p>
             </div>
           </div>
@@ -471,9 +484,9 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-10 sm:mb-12 md:mb-16">
-            <h2 className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
+            <p className="text-4xl text-center mb-2 text-[#8B0000] font-serif">
               Shop by Combo Type
-            </h2>
+            </p>
             <p className="font-body text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
               Each Combo tells a unique story
             </p>
@@ -495,6 +508,9 @@ const Home = () => {
                       src={blossom.image}
                       alt={blossom.title}
                       title={blossom.title}
+                      width="320"
+                      height="256"
+                      loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
@@ -533,11 +549,11 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-serif text-[#8B0000] mb-4">
+            <p className="text-4xl md:text-5xl font-serif text-[#8B0000] mb-4">
               Who We Are
-            </h2>
+            </p>
             <p className="text-gray-600 text-base md:text-lg max-w-3xl mx-auto">
-              At Redheart, gifting is more than just exchanging products — it’s about expressing emotions, celebrating relationships, and creating unforgettable memories. Every bouquet, cake, plant, and gift hamper is crafted with care, creativity, and a touch of love.
+              At Redheart, gifting is more than just exchanging products — it's about expressing emotions, celebrating relationships, and creating unforgettable memories. Every bouquet, cake, plant, and gift hamper is crafted with care, creativity, and a touch of love.
             </p>
           </div>
 
@@ -548,7 +564,7 @@ const Home = () => {
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
                 🌹
               </div>
-              <h3 className="text-lg md:text-xl font-medium text-gray-800 mb-2">Flowers for Every Emotion</h3>
+              <p className="text-lg md:text-xl font-medium text-gray-800 mb-2">Flowers for Every Emotion</p>
               <p className="text-gray-500 text-sm md:text-base">
                 From roses to exotic blooms, we have a flower for every mood and moment.
               </p>
@@ -559,7 +575,7 @@ const Home = () => {
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
                 🍰
               </div>
-              <h3 className="text-lg md:text-xl font-medium text-gray-800 mb-2">Cakes for Every Celebration</h3>
+              <p className="text-lg md:text-xl font-medium text-gray-800 mb-2">Cakes for Every Celebration</p>
               <p className="text-gray-500 text-sm md:text-base">
                 Customisable cakes in various flavours and designs to make every occasion sweeter.
               </p>
@@ -570,7 +586,7 @@ const Home = () => {
               <div className="mb-4 p-4 bg-[#8B0000]/10 rounded-full text-[#8B0000]">
                 🎁
               </div>
-              <h3 className="text-lg md:text-xl font-medium text-gray-800 mb-2">Plants & Personalised Gifts</h3>
+              <p className="text-lg md:text-xl font-medium text-gray-800 mb-2">Plants & Personalised Gifts</p>
               <p className="text-gray-500 text-sm md:text-base">
                 Air-purifying plants, succulents, and curated gift hampers to make moments memorable.
               </p>
@@ -587,27 +603,66 @@ const Home = () => {
       </section>
 
 
-      {/* CTA Section */}
-      <section className="py-20 md:py-28 lg:py-32 bg-gradient-to-br from-accent-rose-50/50 via-accent-pink-50/30 to-grey-50/50 border-t border-grey-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-accent-rose-100 border border-accent-rose-200 rounded-full mb-8">
-            <Heart className="w-8 h-8 text-accent-rose-600" strokeWidth={2} fill="currentColor" />
-          </div>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-light text-black-charcoal mb-6 tracking-tight">
-            Spread Love, One Bloom at a Time
-          </h2>
-          <p className="font-body text-grey-700 text-base md:text-lg mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-            Let us help you create unforgettable moments with our premium floral arrangements
+
+      {/* SEO Footer Content */}
+      <section className="bg-[#fdf8f8] border-t border-gray-200 py-14 md:py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <h1 className="text-2xl md:text-3xl font-serif text-[#8B0000] mb-4 text-center">
+            Online Flower, Cake &amp; Gift Delivery Across India
+          </h1>
+          <p className="text-gray-600 text-sm md:text-base leading-relaxed text-center max-w-3xl mx-auto mb-10">
+            RedHeart is India's trusted gifting destination for fresh <Link to="/florist-near-me" className="text-[#8B0000] underline hover:text-[#a00000]">flowers</Link>, custom <Link to="/order-cake-online" className="text-[#8B0000] underline hover:text-[#a00000]">cakes</Link>, indoor <Link to="/plants-online" className="text-[#8B0000] underline hover:text-[#a00000]">plants</Link>, and curated <Link to="/gift-hampers" className="text-[#8B0000] underline hover:text-[#a00000]">gift hampers</Link>. We deliver love to 830+ cities across India — same day, next day, or at midnight — so your emotions always arrive on time.
           </p>
-          <a
-            href="#collections"
-            className="inline-flex items-center gap-2 px-10 py-4 bg-accent-rose-600 hover:bg-accent-rose-700 text-primary-white font-body font-light tracking-wide rounded-full transition-all duration-300 shadow-elegant hover:shadow-premium border border-accent-rose-700/30"
-          >
-            Start Shopping
-            <ArrowRight className="w-5 h-5" strokeWidth={2} />
-          </a>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+
+            <div>
+              <h2 className="text-lg font-semibold text-[#8B0000] mb-2">Send Flowers Online with Same-Day Delivery</h2>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Whether it's a classic red rose bouquet, a seasonal arrangement, or an exotic bloom hamper — RedHeart handpicks every flower for freshness and beauty. <Link to="/florist-near-me" className="text-[#8B0000] underline hover:text-[#a00000]">Order flowers online</Link> before 5 PM and get same-day delivery right at the doorstep of your loved ones, anywhere in India. From Mumbai and Delhi to Bengaluru, Hyderabad, Pune, Chennai, and beyond — we've got every city covered.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-[#8B0000] mb-2">Order Cakes Online for Every Occasion</h2>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                From a simple <Link to="/birthday-gifts-delivery" className="text-[#8B0000] underline hover:text-[#a00000]">birthday cake</Link> to an elaborate custom photo cake — our bakers craft every cake fresh to order. Choose from flavours like chocolate truffle, butterscotch, red velvet, black forest, and more. <Link to="/order-cake-online" className="text-[#8B0000] underline hover:text-[#a00000]">Order a cake online</Link> and personalise with a name, message, or photo for that extra special touch. Midnight delivery is available in select cities.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-[#8B0000] mb-2">Gift Delivery for Every Special Occasion</h2>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                <Link to="/birthday-gifts-delivery" className="text-[#8B0000] underline hover:text-[#a00000]">Birthdays</Link>, <Link to="/anniversary-gifts-delivery" className="text-[#8B0000] underline hover:text-[#a00000]">anniversaries</Link>, <Link to="/wedding-gifts-online" className="text-[#8B0000] underline hover:text-[#a00000]">weddings</Link>, house warmings, baby showers, Raksha Bandhan, Diwali, Valentine's Day, Mother's Day — whatever the occasion, RedHeart has the perfect gift. Browse our curated collection of <Link to="/florist-near-me" className="text-[#8B0000] underline hover:text-[#a00000]">flower bouquets</Link>, <Link to="/gift-hampers" className="text-[#8B0000] underline hover:text-[#a00000]">gift hampers</Link>, and <Link to="/combos-online" className="text-[#8B0000] underline hover:text-[#a00000]">combo packages</Link>.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-[#8B0000] mb-2">Plants &amp; Green Gifts Delivered to Your Door</h2>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Give the gift of life with our range of <Link to="/plants-online" className="text-[#8B0000] underline hover:text-[#a00000]">indoor plants</Link>, succulents, money plants, and air-purifying varieties. Perfect for house warmings, office gifting, or just because — our plants arrive healthy, potted, and ready to brighten any space. Available for delivery across major Indian cities with careful packaging to ensure safe transit.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-[#8B0000] mb-2">Gifting to 830+ Cities Across India</h2>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                No matter where your loved ones are, RedHeart delivers. We serve 830+ cities including Delhi, Mumbai, Bengaluru, Hyderabad, Pune, Chennai, Kolkata, Ahmedabad, Jaipur, Lucknow, Chandigarh, Noida, Gurgaon, and hundreds of smaller towns across India. <Link to="/delivery-cities" className="text-[#8B0000] underline hover:text-[#a00000]">Check all delivery cities</Link> and choose same-day or express delivery slots.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-[#8B0000] mb-2">Why Thousands Trust RedHeart for Gifting</h2>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                RedHeart combines the reliability of a professional delivery service with the warmth of a personal touch. We source only the freshest <Link to="/florist-near-me" className="text-[#8B0000] underline hover:text-[#a00000]">flowers</Link>, partner with local bakers for each city, and ensure every order is packed and delivered with care. Enjoy easy online ordering, real-time tracking, secure payments, and dedicated customer support — because every gift deserves to be perfect.
+              </p>
+            </div>
+
+          </div>
         </div>
       </section>
+
     </div>
   );
 };

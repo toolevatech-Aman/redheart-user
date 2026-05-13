@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getCityPage } from "../../service/cityService";
+import { getCategoryPageSeo } from "../../service/categorySeoService";
 import { getProduct } from "../../service/products";
 import ProductCard from "../product/ProductCard";
 import logo from "../../assets/RedHeart-Logo-02.png";
@@ -66,7 +67,7 @@ function injectAllSchemas({ cityData, category, products = [] }) {
       "@id": `${BASE_URL}/#website`,
       "url": BASE_URL,
       "name": "RedHeart",
-      "description": "Premium flowers, cakes & plants delivered same-day to 430+ cities across India.",
+      "description": "Premium flowers, cakes & plants delivered same-day to 830+ cities across India.",
       "publisher": { "@id": `${BASE_URL}/#organization` },
       "inLanguage": "en-IN",
     },
@@ -93,7 +94,7 @@ function injectAllSchemas({ cityData, category, products = [] }) {
         "addressCountry": "IN",
       },
       "areaServed": { "@type": "Country", "name": "India" },
-      "description": "Same-day delivery of fresh flowers, cakes, and plants to 430+ cities across India.",
+      "description": "Same-day delivery of fresh flowers, cakes, and plants to 830+ cities across India.",
       "contactPoint": {
         "@type": "ContactPoint",
         "telephone": "+919275506722",
@@ -263,31 +264,56 @@ const CityLandingPage = ({ category }) => {
   const { citySlug } = useParams();
   const navigate     = useNavigate();
 
+  // Compute synchronously from route — no API needed, no state delay
+  const isSubcategory   = Boolean(SUBCATEGORY_SLUG_FILTERS?.[citySlug]);
+  const cityNameFromSlug = citySlug
+    ? citySlug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    : "";
+
   // State
   const [cityData,       setCityData]       = useState(null);   // city SEO data from DB
-  const [cityLoading,    setCityLoading]    = useState(true);   // initial city fetch
+  // cityLoading removed — products now fetch in parallel with city data (no sequential wait)
   const [products,       setProducts]       = useState([]);
   const [page,           setPage]           = useState(1);
   const [hasMore,        setHasMore]        = useState(true);
-  const [prodLoading,    setProdLoading]    = useState(false);
+  const [prodLoading,    setProdLoading]    = useState(true);
+  const isFetchingRef  = React.useRef(false); // guard against concurrent fetches
+  const cityDataRef    = React.useRef(null);  // mirrors cityData for use inside callbacks without dep
   const [currentImages,  setCurrentImages]  = useState({});
-  const [isSubcategory,  setIsSubcategory]  = useState(false);  // true = not a city slug
 
-  // Detect: is this a known subcategory slug, or a city slug?
+  // Detect: is this a subcategory or city slug? (isSubcategory is computed above synchronously)
   useEffect(() => {
-    const isSubcat = Boolean(SUBCATEGORY_SLUG_FILTERS?.[citySlug]);
-    setIsSubcategory(isSubcat);
-
-    if (isSubcat) {
-      // Subcategory — no need to hit city API
-      setCityLoading(false);
+    if (isSubcategory) {
+      // Subcategory — apply SEO meta from CMS or fallback
+      const catBaseSlug = CATEGORY_META[category]?.base?.replace("/", "") || "";
+      const pageKey = `${catBaseSlug}/${citySlug}`;
+      getCategoryPageSeo(pageKey).then((seo) => {
+        // Reject if backend returned parent category data instead of subcategory data
+        const validSeo = seo && seo.pageKey === pageKey ? seo : null;
+        if (validSeo) {
+          applyMeta({
+            title:       validSeo.metaTitle,
+            description: validSeo.metaDescription,
+            keywords:    validSeo.metaKeyword,
+            canonical:   validSeo.canonicalUrl || `${BASE_URL}/${pageKey}`,
+          });
+        } else {
+          const label    = citySlug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+          const catLabel = category;
+          applyMeta({
+            title:       `${label} ${catLabel} Online | Same-Day Delivery | RedHeart`,
+            description: `Order ${label} ${catLabel.toLowerCase()} online with same-day delivery across India. Shop ${label} gifts from ₹399 on RedHeart.`,
+            canonical:   `${BASE_URL}/${pageKey}`,
+          });
+        }
+      });
       return;
     }
 
-    // Try to load city data from API
-    setCityLoading(true);
+    // Load city data in parallel with products fetch (both start on mount)
     getCityPage(category, citySlug)
       .then((data) => {
+        cityDataRef.current = data;   // keep ref in sync for fetchProducts
         setCityData(data);
         if (data) {
           applyMeta({
@@ -300,8 +326,7 @@ const CityLandingPage = ({ category }) => {
           injectAllSchemas({ cityData: data, category, products: [] });
         }
       })
-      .catch(console.error)
-      .finally(() => setCityLoading(false));
+      .catch(console.error);
 
     // Clean up all schemas on unmount
     return () => {
@@ -311,9 +336,12 @@ const CityLandingPage = ({ category }) => {
   }, [category, citySlug]);
 
   // ── Fetch products ────────────────────────────────────────────────────────
+  // cityNameFromSlug is derived synchronously from the URL — no API wait needed.
+  // This lets products and city-data fetches run in parallel, cutting mobile LCP delay.
   const fetchProducts = useCallback(
     async (pageNo) => {
-      if (prodLoading) return;
+      if (isFetchingRef.current) return;
+      isFetchingRef.current = true;
       setProdLoading(true);
       try {
         // Build payload — subcategory mode uses taxonomy filters; city mode uses available_cities
@@ -326,7 +354,8 @@ const CityLandingPage = ({ category }) => {
           type:             subcatFilters.type?.join(",")             || "",
           relationship:     subcatFilters.relationship?.join(",")     || "",
           color:            subcatFilters.color?.join(",")            || "",
-          available_cities: !isSubcategory ? (cityData?.cityName || "") : "",
+          // Use slug-derived city name — no need to wait for cityData API response
+          available_cities: !isSubcategory ? cityNameFromSlug : "",
           page:             pageNo,
           limit:            12,
         };
@@ -335,27 +364,32 @@ const CityLandingPage = ({ category }) => {
         setProducts((prev) => pageNo === 1 ? newProducts : [...prev, ...newProducts]);
         setHasMore(pageNo < res.totalPages);
 
-        // Re-inject schemas with ItemList once first page of products loads
-        if (pageNo === 1 && cityData && newProducts.length > 0) {
-          injectAllSchemas({ cityData, category, products: newProducts });
+        // Re-inject schemas with ItemList once first page of products loads.
+        // cityDataRef.current gives us latest city data without it being a useCallback dep.
+        if (pageNo === 1 && newProducts.length > 0 && cityDataRef.current) {
+          injectAllSchemas({ cityData: cityDataRef.current, category, products: newProducts });
         }
       } catch (err) {
         console.error("CityLandingPage fetchProducts:", err);
       } finally {
+        isFetchingRef.current = false;
         setProdLoading(false);
       }
     },
-    [category, cityData, isSubcategory, citySlug, prodLoading]
+    [category, isSubcategory, citySlug, cityNameFromSlug]
+    // cityData intentionally removed — products now fetch in parallel with city data
   );
 
-  // Initial product load — wait until cityData is resolved
+  // Initial product load — fires immediately on mount (parallel with city data fetch)
   useEffect(() => {
-    if (cityLoading) return;
     setProducts([]);
     setPage(1);
     setHasMore(true);
+    setCityData(null);
+    cityDataRef.current   = null;  // reset on route change
+    isFetchingRef.current = false; // reset guard on route change
     fetchProducts(1);
-  }, [cityLoading, cityData]);
+  }, [category, citySlug]); // depends only on route, not on cityLoading
 
   // Pagination
   useEffect(() => {
@@ -378,37 +412,38 @@ const CityLandingPage = ({ category }) => {
   const selectImage = (productId, index) =>
     setCurrentImages((prev) => ({ ...prev, [productId]: index }));
 
-  // ── Loading skeleton ───────────────────────────────────────────────────────
-  if (cityLoading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-rose-200 border-t-rose-600 rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  // Derive the category base URL slug (e.g. "florist-near-me")
+  // Derive the category base URL slug — computed from static data, no API needed
   const categoryBaseSlug = CATEGORY_META[category]?.base?.replace("/", "") || "";
+
+  // Title-case city name from slug e.g. "new-delhi" → "New Delhi"
+  const cityLabel = citySlug
+    ? citySlug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase())
+    : "";
+
+  // Service label e.g. "Flower Delivery" for Flowers category
+  const serviceLabel = CATEGORY_SCHEMA_CONFIG[category]?.serviceLabel || `${category} Delivery`;
+
+  // ── H1 — computed immediately from URL params so it renders on first paint ──
+  // Priority: DB value → city-aware construction → static map → generic fallback
+  const h1Text = cityData?.h1
+    || (citySlug && !isSubcategory ? `${serviceLabel} In ${cityLabel}` : null)
+    || getPageH1(categoryBaseSlug, citySlug)
+    || getDescription(category)
+    || `${category} Delivery`;
 
   // ── Breadcrumb ─────────────────────────────────────────────────────────────
   const breadcrumbs = cityData?.breadcrumb || [
     { label: "Home", url: "/" },
     { label: category, url: `/${categoryBaseSlug}` },
-    ...(citySlug ? [{ label: citySlug.replace(/-/g, " "), url: `/${categoryBaseSlug}/${citySlug}` }] : []),
+    ...(citySlug ? [{ label: `Online ${serviceLabel} in ${cityLabel}`, url: `/${categoryBaseSlug}/${citySlug}` }] : []),
   ];
-
-  // ── H1 ─────────────────────────────────────────────────────────────────────
-  const h1Text = cityData?.h1
-    || getPageH1(categoryBaseSlug, citySlug)
-    || getDescription(category)
-    || `${category} Delivery`;
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-white">
 
       {/* ── Page header: H1 + Breadcrumb ───────────────────────────────────── */}
-      <div className="border-b px-4 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div className="border-b px-4 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 min-h-[56px] sm:min-h-[64px]">
         <h1 className="text-2xl font-semibold text-gray-800 capitalize">{h1Text}</h1>
 
         {/* Breadcrumb */}
@@ -435,6 +470,7 @@ const CityLandingPage = ({ category }) => {
       </div>
 
       {/* ── Product grid ───────────────────────────────────────────────────── */}
+      {/* Empty state — only when load is done and truly no products */}
       {products.length === 0 && !prodLoading ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <img src={logo} alt="No products" className="w-32 h-32 mb-4" />
@@ -444,6 +480,8 @@ const CityLandingPage = ({ category }) => {
           </p>
         </div>
       ) : (
+        /* InfiniteScroll is always in DOM — skeleton cards render inside it while loading.
+           This keeps infinite-scroll-component__outerdiv stable, eliminating CLS. */
         <InfiniteScroll
           dataLength={products.length}
           next={() => setPage((prev) => prev + 1)}
@@ -456,16 +494,28 @@ const CityLandingPage = ({ category }) => {
           }
         >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6 p-4">
-            {products.map((p) => (
-              <ProductCard
-                key={p._id}
-                product={p}
-                currentImageIndex={currentImages[p._id] || 0}
-                selectImage={selectImage}
-                handleProductClick={(slug, id) => handleProductClick(slug, id, p)}
-                calculateDiscount={calculateDiscount}
-              />
-            ))}
+            {products.length === 0 && prodLoading
+              ? Array.from({ length: 12 }).map((_, i) => (
+                  <div key={i} className="rounded-2xl border border-neutral-200 bg-white shadow-md overflow-hidden">
+                    <div className="w-full aspect-square bg-neutral-100 animate-pulse" />
+                    <div className="p-4 space-y-2">
+                      <div className="h-3 bg-neutral-100 rounded animate-pulse w-3/4" />
+                      <div className="h-3 bg-neutral-100 rounded animate-pulse w-1/2" />
+                    </div>
+                  </div>
+                ))
+              : products.map((p, idx) => (
+                  <ProductCard
+                    key={p._id}
+                    product={p}
+                    isLCP={idx < 4}
+                    currentImageIndex={currentImages[p._id] || 0}
+                    selectImage={selectImage}
+                    handleProductClick={(slug, id) => handleProductClick(slug, id, p)}
+                    calculateDiscount={calculateDiscount}
+                  />
+                ))
+            }
           </div>
         </InfiniteScroll>
       )}
@@ -482,7 +532,7 @@ const CityLandingPage = ({ category }) => {
 
       {/* ── FAQ Section ─────────────────────────────────────────────────────── */}
       {cityData?.faqs && cityData.faqs.length > 0 && (
-        <div className="px-4 py-8 border-t border-gray-100 max-w-3xl ml-4 md:ml-16 lg:ml-24">
+        <div className="px-4 py-8 border-t border-gray-100 max-w-3xl mx-auto w-full">
           <div className="text-xl font-semibold text-gray-800 mb-4">Frequently Asked Questions</div>
           <div className="space-y-4">
             {cityData.faqs.map((faq, i) => (

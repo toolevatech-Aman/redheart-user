@@ -17,3 +17,4 @@ export const ProductRedirect = () => {
   const newUrl = `/p/${toSlug(category)}/${toSlug(productSlug)}`;
   return <Navigate to={newUrl} replace />;
 };
+

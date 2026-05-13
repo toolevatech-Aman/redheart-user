@@ -59,9 +59,12 @@ export default function DeliveryCities() {
   // Apply page meta
   useEffect(() => {
     document.title = `Delivery Cities | RedHeart — Flowers, Cakes & Plants Across India`;
-    let el = document.querySelector('meta[name="description"]');
-    if (!el) { el = document.createElement("meta"); el.name = "description"; document.head.appendChild(el); }
-    el.setAttribute("content", "RedHeart delivers fresh flowers, cakes, and plants to 430+ cities across India. Find your city and order now for same-day delivery.");
+    let desc = document.querySelector('meta[name="description"]');
+    if (!desc) { desc = document.createElement("meta"); desc.name = "description"; document.head.appendChild(desc); }
+    desc.setAttribute("content", "RedHeart delivers fresh flowers, cakes, and plants to 830+ cities across India. Find your city and order now for same-day delivery.");
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) { canonical = document.createElement("link"); canonical.rel = "canonical"; document.head.appendChild(canonical); }
+    canonical.setAttribute("href", "https://www.redheart.in/delivery-cities");
   }, []);
 
   // Load cities on tab change
@@ -90,7 +93,7 @@ export default function DeliveryCities() {
           We Deliver Across India
         </h1>
         <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto">
-          Fresh flowers, delicious cakes & beautiful plants delivered to 430+ cities. Find your city below.
+          Fresh flowers, delicious cakes & beautiful plants delivered to 830+ cities. Find your city below.
         </p>
       </div>
 

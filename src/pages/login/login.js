@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { sendOtpApi, verifyOtpApi } from "../../service/loginService";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Lock, Smartphone, Shield, Check, Sparkles, Heart, ArrowRight } from "lucide-react";
-import logo from "../../assets/redHeartLogoo.png";
+import logo from "../../assets/redHeartLogoo.webp";
 import { message } from "../../comman/toaster-message/toasterMessage";
 
 

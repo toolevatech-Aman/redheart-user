@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Heart, Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
-import logo from "../../assets/redHeartLogoo.png";
+import logo from "../../assets/RedHeart-Logo-Cropped.png";
 import { getPageContentApi } from "../../service/pageContent";
 import { Linkedin } from "react-feather";
 
@@ -67,20 +67,16 @@ console.log(currentPage, "currentPage");
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center space-x-3 mb-6 group">
+            <Link to="/" className="flex flex-col items-start mb-6 group w-fit">
               <img
                 src={logo}
                 alt="RedHeart Logo"
-                className="h-10 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+                className="block h-9 sm:h-11 w-auto self-start brightness-110 transition-transform duration-300 group-hover:scale-105"
+                style={{ aspectRatio: '455 / 121' }}
               />
-              <div className="flex flex-col">
-                <span className="font-elegant text-2xl sm:text-3xl text-accent-rose-600 leading-none">
-                  Red Heart
-                </span>
-                <span className="font-body text-[10px] sm:text-xs text-grey-400 tracking-[0.15em] uppercase mt-0.5">
-                  Premium Florals
-                </span>
-              </div>
+              <span className="font-body text-[11px] sm:text-xs text-grey-500 italic tracking-widest pl-9 sm:pl-11">
+                where emotion begins
+              </span>
             </Link>
             <p className="font-body text-sm text-grey-400 mb-6 font-light leading-relaxed max-w-sm">
             We believe gifting is more than just exchanging products; it’s about expressing emotions, celebrating relationships, and creating unforgettable memories. That’s why at Redheart, every bouquet, every cake, every plant, and every gift hamper is crafted with care, creativity, and a touch of love.

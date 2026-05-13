@@ -1,13 +1,13 @@
 import React, { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import AppLayout from "./comman/app-layout/app-layout";
-import SellWithUs from "./pages/sell-with-us/sell-with-us";
 import { CategoryRedirect, ProductRedirect } from "./utils/RedirectHandler";
-import CityLandingPage from "./pages/cityLanding/CityLandingPage";
-import DeliveryCities from "./pages/deliveryCities/DeliveryCities";
 
 // Lazy load pages
 const Home = lazy(() => import("./pages/home/home"));
+const SellWithUs = lazy(() => import("./pages/sell-with-us/sell-with-us"));
+const CityLandingPage = lazy(() => import("./pages/cityLanding/CityLandingPage"));
+const DeliveryCities = lazy(() => import("./pages/deliveryCities/DeliveryCities"));
 const Login = lazy(() => import("./pages/login/login"));
 const ProductDescription = lazy(() => import("./pages/product/product-description"));
 const Product = lazy(() => import("./pages/product/product"));
@@ -20,7 +20,6 @@ const Shipping = lazy(() => import("./pages/shipping/shipping"));
 const Returns = lazy(() => import("./pages/returns/returns"));
 const TrackOrder = lazy(() => import("./pages/track-order/track-order"));
 const GiftCards = lazy(() => import("./pages/gift-cards/gift-cards"));
-const SizeGuide = lazy(() => import("./pages/sell-with-us/sell-with-us"));
 const Cookies = lazy(() => import("./pages/cookies/cookies"));
 const RefundPolicy = lazy(() => import("./pages/refund-policy/refund-policy"));
 const Cart = lazy(() => import("./pages/cart/cart"));
@@ -69,6 +68,14 @@ const Router = () => {
         {/* ── Legacy /product/ routes → 301 redirect to new SEO URLs ── */}
         <Route path="/product/:category" element={<CategoryRedirect />} />
         <Route path="/product/:category/:productSlug" element={<ProductRedirect />} />
+
+        {/* ── Short slug 301 redirects → long-form SEO URLs ── */}
+        <Route path="/flowers"      element={<Navigate to="/florist-near-me"           replace />} />
+        <Route path="/cakes"        element={<Navigate to="/order-cake-online"          replace />} />
+        <Route path="/plants"       element={<Navigate to="/plants-online"              replace />} />
+        <Route path="/birthday"     element={<Navigate to="/birthday-gifts-delivery"    replace />} />
+        <Route path="/anniversary"  element={<Navigate to="/anniversary-gifts-delivery" replace />} />
+        <Route path="/wedding"      element={<Navigate to="/wedding-gifts-online"       replace />} />
 
         {/* ── New SEO product detail route ── */}
         {/* /p/:categorySlug/:productSlug  e.g. /p/order-cake-online/black-forest-cake-100001ca */}
